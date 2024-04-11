@@ -1,0 +1,87 @@
+<!-- 2. personal info -->
+<p-card styleClass="max-w-[900px] mt-[60px] mb-[40px] mx-auto">
+  <div class="flex flex-col my-0 mx-auto gap-10 max-w-[400px] items-end">
+    <!-- login option -->
+    <div class="flex flex-col w-full justify-around">
+      <!-- desktop version of login way select -->
+      <p-selectButton
+        (onChange)="onDesktopSelectChange()"
+        [(ngModel)]="loginWay"
+        [options]="desktopSelectOptions"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="hidden sm:block w-full"
+      ></p-selectButton>
+      <!-- mobile version of login way select -->
+      <p-dropdown
+        [(ngModel)]="loginWay"
+        [options]="mobileSelectOptions"
+        class="sm:hidden"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select a sign in method"
+        styleClass="w-full"
+      ></p-dropdown>
+    </div>
+    <!-- email -->
+    <div class="flex w-full justify-around">
+      <div class="flex flex-col flex-1 max-w-[400px]">
+        <span class="p-float-label w-full">
+          <span class="p-float-label w-full">
+            <input
+              [(ngModel)]="loginEmailOrUsername"
+              class="w-full"
+              id="username"
+              pInputText
+              type="text"
+            />
+            <label for="email">{{
+              loginWay === "username" ? "Username" : "Email address"
+            }}</label>
+          </span>
+        </span>
+      </div>
+    </div>
+    <!-- password -->
+    <div class="flex w-full justify-around">
+      <div class="flex flex-col flex-1 max-w-[400px] w-full">
+        <span class="p-float-label w-full">
+          <span class="p-float-label w-full">
+            <input
+              [(ngModel)]="password"
+              class="w-full"
+              id="password"
+              pInputText
+              type="password"
+            />
+            <label for="email">Password</label>
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap justify-between w-full items-center">
+      <p class="text-gray-500 hover:text-indigo-600">
+        <a routerLink="/forgot-password">Forgot your password?</a>
+      </p>
+      <p-button
+        (onClick)="onSubmit()"
+        icon="pi pi-arrow-circle-right"
+        label="Sign in"
+      ></p-button>
+    </div>
+  </div>
+</p-card>
+
+<p class="text-indigo-700 text-center p-4">
+  <a class="hover:text-black" routerLink="/register">
+    Don't have an account? Create one by clicking
+    <span class="font-bold">here</span></a
+  >.
+</p>
+
+@if (isLoading) {
+<app-spinner></app-spinner>
+}
+
+<p-toast></p-toast>

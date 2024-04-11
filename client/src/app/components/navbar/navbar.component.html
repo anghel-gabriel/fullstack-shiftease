@@ -1,0 +1,32 @@
+<!-- navbar ui -->
+<div class="header">
+  <p-menubar
+    [model]="navbarItems"
+    [style]="{
+      background: 'transparent',
+      border: 'none',
+      flex: '1'
+    }"
+    class="menu-bar"
+  >
+    <ng-template let-item pTemplate="item">
+      <a
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="item.url"
+        class="p-menuitem-link nav-link"
+        pRipple
+        routerLinkActive="nav-link-active"
+      >
+        <div>
+          <span [class]="item.icon"></span>
+          <span> {{ item.label }}</span>
+        </div>
+      </a>
+    </ng-template>
+  </p-menubar>
+  <img class="h-8 cursor-pointer" src="../../../assets/logo.png" />
+</div>
+
+<!-- spinner -->
+@if (isLoading){
+<app-spinner />}

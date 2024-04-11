@@ -1,0 +1,54 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss/base" layer(tailwindcss);
+@import "tailwindcss/components" layer(tailwindcss);
+@import "tailwindcss/utilities" layer(tailwindcss);
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+// primeng components
+@media (max-width: 960px) {
+  .p-menubar-root-list {
+    padding-top: 0px;
+    width: 100vw;
+  }
+}
+
+.p-toast {
+  max-width: 100vw;
+}
+
+@media screen and (max-width: 740px) {
+  .p-paginator-current {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    margin: 0 auto;
+  }
+
+  span.p-paginator-current {
+    font-size: 14px;
+  }
+
+  .p-paginator-rpp-options {
+    margin-top: 15px;
+  }
+
+  .p-paginator-element {
+    margin: -5px;
+    width: 5px;
+  }
+}
+
+@media screen and (min-width: 335px) {
+  .p-paginator-rpp-options {
+    margin-top: 0;
+  }
+}

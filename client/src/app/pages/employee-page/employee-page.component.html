@@ -1,0 +1,151 @@
+@if(isLoading){ <app-spinner />}
+
+<p-card styleClass="max-w-[920px] my-[60px] mx-auto">
+    <div class="min- flex flex-col gap-8 px-[3%] min-[785px]:gap-[60px]">
+        <div
+            class="flex w-full flex-col items-center justify-between gap-8 min-[785px]:flex-row"
+        >
+            <!-- first name -->
+            <div class="flex w-full max-w-[330px] flex-1 flex-col">
+                <span class="p-float-label">
+                    <input
+                        [(ngModel)]="firstName"
+                        class="w-full"
+                        id="firstName"
+                        pInputText
+                    />
+                    <label for="firstName">First name*</label>
+                </span>
+                <small class="mt-1"
+                    >First name should be at least 6 characters long</small
+                >
+            </div>
+            <!-- last name -->
+            <div class="flex w-full max-w-[330px] flex-1 flex-col">
+                <span class="p-float-label">
+                    <input
+                        [(ngModel)]="lastName"
+                        class="w-full"
+                        id="lastName"
+                        pInputText
+                    />
+                    <label for="lastName">Last name*</label>
+                </span>
+                <small class="mt-1"
+                    >Last name should be at least 6 characters long</small
+                >
+            </div>
+        </div>
+
+        <div
+            class="flex w-full flex-col items-center justify-between gap-8 min-[785px]:flex-row min-[785px]:items-start"
+        >
+            <!-- username -->
+            <div class="flex w-full max-w-[330px] flex-1 flex-col">
+                <span class="p-float-label">
+                    <input
+                        [(ngModel)]="username"
+                        class="w-full"
+                        id="username"
+                        name="username"
+                        pInputText
+                    />
+                    <label for="username">Username*</label>
+                </span>
+                <small class="mt-1"
+                    >Username must be alphanumeric and at least 6 characters
+                    long</small
+                >
+            </div>
+            <!-- birthdate -->
+            <div class="flex w-full max-w-[330px] flex-1 flex-col">
+                <span class="p-float-label">
+                    <span class="p-float-label">
+                        <p-calendar
+                            [(ngModel)]="birthDate"
+                            id="birth-date"
+                            inputId="birth_date"
+                            styleClass="w-full"
+                        ></p-calendar>
+                        <label for="birth-date">Birth Date*</label>
+                    </span>
+                </span>
+                <small class="mt-1" id="age-help"
+                    >You must be at least 18 years-old</small
+                >
+            </div>
+        </div>
+    </div>
+    <div
+        class="mt-8 flex flex-col gap-8 px-[3%] sm:gap-8 min-[785px]:mt-[60px] min-[785px]:gap-[40px]"
+    >
+        <div
+            class="flex w-full flex-col items-center justify-between gap-8 min-[785px]:flex-row"
+        >
+            <!-- gender -->
+            <div class="flex w-full max-w-[330px] flex-1 flex-col">
+                <span class="p-float-label">
+                    <p-dropdown
+                        [(ngModel)]="gender"
+                        [options]="genderOptions"
+                        id="gender"
+                        inputId="float-label"
+                        optionLabel="name"
+                        styleClass="w-full"
+                    ></p-dropdown>
+                    <label for="gender">Gender</label>
+                </span>
+            </div>
+            <!-- profile picture -->
+            <div
+                class="flex w-full max-w-[330px] items-center justify-between gap-x-3"
+            >
+                <p-avatar
+                    [image]="photoURL"
+                    shape="circle"
+                    size="large"
+                ></p-avatar>
+                <div
+                    class="mb-1 flex flex-wrap justify-between gap-x-1 gap-y-2"
+                >
+                    <p-fileUpload
+                        mode="basic"
+                        [auto]="true"
+                        chooseLabel="Choose"
+                        name="demo[]"
+                        url="https://www.primefaces.org/cdn/api/upload.php"
+                        accept="image/*"
+                        [maxFileSize]="1000000"
+                        (onUpload)="onUpload($event)"
+                    />
+                    <p-button
+                        icon="pi pi-trash"
+                        label="Remove"
+                        (onClick)="removePhoto()"
+                        [disabled]="photoURL === defaultPhotoURL"
+                    />
+                </div>
+            </div>
+        </div>
+        <div
+            class="flex w-full flex-col items-center justify-end gap-8 min-[785px]:flex-row"
+        >
+            <!-- save profile button -->
+            <p-button
+                (click)="handleSaveProfile()"
+                class="max-w-[330px] max-[785px]:w-full"
+                icon="pi pi-check"
+                iconPos="right"
+                label="Save changes"
+                severity="success"
+                styleClass="w-full"
+            ></p-button>
+        </div>
+    </div>
+</p-card>
+
+<!-- loading spinner -->
+@if(isLoading){
+<app-spinner />}
+
+<p-toast />
