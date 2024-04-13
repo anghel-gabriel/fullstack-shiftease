@@ -37,13 +37,32 @@ const deleteShift = async (req, res, next) => {
   }
 };
 
-const getShift = async (req, res, next) => {};
+const updateShift = async (req, res, next) => {
+  const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
+  const { id } = req.params;
+  // getting body data
+  const shift = new Shift({
+    startTime: startTime,
+    endTime: endTime,
+    hourlyWage: hourlyWage,
+    workplace: workplace,
+    comments: comments,
+  });
+  // adding shift to database
+  try {
+    const shiftId = ObjectId.createFromHexString(id);
+    await shiftsService.updateShiftById(shiftId, req.body);
+    res.status(200).send("Your shift has been added");
+  } catch (error) {
+    console.log("An error has occured while adding your shift.", error);
+  }
+};
 
-const editShift = async (req, res, next) => {};
+const getShift = async (req, res, next) => {};
 
 export default {
   addShift,
   deleteShift,
   getShift,
-  editShift,
+  updateShift,
 };
