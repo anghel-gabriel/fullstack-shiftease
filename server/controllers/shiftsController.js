@@ -23,7 +23,7 @@ const addShift = async (req, res, next) => {
 };
 
 const deleteShift = async (req, res, next) => {
-  const { id } = req.body;
+  const { id } = req.params;
   // adding shift to database
   try {
     const shiftId = ObjectId.createFromHexString(id);
