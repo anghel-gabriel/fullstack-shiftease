@@ -2,6 +2,7 @@ import Shift from "../models/shiftModel.js";
 import shiftsService from "../services/shiftsService.js";
 import { ObjectId } from "mongodb";
 
+// get single shift by shift id
 const getShift = async (req, res, next) => {
   const { id } = req.params;
 
@@ -14,6 +15,17 @@ const getShift = async (req, res, next) => {
   }
 };
 
+// get all shifts
+const getAllShifts = async (req, res, next) => {
+  try {
+    const foundShifts = await shiftsService.getAllShifts();
+    res.status(200).send(foundShifts);
+  } catch (error) {
+    res.status(400).send("An error has occured while getting shifts.");
+  }
+};
+
+// add new shift
 const addShift = async (req, res, next) => {
   const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
   // getting body data
@@ -33,6 +45,7 @@ const addShift = async (req, res, next) => {
   }
 };
 
+// update shift by shift id
 const updateShift = async (req, res, next) => {
   const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
   const { id } = req.params;
@@ -54,6 +67,7 @@ const updateShift = async (req, res, next) => {
   }
 };
 
+// delete shift by shift id
 const deleteShift = async (req, res, next) => {
   const { id } = req.params;
   // adding shift to database
@@ -74,4 +88,5 @@ export default {
   deleteShift,
   getShift,
   updateShift,
+  getAllShifts,
 };

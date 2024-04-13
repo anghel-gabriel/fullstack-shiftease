@@ -8,6 +8,10 @@ const getShiftById = async (shiftId) => {
   return await Shift.findById(shiftId);
 };
 
+const getAllShifts = async () => {
+  return await Shift.find();
+};
+
 const updateShiftById = async (shiftId, newData) => {
   return await Shift.findByIdAndUpdate(shiftId, newData);
 };
@@ -16,4 +20,10 @@ const deleteShift = async (shiftId) => {
   return await Shift.findByIdAndDelete(shiftId);
 };
 
-export default { getShiftById, addShift, updateShiftById, deleteShift };
+export default {
+  getShiftById,
+  addShift,
+  updateShiftById,
+  deleteShift,
+  getAllShifts,
+};
