@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import authRouter from "./routes/authRouter.js";
+import shiftsRouter from "./routes/shiftsRouter.js";
+import dotenv from "dotenv";
 
 const PORT = 8080;
 const ACCESS_URL =
@@ -9,7 +11,9 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded());
+dotenv.config({ path: "./config/.env" });
 
+app.use("api/shifts", shiftsRouter);
 app.use("/api/auth", authRouter);
 
 const connectFn = async () => {

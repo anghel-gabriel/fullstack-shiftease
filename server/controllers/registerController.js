@@ -13,7 +13,7 @@ const registerUser = async (req, res) => {
     gender,
   } = req.body;
 
-  // data validation
+  // #TODO: data validation
   if (!username || !emailAddress || !password) {
     return res.status(400).send("Please fill al the mandatory fields.");
   }
