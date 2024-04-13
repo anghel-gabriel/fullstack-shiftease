@@ -1,5 +1,6 @@
 import express from "express";
 import shiftController from "../controllers/shiftsController.js";
+import shiftsService from "../services/shiftsService.js";
 
 const shiftsRouter = express.Router();
 

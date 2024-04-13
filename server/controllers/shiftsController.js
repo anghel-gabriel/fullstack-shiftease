@@ -1,4 +1,7 @@
+import { overwriteMiddlewareResult } from "mongoose";
 import Shift from "../models/shiftModel.js";
+import shiftsService from "../services/shiftsService.js";
+import { ObjectId } from "mongodb";
 
 const addShift = async (req, res, next) => {
   const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
@@ -23,10 +26,14 @@ const deleteShift = async (req, res, next) => {
   const { id } = req.body;
   // adding shift to database
   try {
-    await Shift.deleteOne({ _id: id });
-    res.status(200).send("Your shift has been deleted.");
+    const shiftId = ObjectId.createFromHexString(id);
+    console.log(shiftId);
+    const result = await shiftsService.deleteShift(shiftId);
+    if (!result || result.length === 0)
+      res.status(404).send(`Shift with id: ${id} not found.`);
+    else res.status(200).send("Your shift has been deleted.");
   } catch (error) {
-    console.log("An error has occured while adding your shift.", error);
+    console.log("An error has occured while deleting your shift.", error);
   }
 };
 
