@@ -1,8 +1,11 @@
 import express from "express";
-import { postAddShift } from "../controllers/shiftsController.js";
+import shiftController from "../controllers/shiftsController.js";
 
 const shiftsRouter = express.Router();
 
-shiftsRouter.post("/add-shift", postAddShift);
+shiftsRouter.get("/get-shift", shiftController.getShift);
+shiftsRouter.post("/add-shift", shiftController.addShift);
+shiftsRouter.put("/edit-shift", shiftController.editShift);
+shiftsRouter.delete("/delete-shift", shiftController.deleteShift);
 
 export default shiftsRouter;
