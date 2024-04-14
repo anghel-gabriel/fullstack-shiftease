@@ -15,6 +15,20 @@ const getShift = async (req, res, next) => {
   }
 };
 
+// get shifts by user id
+const getUserShifts = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const userId = ObjectId.createFromHexString(id);
+    const foundShifts = await shiftsService.getUserShifts(userId);
+    res.status(200).send(foundShifts);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send("An error has occured while getting user shifts.");
+  }
+};
+
 // get all shifts
 const getAllShifts = async (req, res, next) => {
   try {
@@ -89,4 +103,5 @@ export default {
   getShift,
   updateShift,
   getAllShifts,
+  getUserShifts,
 };

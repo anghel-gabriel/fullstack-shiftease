@@ -4,6 +4,11 @@ const addShift = async (shiftData) => {
   return await Shift.create(shiftData);
 };
 
+// get shifts by user id
+const getUserShifts = async (userId) => {
+  return Shift.find({ startTime: "azi" });
+};
+
 const getShiftById = async (shiftId) => {
   return await Shift.findById(shiftId);
 };
@@ -26,4 +31,5 @@ export default {
   updateShiftById,
   deleteShift,
   getAllShifts,
+  getUserShifts,
 };

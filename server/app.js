@@ -5,9 +5,8 @@ import shiftsRouter from "./routes/shiftsRouter.js";
 import dotenv from "dotenv";
 import authorizeMdw from "./middlewares/authorize.js";
 
-const PORT = process.env.PORT || 8080;
-const ACCESS_URL =
-  "mongodb+srv://anghegabriel:parolaparola@shiftease.w0cvn0c.mongodb.net/ShiftEase?retryWrites=true&w=majority&appName=ShiftEase";
+console.log(process.env.PORT);
+const PORT = process.env.PORT ?? 8080;
 const app = express();
 
 app.use(express.json());
@@ -19,7 +18,7 @@ app.use("/api/auth", authRouter);
 
 const connectFn = async () => {
   try {
-    await mongoose.connect(ACCESS_URL);
+    await mongoose.connect(process.env.ACCESS_URL);
     console.log("You are now connected with MongoDB.");
     app.listen(PORT);
     console.log("Express.js server started.");
