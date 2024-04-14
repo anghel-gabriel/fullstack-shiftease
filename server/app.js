@@ -5,7 +5,7 @@ import shiftsRouter from "./routes/shiftsRouter.js";
 import dotenv from "dotenv";
 import authorizeMdw from "./middlewares/authorize.js";
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 const ACCESS_URL =
   "mongodb+srv://anghegabriel:parolaparola@shiftease.w0cvn0c.mongodb.net/ShiftEase?retryWrites=true&w=majority&appName=ShiftEase";
 const app = express();
