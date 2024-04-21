@@ -5,6 +5,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import {HttpClientModule} from '@angular/common/http';
 
 // angular pages
 import { MyShiftsPageComponent } from "./pages/my-shifts-page/my-shifts-page.component";
@@ -61,6 +62,7 @@ import { ChartModule } from "primeng/chart";
 import { AdminStatsComponent } from "./components/admin-stats/admin-stats.component";
 import { firebaseConfig } from "./utils/firebaseConfig";
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,7 +82,7 @@ import { firebaseConfig } from "./utils/firebaseConfig";
     AllShiftsPageComponent,
     EmployeesPageComponent,
     EmployeePageComponent,
-    AdminStatsComponent,
+    AdminStatsComponent
   ],
   imports: [
     CommonModule,
@@ -119,6 +121,7 @@ import { firebaseConfig } from "./utils/firebaseConfig";
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent],
