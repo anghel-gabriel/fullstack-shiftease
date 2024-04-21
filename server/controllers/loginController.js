@@ -5,7 +5,15 @@ import loginService from "../services/loginService.js";
 const login = async (req, res) => {
   // getting body data
   // #TODO: get user data by login method
-  const { username, emailAddress, password } = req.body;
+  const {
+    emailAddress,
+    username,
+    firstName,
+    lastName,
+    gender,
+    birthDate,
+    password,
+  } = req.body;
   // #TODO: data validation
   // -----
   try {

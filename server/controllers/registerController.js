@@ -31,15 +31,11 @@ const registerUser = async (req, res) => {
     };
 
     try {
-      console.log(
-        await registerService.checkEmailAddressExisting(userData.emailAddress)
-      );
       await registerService.register(userData);
       if (err) {
         console.log(err);
         res.status(500).send("An error has occured while registering.");
-      }
-      res.status(200).send("New user was added to database.");
+      } else res.status(200).send("New user was added to database.");
     } catch (error) {
       console.log(error);
       res.status(500).send("An error has occured while registering.");

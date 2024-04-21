@@ -25,6 +25,10 @@ const deleteShift = async (shiftId) => {
   return await Shift.findByIdAndDelete(shiftId);
 };
 
+const deleteUserShifts = async (userId) => {
+  return await Shift.deleteMany({ author: userId });
+};
+
 export default {
   getShiftById,
   addShift,
@@ -32,4 +36,5 @@ export default {
   deleteShift,
   getAllShifts,
   getUserShifts,
+  deleteUserShifts,
 };
