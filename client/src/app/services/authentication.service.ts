@@ -61,40 +61,8 @@ export class AuthenticationService {
     return this.loggedUser.asObservable();
   }
 
-  // function used for logging with username
-  async getEmailFromUsername(username: any) {
-    const usersRef = collection(this.firestore, "users");
-    const q = query(usersRef, where("username", "==", username));
-    const snapshot = await getDocs(q);
-    if (snapshot.empty) {
-      return null;
-    } else {
-      const userDoc = snapshot.docs[0];
-      const userData = userDoc.data();
-      return userData["email"];
-    }
-  }
-
-  async signIn(email: string, password: string) {
-    try {
-      const signInResponse = await signInWithEmailAndPassword(
-        this.auth,
-        email,
-        password
-      );
-      const loggedUserUid = signInResponse.user.uid;
-      const loggedUserRef = doc(this.firestore, `users/${loggedUserUid}`);
-      const loggedUserDoc = await getDoc(loggedUserRef);
-      const loggedUserData = loggedUserDoc.data();
-      this.loggedUser.next(loggedUserData);
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  }
-
   async logOut() {
     try {
-      await this.auth.signOut();
       this.loggedUser.next(null);
     } catch (error: any) {
       throw new Error(error);
@@ -271,6 +239,9 @@ export class AuthenticationService {
         const errorMsg = await response.text();
         console.log(errorMsg);
         throw new Error(errorMsg);
+      } else {
+        const res = await response.json();
+        this.loggedUser.next(res.user);
       }
     } catch (error: any) {
       throw new Error(error);

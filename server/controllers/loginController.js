@@ -34,8 +34,9 @@ const login = async (req, res) => {
     // checking if entered password is equal to 'decrypted' hash password from database
     bcrypt.compare(password, userPassword, (err, result) => {
       if (result) {
+        const user = foundUsers[0];
         const data = {
-          id: foundUsers[0]._id,
+          id: user._id,
         };
         const token = jwt.sign(data, process.env.SECRET_KEY, {
           expiresIn: "7d",
@@ -43,6 +44,14 @@ const login = async (req, res) => {
         res.send(200, {
           status: 200,
           bearer: token,
+          user: {
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+            birthDate: user.birthDate,
+            gender: user.gender.value,
+          },
         });
       } else {
         console.log("eroare", err);
