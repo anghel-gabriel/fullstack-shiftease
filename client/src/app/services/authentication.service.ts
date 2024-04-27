@@ -224,6 +224,7 @@ export class AuthenticationService {
     try {
       const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
+        credentials: "include",
         body: JSON.stringify({
           usernameOrEmail: usernameOrEmail,
           password: password,

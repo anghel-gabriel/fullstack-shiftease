@@ -61,7 +61,7 @@ export class MyShiftsPageComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private db: DatabaseService,
     private auth: AuthenticationService,
-    private toast: MessageService,
+    private toast: MessageService
   ) {
     this.auth.getLoggedUser().subscribe((data) => {
       this.userPhotoURL = data?.photoURL || defaultPhotoURL;
@@ -116,10 +116,10 @@ export class MyShiftsPageComponent implements OnInit {
     this.loading = true;
     this.addModalVisible = false;
     try {
-      await this.db.addShift(addedShift);
+      await this.db.addShiftBackend(addedShift);
     } catch (error: any) {
       this.showError(
-        "An error has occured while adding shift. Please try again.",
+        "An error has occured while adding shift. Please try again."
       );
     } finally {
       this.loading = false;
@@ -146,7 +146,7 @@ export class MyShiftsPageComponent implements OnInit {
       await this.db.editShift(this.selectedShift.id, editedShift);
     } catch (error: any) {
       this.showError(
-        "An error has occured while updating shift. Please try again.",
+        "An error has occured while updating shift. Please try again."
       );
     } finally {
       this.loading = false;
@@ -176,7 +176,7 @@ export class MyShiftsPageComponent implements OnInit {
       await this.db.deleteShift(shiftId);
     } catch (error: any) {
       this.showError(
-        "An error has occured while deleting shift. Please try again.",
+        "An error has occured while deleting shift. Please try again."
       );
     } finally {
       this.loading = false;
@@ -209,7 +209,7 @@ export class MyShiftsPageComponent implements OnInit {
           "Hourly Wage ($)": shift.hourlyWage,
           "Profit ($)": shift.profit,
           Comments: shift.comments,
-        })),
+        }))
       );
 
       const workbook = {
@@ -229,7 +229,7 @@ export class MyShiftsPageComponent implements OnInit {
       FileSaver.saveAs(data, `ShiftEase_${new Date().getTime()}.xlsx`);
     } catch (error) {
       this.showError(
-        "An error has occurred while exporting Excel. Please try again.",
+        "An error has occurred while exporting Excel. Please try again."
       );
     } finally {
       this.isLoading = false;

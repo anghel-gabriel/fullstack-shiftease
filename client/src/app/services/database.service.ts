@@ -25,7 +25,7 @@ export class DatabaseService {
 
   constructor(
     public firestore: Firestore,
-    private auth: AuthenticationService,
+    private auth: AuthenticationService
   ) {
     this.auth
       .getLoggedUser()
@@ -47,7 +47,7 @@ export class DatabaseService {
       switchMap(async () => {
         const val = await this.getShifts();
         return val;
-      }),
+      })
     );
   }
 
@@ -60,7 +60,7 @@ export class DatabaseService {
 
       let queryRef = query(
         collection(this.firestore, "shifts"),
-        orderBy("startTime", "desc"),
+        orderBy("startTime", "desc")
       );
       const docs = await getDocs(queryRef);
       const shiftsList = [] as any;
@@ -91,6 +91,21 @@ export class DatabaseService {
     }
   }
 
+  async addShiftBackend(shift: any) {
+    try {
+      await fetch("http://localhost:8080/api/shifts/add-shift", {
+        method: "POST",
+        body: JSON.stringify(shift),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
   async editShift(shiftId: string, newData: any) {
     const shiftRef = doc(this.firestore, "shifts", shiftId);
     try {
@@ -115,7 +130,7 @@ export class DatabaseService {
       switchMap(async () => {
         const val = await this.getAllUsers();
         return val;
-      }),
+      })
     );
   }
 

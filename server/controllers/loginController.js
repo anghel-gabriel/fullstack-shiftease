@@ -6,8 +6,6 @@ const login = async (req, res) => {
   // getting body data
   const { usernameOrEmail, password, loginMethod } = req.body;
 
-  console.log(usernameOrEmail, password, loginMethod);
-
   if (!usernameOrEmail || !password || !loginMethod)
     return res.status(400).send("Bad request.");
 
@@ -20,11 +18,6 @@ const login = async (req, res) => {
       foundUsers = await loginService.getUserByUsername(usernameOrEmail);
     // TODO: choose another message
     else res.status(400).send("Please select a login method.");
-
-    console.log("login method", loginMethod);
-    console.log("username or email", usernameOrEmail);
-    console.log("password", password);
-    console.log(foundUsers);
 
     if (!foundUsers || !foundUsers.length)
       return res
@@ -41,7 +34,23 @@ const login = async (req, res) => {
         const token = jwt.sign(data, process.env.SECRET_KEY, {
           expiresIn: "7d",
         });
-        res.send(200, {
+
+        res.cookie("LOGIN_INFO", token, {
+          // can only be accessed by server requests
+          httpOnly: true,
+          // path = where the cookie is valid
+          // path: "/",
+          // // domain = what domain the cookie is valid on
+          // domain: "localhost",
+          // // secure = only send cookie over https
+          // secure: false,
+          // // sameSite = only send cookie if the request is coming from the same origin
+          // sameSite: "lax", // "strict" | "lax" | "none" (secure must be true)
+          // // maxAge = how long the cookie is valid for in milliseconds
+          maxAge: 3333600000, // 1 hour
+        });
+
+        res.status(200).send({
           status: 200,
           bearer: token,
           user: {
@@ -54,12 +63,10 @@ const login = async (req, res) => {
           },
         });
       } else {
-        console.log("eroare", err);
         res.status(401).send("You entered a wrong password.");
       }
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send("An error has occured while logging in.");
   }
 };
