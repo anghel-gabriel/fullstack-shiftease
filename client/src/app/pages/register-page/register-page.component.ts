@@ -102,11 +102,14 @@ export class RegisterPageComponent {
         this.showError("Your passwords must match.");
         return;
       }
+      // check if username or email already existing
       try {
         this.isLoading = true;
         await this.auth.checkCredentialsBackend(
           this.emailAddress,
-          this.username
+          this.username,
+          this.password,
+          this.confirmPassword
         );
         this.activeIndex++;
         return;
@@ -149,6 +152,7 @@ export class RegisterPageComponent {
       emailAddress: this.emailAddress,
       username: this.username,
       password: this.password,
+      confirmPassword: this.confirmPassword,
       firstName: this.firstName,
       lastName: this.lastName,
       birthDate: new Date(this.birthDate).toISOString(),

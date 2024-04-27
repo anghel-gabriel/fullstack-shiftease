@@ -243,13 +243,23 @@ export class AuthenticationService {
     }
   }
 
-  async checkCredentialsBackend(emailAddress: string, username: string) {
+  async checkCredentialsBackend(
+    emailAddress: string,
+    username: string,
+    password: string,
+    confirmPassword: string
+  ) {
     try {
       const response = await fetch(
         "http://localhost:8080/api/auth/credentials",
         {
           method: "POST",
-          body: JSON.stringify({ emailAddress, username }),
+          body: JSON.stringify({
+            emailAddress,
+            username,
+            password,
+            confirmPassword,
+          }),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
