@@ -32,7 +32,7 @@ export class AllShiftsPageComponent {
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private db: DatabaseService,
+    private db: DatabaseService
   ) {}
 
   showError(message: string) {
@@ -43,18 +43,18 @@ export class AllShiftsPageComponent {
     });
   }
 
-  ngOnInit() {
-    this.db.updateShifts().subscribe((shifts) => {
-      this.shifts = [...shifts].map((shift) => {
-        return {
-          ...shift,
-          startTime: new Date(shift.startTime),
-          endTime: new Date(shift.endTime),
-        };
-      });
-    });
-    this.db.getAreMyShiftsLoading().subscribe((val) => (this.isLoading = val));
-  }
+  // ngOnInit() {
+  //   this.db.updateShifts().subscribe((shifts) => {
+  //     this.shifts = [...shifts].map((shift) => {
+  //       return {
+  //         ...shift,
+  //         startTime: new Date(shift.startTime),
+  //         endTime: new Date(shift.endTime),
+  //       };
+  //     });
+  //   });
+  //   this.db.getAreMyShiftsLoading().subscribe((val) => (this.isLoading = val));
+  // }
 
   // statistics modal
   onStatisticsClick() {
@@ -76,7 +76,7 @@ export class AllShiftsPageComponent {
       await this.db.editShift(this.selectedShift.id, editedShift);
     } catch (error: any) {
       this.showError(
-        "An error has occured while updating shift. Please try again.",
+        "An error has occured while updating shift. Please try again."
       );
     } finally {
       this.loading = false;
@@ -106,7 +106,7 @@ export class AllShiftsPageComponent {
       await this.db.deleteShift(shiftId);
     } catch (error: any) {
       this.showError(
-        "An error occurred while updating shift. Please try again.",
+        "An error occurred while updating shift. Please try again."
       );
     } finally {
       this.loading = false;
@@ -140,7 +140,7 @@ export class AllShiftsPageComponent {
           "Hourly Wage ($)": shift.hourlyWage,
           "Profit ($)": shift.profit,
           Comments: shift.comments,
-        })),
+        }))
       );
 
       const workbook = {
@@ -160,7 +160,7 @@ export class AllShiftsPageComponent {
       FileSaver.saveAs(data, `ShiftEase_${new Date().getTime()}.xlsx`);
     } catch (error) {
       this.showError(
-        "An error has occurred while exporting Excel. Please try again.",
+        "An error has occurred while exporting Excel. Please try again."
       );
     } finally {
       this.isLoading = false;

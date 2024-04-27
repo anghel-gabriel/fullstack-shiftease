@@ -20,19 +20,19 @@ export class BestMonthComponent {
   data = {};
   options = {};
 
-  constructor(
-    private auth: AuthenticationService,
-    private db: DatabaseService,
-  ) {
-    this.db.updateShifts().subscribe((shifts) => {
-      const currentId = this.auth?.getAuthUser()?.uid;
-      const myShifts = shifts.filter(
-        (shift: any) => shift.author === currentId,
-      );
-      this.bestMonthStats = getBestMonthStats(myShifts);
-      this.updateChartData(myShifts);
-    });
-  }
+  // constructor(
+  //   private auth: AuthenticationService,
+  //   private db: DatabaseService,
+  // ) {
+  //   this.db.updateShifts().subscribe((shifts) => {
+  //     const currentId = this.auth?.getAuthUser()?.uid;
+  //     const myShifts = shifts.filter(
+  //       (shift: any) => shift.author === currentId,
+  //     );
+  //     this.bestMonthStats = getBestMonthStats(myShifts);
+  //     this.updateChartData(myShifts);
+  //   });
+  // }
 
   updateChartData(shifts: any[]): void {
     const workplaceProfits = shifts.reduce((acc, shift) => {

@@ -22,6 +22,7 @@ export class DatabaseService {
   loggedUserUid = new BehaviorSubject<string>("");
   private areMyShiftsLoading = new BehaviorSubject<boolean>(false);
   private areAllUsersLoading = new BehaviorSubject<boolean>(false);
+  private myShifts = new BehaviorSubject<[]>([]);
 
   constructor(
     public firestore: Firestore,
@@ -41,43 +42,8 @@ export class DatabaseService {
     return this.areAllUsersLoading.asObservable();
   }
 
-  // shifts CRUD
-  updateShifts() {
-    return collectionChanges(query(collection(this.firestore, "shifts"))).pipe(
-      switchMap(async () => {
-        const val = await this.getShifts();
-        return val;
-      })
-    );
-  }
-
-  private async getShifts() {
-    this.areMyShiftsLoading.next(true);
-    try {
-      const user = this.auth.getAuthUser();
-      const userId = user?.uid || "";
-      if (!userId) throw new Error("User not logged");
-
-      let queryRef = query(
-        collection(this.firestore, "shifts"),
-        orderBy("startTime", "desc")
-      );
-      const docs = await getDocs(queryRef);
-      const shiftsList = [] as any;
-
-      docs.forEach((val: any) => {
-        shiftsList.push({
-          id: val.id,
-          ...val.data(),
-        });
-      });
-
-      return shiftsList;
-    } catch (error: any) {
-      throw new Error(error);
-    } finally {
-      this.areMyShiftsLoading.next(false);
-    }
+  getMyShiftsObsBackend() {
+    return this.areMyShiftsLoading.asObservable();
   }
 
   async addShift(shift: any) {
@@ -103,6 +69,34 @@ export class DatabaseService {
       });
     } catch (error: any) {
       throw new Error(error);
+    }
+  }
+
+  public async getShiftsBackend(): Promise<any[]> {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/shifts/get-user-shifts/`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      return data; // Assuming the server returns an array of shifts
+    } catch (error: any) {
+      console.log("eroare mica", error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
     }
   }
 

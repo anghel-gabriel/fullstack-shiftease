@@ -86,18 +86,18 @@ export class MyShiftsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.db.updateShifts().subscribe((shifts) => {
-      this.shifts = [...shifts]
-        .filter((shift: any) => shift.author === this.auth?.getAuthUser()?.uid)
-        .map((shift) => {
-          return {
-            ...shift,
-            startTime: new Date(shift.startTime),
-            endTime: new Date(shift.endTime),
-          };
-        });
-    });
-    this.db.getAreMyShiftsLoading().subscribe((val) => (this.isLoading = val));
+    this.loadUserShifts();
+  }
+
+  async loadUserShifts() {
+    try {
+      this.isLoading = true;
+      this.shifts = await this.db.getShiftsBackend();
+    } catch (error) {
+      console.error("Error loading shifts:", error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   // best month modal

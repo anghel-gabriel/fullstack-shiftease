@@ -6,7 +6,7 @@ const addShift = async (shiftData) => {
 
 // get shifts by user id
 const getUserShifts = async (userId) => {
-  return Shift.find({ startTime: "azi" });
+  return Shift.find({ author: userId });
 };
 
 const getShiftById = async (shiftId) => {
