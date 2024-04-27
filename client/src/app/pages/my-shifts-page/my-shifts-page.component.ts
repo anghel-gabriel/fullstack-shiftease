@@ -14,7 +14,7 @@ import { DatabaseService } from "src/app/services/database.service";
   styleUrls: ["./my-shifts-page.component.scss"],
   providers: [ConfirmationService, MessageService],
 })
-export class MyShiftsPageComponent implements OnInit {
+export class MyShiftsPageComponent {
   @ViewChild("dt") dt: Table | undefined;
   @ViewChild("op") overlayPanel!: OverlayPanel;
   // loading states
@@ -63,6 +63,8 @@ export class MyShiftsPageComponent implements OnInit {
     private auth: AuthenticationService,
     private toast: MessageService
   ) {
+    this.db.getMyShiftsObsBackend().subscribe((data) => (this.shifts = data));
+
     this.auth.getLoggedUser().subscribe((data) => {
       this.userPhotoURL = data?.photoURL || defaultPhotoURL;
       this.userFirstName = data?.firstName;
@@ -83,21 +85,6 @@ export class MyShiftsPageComponent implements OnInit {
       summary: "Success",
       detail: message,
     });
-  }
-
-  ngOnInit() {
-    this.loadUserShifts();
-  }
-
-  async loadUserShifts() {
-    try {
-      this.isLoading = true;
-      this.shifts = await this.db.getShiftsBackend();
-    } catch (error) {
-      console.error("Error loading shifts:", error);
-    } finally {
-      this.isLoading = false;
-    }
   }
 
   // best month modal

@@ -28,9 +28,12 @@ export class DatabaseService {
     public firestore: Firestore,
     private auth: AuthenticationService
   ) {
+    console.log("constructor1");
     this.auth
       .getLoggedUser()
       .subscribe((userData) => this.loggedUserUid.next(userData?.uid));
+
+    this.getShiftsBackend();
   }
 
   // loading states for data fetching
@@ -43,7 +46,7 @@ export class DatabaseService {
   }
 
   getMyShiftsObsBackend() {
-    return this.areMyShiftsLoading.asObservable();
+    return this.myShifts.asObservable();
   }
 
   async addShift(shift: any) {
@@ -72,8 +75,9 @@ export class DatabaseService {
     }
   }
 
-  public async getShiftsBackend(): Promise<any[]> {
+  public async getShiftsBackend() {
     try {
+      this.areMyShiftsLoading.next(true);
       const response = await fetch(
         `http://localhost:8080/api/shifts/get-user-shifts/`,
         {
@@ -90,13 +94,15 @@ export class DatabaseService {
       }
 
       const data = await response.json();
+      this.myShifts.next(data);
       console.log(data);
-      return data; // Assuming the server returns an array of shifts
     } catch (error: any) {
       console.log("eroare mica", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
+    } finally {
+      this.areMyShiftsLoading.next(false);
     }
   }
 
