@@ -56,7 +56,7 @@ export class ProfilePageComponent {
     private messageService: MessageService,
     private auth: AuthenticationService,
     private fileUpload: FileUploadService,
-    private database: DatabaseService,
+    private database: DatabaseService
   ) {
     this.isViewPortAtLeastMedium = window.innerWidth >= 640;
     this.auth.getLoggedUser().subscribe((data: any) => {
@@ -124,7 +124,7 @@ export class ProfilePageComponent {
       }
       if (this.firstName.length < 2 || this.lastName.length < 2) {
         this.showError(
-          "First name and last name must be at least 2 characters long",
+          "First name and last name must be at least 2 characters long"
         );
         return;
       }
@@ -133,25 +133,25 @@ export class ProfilePageComponent {
         !isUserAgeBetween6And130(new Date(this.birthDate))
       ) {
         this.showError(
-          "You must be between 18 and 90 years old in order to register",
+          "You must be between 18 and 90 years old in order to register"
         );
         return;
       }
 
       this.isLoading = true;
 
-      // check for username availability if there is a new username
-      if (this.username !== this.actualUsername) {
-        const isUsernameAvailable = await this.auth.isUsernameAvailable(
-          this.username,
-        );
-        if (!isUsernameAvailable) {
-          this.showError(
-            "The new username is not available. Please choose another one.",
-          );
-          return;
-        }
-      }
+      // // check for username availability if there is a new username
+      // if (this.username !== this.actualUsername) {
+      //   const isUsernameAvailable = await this.auth.isUsernameAvailable(
+      //     this.username,
+      //   );
+      //   if (!isUsernameAvailable) {
+      //     this.showError(
+      //       "The new username is not available. Please choose another one.",
+      //     );
+      //     return;
+      //   }
+      // }
 
       // update all shifts .authorFullName if firstName or lastName are changed
       let isFullNameChanged = false;
@@ -175,7 +175,7 @@ export class ProfilePageComponent {
         if (userId) {
           await this.database.updateShiftAuthorFullName(
             userId,
-            `${this.firstName} ${this.lastName}`,
+            `${this.firstName} ${this.lastName}`
           );
         }
       }
@@ -186,7 +186,7 @@ export class ProfilePageComponent {
       });
     } catch (error) {
       this.showError(
-        "An error has occurred while updating data. Please try again.",
+        "An error has occurred while updating data. Please try again."
       );
     } finally {
       this.isLoading = false;
@@ -199,7 +199,7 @@ export class ProfilePageComponent {
       try {
         const photoURL = await this.fileUpload.uploadFile(
           file,
-          `users/${file.name}`,
+          `users/${file.name}`
         );
         const userId = this.auth.getAuthUser()?.uid;
         if (userId) {
@@ -208,7 +208,7 @@ export class ProfilePageComponent {
         }
       } catch (error) {
         this.showError(
-          "An error has occured while updating profile picture. Please try again.",
+          "An error has occured while updating profile picture. Please try again."
         );
       } finally {
         this.isLoading = false;
@@ -229,11 +229,11 @@ export class ProfilePageComponent {
     } catch (error: any) {
       if (
         !error.message.includes(
-          "expected a child path but got a URL, use refFromURL instead",
+          "expected a child path but got a URL, use refFromURL instead"
         )
       )
         this.showError(
-          "An error has occured while removing profile picture. Please try again.",
+          "An error has occured while removing profile picture. Please try again."
         );
     } finally {
       this.isLoading = false;

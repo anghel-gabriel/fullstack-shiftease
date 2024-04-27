@@ -134,6 +134,7 @@ export class RegisterPageComponent {
         );
         return;
       }
+      this.activeIndex++;
     }
   }
 

@@ -29,12 +29,12 @@ export class ChangeEmailFormComponent {
         this.errorEvent.emit("Your email addresses must match.");
         return;
       }
-      const isEmailAddressAvailable = this.auth.isEmailAvailable(this.newEmail);
-      if (!isEmailAddressAvailable) {
-        this.errorEvent.emit(
-          "The new email address is unavailable. Please choose another one.",
-        );
-      }
+      // const isEmailAddressAvailable = this.auth.isEmailAvailable(this.newEmail);
+      // if (!isEmailAddressAvailable) {
+      //   this.errorEvent.emit(
+      //     "The new email address is unavailable. Please choose another one.",
+      //   );
+      // }
       this.closeForm.emit();
       await this.auth.changeEmail(this.newEmail);
       this.successEvent.emit("Email address changed successfully.");

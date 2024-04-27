@@ -10,8 +10,7 @@
         [options]="desktopSelectOptions"
         optionLabel="label"
         optionValue="value"
-        styleClass="hidden sm:block w-full"
-      ></p-selectButton>
+        styleClass="hidden sm:block w-full"></p-selectButton>
       <!-- mobile version of login way select -->
       <p-dropdown
         [(ngModel)]="loginWay"
@@ -20,8 +19,7 @@
         optionLabel="label"
         optionValue="value"
         placeholder="Select a sign in method"
-        styleClass="w-full"
-      ></p-dropdown>
+        styleClass="w-full"></p-dropdown>
     </div>
     <!-- email -->
     <div class="flex w-full justify-around">
@@ -29,12 +27,11 @@
         <span class="p-float-label w-full">
           <span class="p-float-label w-full">
             <input
-              [(ngModel)]="loginEmailOrUsername"
+              [(ngModel)]="usernameOrEmail"
               class="w-full"
               id="username"
               pInputText
-              type="text"
-            />
+              type="text" />
             <label for="email">{{
               loginWay === "username" ? "Username" : "Email address"
             }}</label>
@@ -52,8 +49,7 @@
               class="w-full"
               id="password"
               pInputText
-              type="password"
-            />
+              type="password" />
             <label for="email">Password</label>
           </span>
         </span>
@@ -67,8 +63,7 @@
       <p-button
         (onClick)="onSubmit()"
         icon="pi pi-arrow-circle-right"
-        label="Sign in"
-      ></p-button>
+        label="Sign in"></p-button>
     </div>
   </div>
 </p-card>

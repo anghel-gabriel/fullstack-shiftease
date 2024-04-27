@@ -61,20 +61,6 @@ export class AuthenticationService {
     return this.loggedUser.asObservable();
   }
 
-  async isUsernameAvailable(username: string): Promise<boolean> {
-    const usersRef = collection(this.firestore, "users");
-    const q = query(usersRef, where("username", "==", username));
-    const snapshot = await getDocs(q);
-    return snapshot.empty;
-  }
-
-  async isEmailAvailable(username: string): Promise<boolean> {
-    const usersRef = collection(this.firestore, "users");
-    const q = query(usersRef, where("email", "==", username));
-    const snapshot = await getDocs(q);
-    return snapshot.empty;
-  }
-
   // function used for logging with username
   async getEmailFromUsername(username: any) {
     const usersRef = collection(this.firestore, "users");
@@ -86,34 +72,6 @@ export class AuthenticationService {
       const userDoc = snapshot.docs[0];
       const userData = userDoc.data();
       return userData["email"];
-    }
-  }
-
-  async register(registerData: RegisterInterface) {
-    // create user in firebase auth
-    try {
-      const registerResponse = await createUserWithEmailAndPassword(
-        this.auth,
-        registerData.emailAddress,
-        registerData.password
-      );
-      const newUserData: UserInterface = {
-        uid: registerResponse.user.uid,
-        email: registerData.emailAddress,
-        username: registerData.username,
-        firstName: registerData.firstName,
-        lastName: registerData.lastName,
-        birthDate: registerData.birthDate,
-        gender: registerData.gender,
-        role: "user",
-        photoURL: defaultPhotoURL,
-      };
-      // create username in firestore
-      const newUserRef = doc(this.firestore, `users/${newUserData.uid}`);
-      await setDoc(newUserRef, newUserData);
-      this.loggedUser.next(newUserData);
-    } catch (error: any) {
-      throw new Error(error.message);
     }
   }
 
@@ -284,6 +242,36 @@ export class AuthenticationService {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
+  async loginBackend(
+    usernameOrEmail: string,
+    password: string,
+    loginMethod: string
+  ) {
+    console.log(usernameOrEmail);
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          usernameOrEmail: usernameOrEmail,
+          password: password,
+          loginMethod: loginMethod,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+
+      if (!response.ok) {
+        console.log(response);
+        const errorMsg = await response.text();
+        console.log(errorMsg);
+        throw new Error(errorMsg);
+      }
     } catch (error: any) {
       throw new Error(error);
     }

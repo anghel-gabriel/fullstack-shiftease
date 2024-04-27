@@ -1,7 +1,11 @@
 import User from "../models/userModel.js";
 
 const getUserByEmailAddress = async (emailAddress) => {
-  User.find({ emailAddress });
+  return await User.find({ emailAddress });
 };
 
-export default { getUserByEmailAddress };
+const getUserByUsername = async (username) => {
+  return await User.find({ username: username });
+};
+
+export default { getUserByEmailAddress, getUserByUsername };
