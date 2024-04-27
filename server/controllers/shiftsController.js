@@ -30,18 +30,22 @@ const getUserShifts = async (req, res, next) => {
 };
 
 // get all shifts
-const getAllShifts = async (req, res, next) => {
+const getAllShifts = async (req, res) => {
   try {
-    const foundShifts = await shiftsService.getAllShifts();
+    const foundShifts = await Shift.find({}).populate(
+      "author",
+      "firstName lastName username"
+    );
     res.status(200).send(foundShifts);
   } catch (error) {
-    res.status(400).send("An error has occured while getting shifts.");
+    res.status(400).send("An error has occurred while getting shifts.");
   }
 };
 
 // add new shift
 const addShift = async (req, res, next) => {
   const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
+  const userId = req.tokenData.id;
   // getting body data
   const shift = new Shift({
     startTime: startTime,
@@ -52,7 +56,14 @@ const addShift = async (req, res, next) => {
   });
   // adding shift to database
   try {
-    await shiftsService.addShift(shift);
+    await shiftsService.addShift({
+      startTime,
+      endTime,
+      hourlyWage,
+      workplace,
+      comments,
+      author: userId,
+    });
     res.status(200).send("Your shift has been added");
   } catch (error) {
     console.log("An error has occured while adding your shift.", error);
