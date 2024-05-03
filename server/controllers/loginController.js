@@ -50,6 +50,8 @@ const login = async (req, res) => {
           maxAge: 3333600000, // 1 hour
         });
 
+        console.log(user);
+
         res.status(200).send({
           status: 200,
           bearer: token,
@@ -60,6 +62,7 @@ const login = async (req, res) => {
             role: user.role,
             birthDate: user.birthDate,
             gender: user.gender.value,
+            userRole: user.userRole,
           },
         });
       } else {

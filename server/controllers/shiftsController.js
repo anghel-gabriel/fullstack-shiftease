@@ -18,6 +18,7 @@ const getShift = async (req, res, next) => {
 // get shifts by user id
 const getUserShifts = async (req, res, next) => {
   const id = req.tokenData.id;
+  console.log("reqtkndt", req.tokenData);
 
   try {
     const userId = ObjectId.createFromHexString(id);

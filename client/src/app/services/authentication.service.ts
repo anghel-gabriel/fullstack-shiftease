@@ -18,7 +18,6 @@ export class AuthenticationService {
   private authStateChecked = new BehaviorSubject<boolean>(false);
 
   constructor(public auth: Auth, public firestore: Firestore) {
-    this.initializeLoggedUser();
     this.auth.onAuthStateChanged(this.handleAuthStateChange.bind(this));
   }
 
@@ -227,20 +226,10 @@ export class AuthenticationService {
       } else {
         const res = await response.json();
         this.loggedUser.next(res.user);
+        console.log("obiect user", res.user);
       }
     } catch (error: any) {
       throw new Error(error);
-    }
-  }
-
-  private async initializeLoggedUser() {
-    const currentUser = this.auth.currentUser;
-    if (currentUser) {
-      const loggedUserRef = doc(this.firestore, `users/${currentUser.uid}`);
-      const loggedUserDoc = await getDoc(loggedUserRef);
-      this.loggedUser.next(loggedUserDoc.data() as UserInterface);
-    } else {
-      this.loggedUser.next(null);
     }
   }
 

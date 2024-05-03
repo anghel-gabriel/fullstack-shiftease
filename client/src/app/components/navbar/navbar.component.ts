@@ -16,12 +16,12 @@ export class NavbarComponent implements OnInit {
   constructor(
     private auth: AuthenticationService,
     private router: Router,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.auth.getLoggedUser().subscribe((user) => {
-      this.updateNavbarItems(!!user, user?.role);
+      this.updateNavbarItems(!!user, user?.userRole);
     });
   }
 

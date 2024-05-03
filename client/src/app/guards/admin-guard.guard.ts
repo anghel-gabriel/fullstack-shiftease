@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { Observable, from } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
-import { AuthenticationService } from '../services/authentication.service';
+import { Injectable } from "@angular/core";
+import { CanActivate, Router } from "@angular/router";
+import { Observable, from } from "rxjs";
+import { map, switchMap, take } from "rxjs/operators";
+import { AuthenticationService } from "../services/authentication.service";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AdminGuard implements CanActivate {
   constructor(
@@ -19,10 +19,10 @@ export class AdminGuard implements CanActivate {
         this.authService.getLoggedUser().pipe(
           take(1),
           map((user) => {
-            if (user && user.role === 'admin') {
+            if (user && user.userRole === "admin") {
               return true;
             } else {
-              this.router.navigate(['/error']);
+              this.router.navigate(["/error"]);
               return false;
             }
           })

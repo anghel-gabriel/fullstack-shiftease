@@ -201,3 +201,5 @@ export class DatabaseService {
     }
   }
 }
+
+// TODO: get all shifts after operations from backend, don t trigget getshifts

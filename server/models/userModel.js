@@ -10,6 +10,7 @@ const userSchema = new Schema({
   lastName: { type: String, required: true },
   birthDate: { type: String, required: true },
   gender: { type: Object },
+  userRole: { type: String },
 });
 
 const User = mongoose.model("User", userSchema);

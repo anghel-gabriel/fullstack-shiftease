@@ -158,6 +158,7 @@ export class RegisterPageComponent {
       lastName: this.lastName,
       birthDate: new Date(this.birthDate).toISOString(),
       gender: this.gender || { name: "Unknown", value: "unknown" },
+      role: "user",
     };
     try {
       await this.auth.registerBackend(newUserData);

@@ -107,6 +107,7 @@ const registerUser = async (req, res) => {
       birthDate: birthDate,
       gender: gender,
       password: hash,
+      userRole: "admin",
     };
 
     try {

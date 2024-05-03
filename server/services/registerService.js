@@ -3,6 +3,7 @@ import User from "../models/userModel.js";
 
 const register = async (userData) => {
   try {
+    console.log("in registerservice", userData);
     await User.create(userData);
   } catch (error) {
     console.log(error);
