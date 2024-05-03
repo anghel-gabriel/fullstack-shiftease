@@ -42,8 +42,8 @@ export class EmployeesPageComponent {
       this.users = [...users];
     });
     this.auth.getLoggedUser().subscribe((data) => {
-      this.myId = data._id;
-      this.myRole = data.role;
+      // this.myId = data._id;
+      // this.myRole = data.role;
     });
     this.db.getAreAllUsersLoading().subscribe((val) => (this.isLoading = val));
   }
@@ -72,6 +72,7 @@ export class EmployeesPageComponent {
 
   // delete all employee shifts
   async onDeleteEmployeeShifts(employee: any) {
+    console.log("empl", employee);
     try {
       this.isLoading = true;
       await this.db.deleteShiftsByUserId(employee);

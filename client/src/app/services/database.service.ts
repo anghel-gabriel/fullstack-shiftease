@@ -12,6 +12,7 @@ import {
 } from "@angular/fire/firestore";
 import { BehaviorSubject, switchMap } from "rxjs";
 import { AuthenticationService } from "./authentication.service";
+import { user } from "@angular/fire/auth";
 
 @Injectable({
   providedIn: "root",
@@ -29,7 +30,6 @@ export class DatabaseService {
     public firestore: Firestore,
     private auth: AuthenticationService
   ) {
-    console.log("constructor1");
     this.auth
       .getLoggedUser()
       .subscribe((userData) => this.loggedUserUid.next(userData?.uid));
@@ -100,9 +100,7 @@ export class DatabaseService {
 
       const data = await response.json();
       this.myShifts.next(data);
-      console.log(data);
     } catch (error: any) {
-      console.log("eroare mica", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
@@ -130,11 +128,8 @@ export class DatabaseService {
       }
 
       const data = await response.json();
-      console.log("data from all shifts", data);
       this.allShifts.next(data);
-      console.log(data);
     } catch (error: any) {
-      console.log("eroare mica", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
@@ -179,7 +174,6 @@ export class DatabaseService {
 
       this.getShiftsBackend();
     } catch (error: any) {
-      console.log("eroare mica", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
@@ -207,11 +201,8 @@ export class DatabaseService {
       }
 
       const data = await response.json();
-      console.log("data from all shifts", data);
       this.allUsers.next(data);
-      console.log(data);
     } catch (error: any) {
-      console.log("eroare mica", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
@@ -224,7 +215,7 @@ export class DatabaseService {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/admin/delete-user-shifts/${userId}/`,
+        `http://localhost:8080/api/admin/delete-user-shifts/66354e2bc18369f140213fec/`,
         {
           method: "DELETE",
           credentials: "include",
@@ -233,17 +224,10 @@ export class DatabaseService {
           },
         }
       );
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      const data = await response.json();
-      console.log("data from all shifts", data);
-      this.allShifts.next(data);
-      console.log(data);
     } catch (error: any) {
-      console.log("eroare mica", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );

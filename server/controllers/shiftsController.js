@@ -119,14 +119,12 @@ const deleteShift = async (req, res, next) => {
 
 // delete all shifts by user id
 const deleteUserShifts = async (req, res, next) => {
-  const { userId } = req.params;
+  const { id } = req.params;
   // adding shift to database
   try {
-    console.log(userId);
-    const result = await shiftsService.deleteUserShifts(userId);
-    if (!result || result.length === 0)
-      res.status(404).send(`Shift with id: ${id} not found.`);
-    else res.status(200).send("Your shift has been deleted.");
+    const userId = ObjectId.createFromHexString(id);
+    await shiftsService.deleteUserShifts(userId);
+    res.status(200).send("Your shift has been deleted.");
   } catch (error) {
     console.log("An error has occured while deleting your shift.", error);
   }
