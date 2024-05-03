@@ -15,30 +15,7 @@ import { defaultPhotoURL } from "../utils/defaultProfileImage";
 })
 export class AuthenticationService {
   private loggedUser = new BehaviorSubject<any>(null);
-  private authStateChecked = new BehaviorSubject<boolean>(false);
-
-  constructor(public auth: Auth, public firestore: Firestore) {
-    this.auth.onAuthStateChanged(this.handleAuthStateChange.bind(this));
-  }
-
-  waitForAuthStateChecked(): Promise<void> {
-    return new Promise((resolve) => {
-      if (this.authStateChecked.value) {
-        resolve();
-      } else {
-        const subscription = this.authStateChecked.subscribe((checked) => {
-          if (checked) {
-            subscription.unsubscribe();
-            resolve();
-          }
-        });
-      }
-    });
-  }
-
-  getAuthUser() {
-    return this.auth.currentUser;
-  }
+  constructor(public auth: Auth, public firestore: Firestore) {}
 
   getLoggedUser() {
     return this.loggedUser.asObservable();
@@ -57,8 +34,6 @@ export class AuthenticationService {
     try {
       await setDoc(userRef, { photoURL: photoURL }, { merge: true });
       const updatedUserDoc = await getDoc(userRef);
-      if (userId === this.getAuthUser()?.uid)
-        this.loggedUser.next(updatedUserDoc.data() as UserInterface);
     } catch (error: any) {
       throw new Error(error);
     }
@@ -72,8 +47,6 @@ export class AuthenticationService {
     try {
       await setDoc(userRef, { photoURL: defaultPhotoURL }, { merge: true });
       const updatedUserDoc = await getDoc(userRef);
-      if (userId === this.getAuthUser()?.uid)
-        this.loggedUser.next(updatedUserDoc.data() as UserInterface);
     } catch (error: any) {
       throw new Error(`Error removing user photo: ${error.message}`);
     }
@@ -85,8 +58,6 @@ export class AuthenticationService {
       const userRef = doc(this.firestore, `users/${userId}`);
       await setDoc(userRef, newData, { merge: true });
       const updatedUserDoc = await getDoc(userRef);
-      if (userId === this.getAuthUser()?.uid)
-        this.loggedUser.next(updatedUserDoc.data() as UserInterface);
     } catch (error: any) {
       throw new Error(error.message);
     }
@@ -231,16 +202,5 @@ export class AuthenticationService {
     } catch (error: any) {
       throw new Error(error);
     }
-  }
-
-  private async handleAuthStateChange(user: any) {
-    if (user) {
-      const loggedUserRef = doc(this.firestore, `users/${user.uid}`);
-      const loggedUserDoc = await getDoc(loggedUserRef);
-      this.loggedUser.next(loggedUserDoc.data() as UserInterface);
-    } else {
-      this.loggedUser.next(null);
-    }
-    this.authStateChecked.next(true);
   }
 }

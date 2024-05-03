@@ -18,10 +18,12 @@ const getShift = async (req, res, next) => {
 // get shifts by user id
 const getUserShifts = async (req, res, next) => {
   const id = req.tokenData.id;
+  console.log("idtkn", id);
   console.log("reqtkndt", req.tokenData);
 
   try {
     const userId = ObjectId.createFromHexString(id);
+    console.log("yserud", userId);
     const foundShifts = await shiftsService.getUserShifts(userId);
     res.status(200).send(foundShifts);
   } catch (error) {
@@ -37,7 +39,12 @@ const getAllShifts = async (req, res) => {
       "author",
       "firstName lastName username"
     );
-    res.status(200).send(foundShifts);
+    const transformedShifts = foundShifts.map((shift) => ({
+      ...shift.toJSON(),
+      authorFullName: `${shift.author.firstName} ${shift.author.lastName}`,
+      authorId: shift.author._id,
+    }));
+    res.status(200).send(transformedShifts);
   } catch (error) {
     res.status(400).send("An error has occurred while getting shifts.");
   }

@@ -171,7 +171,7 @@ export class ProfilePageComponent {
       }
       await this.auth.editProfile(this.uid, newData as any);
       if (isFullNameChanged) {
-        const userId = this.auth.getAuthUser()?.uid;
+        const userId = "vrajeala";
         if (userId) {
           await this.database.updateShiftAuthorFullName(
             userId,
@@ -201,7 +201,7 @@ export class ProfilePageComponent {
           file,
           `users/${file.name}`
         );
-        const userId = this.auth.getAuthUser()?.uid;
+        const userId = "vrajeala";
         if (userId) {
           await this.auth.updateUserPhoto(userId, photoURL);
           this.photoURL = photoURL;
@@ -220,7 +220,7 @@ export class ProfilePageComponent {
   async removePhoto() {
     this.isLoading = true;
     try {
-      const userId = this.auth.getAuthUser()?.uid;
+      const userId = "vrajeala";
       if (userId) {
         await this.auth.removeUserPhoto(userId);
         await this.fileUpload.deleteFile(this.photoURL);

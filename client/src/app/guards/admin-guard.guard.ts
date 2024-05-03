@@ -14,20 +14,22 @@ export class AdminGuard implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
-    return from(this.authService.waitForAuthStateChecked()).pipe(
-      switchMap(() =>
-        this.authService.getLoggedUser().pipe(
-          take(1),
-          map((user) => {
-            if (user && user.userRole === "admin") {
-              return true;
-            } else {
-              this.router.navigate(["/error"]);
-              return false;
-            }
-          })
-        )
-      )
-    );
+    // return from(this.authService.waitForAuthStateChecked()).pipe(
+    //   switchMap(() =>
+    //     this.authService.getLoggedUser().pipe(
+    //       take(1),
+    //       map((user) => {
+    //         if (user && user.userRole === "admin") {
+    //           return true;
+    //         } else {
+    //           this.router.navigate(["/error"]);
+    //           return false;
+    //         }
+    //       })
+    //     )
+    //   )
+    // );
+
+    return true;
   }
 }

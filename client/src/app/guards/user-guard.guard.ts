@@ -8,25 +8,23 @@ import { map, take, switchMap } from "rxjs/operators";
   providedIn: "root",
 })
 export class UserGuard implements CanActivate {
-  constructor(
-    private auth: AuthenticationService,
-    private router: Router,
-  ) {}
+  constructor(private auth: AuthenticationService, private router: Router) {}
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
-    return from(this.auth.waitForAuthStateChecked()).pipe(
-      switchMap(() =>
-        this.auth.getLoggedUser().pipe(
-          take(1),
-          map((user) => {
-            if (!user) {
-              this.router.navigate(["/sign-in"]);
-              return false;
-            }
-            return true;
-          }),
-        ),
-      ),
-    );
+    // return from(this.auth.waitForAuthStateChecked()).pipe(
+    //   switchMap(() =>
+    //     this.auth.getLoggedUser().pipe(
+    //       take(1),
+    //       map((user) => {
+    //         if (!user) {
+    //           this.router.navigate(["/sign-in"]);
+    //           return false;
+    //         }
+    //         return true;
+    //       })
+    //     )
+    //   )
+    // );
+    return true;
   }
 }

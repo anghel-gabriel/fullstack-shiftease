@@ -33,8 +33,18 @@ export class AllShiftsPageComponent {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private db: DatabaseService
-  ) {}
-
+  ) {
+    this.db.getAllShiftsObsBackend().subscribe((shifts) => {
+      this.shifts = [...shifts].map((shift) => {
+        return {
+          ...shift,
+          startTime: new Date(shift.startTime),
+          endTime: new Date(shift.endTime),
+        };
+      });
+    });
+    this.db.getAreMyShiftsLoading().subscribe((val) => (this.isLoading = val));
+  }
   showError(message: string) {
     this.messageService.add({
       severity: "error",
@@ -42,19 +52,6 @@ export class AllShiftsPageComponent {
       summary: "Error",
     });
   }
-
-  // ngOnInit() {
-  //   this.db.updateShifts().subscribe((shifts) => {
-  //     this.shifts = [...shifts].map((shift) => {
-  //       return {
-  //         ...shift,
-  //         startTime: new Date(shift.startTime),
-  //         endTime: new Date(shift.endTime),
-  //       };
-  //     });
-  //   });
-  //   this.db.getAreMyShiftsLoading().subscribe((val) => (this.isLoading = val));
-  // }
 
   // statistics modal
   onStatisticsClick() {

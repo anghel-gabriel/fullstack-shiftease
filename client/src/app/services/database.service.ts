@@ -19,8 +19,10 @@ import { AuthenticationService } from "./authentication.service";
 export class DatabaseService {
   loggedUserUid = new BehaviorSubject<string>("");
   private areMyShiftsLoading = new BehaviorSubject<boolean>(false);
+  private areAllShiftsLoading = new BehaviorSubject<boolean>(false);
   private areAllUsersLoading = new BehaviorSubject<boolean>(false);
   private myShifts = new BehaviorSubject<[]>([]);
+  private allShifts = new BehaviorSubject<any[]>([]);
 
   constructor(
     public firestore: Firestore,
@@ -32,11 +34,16 @@ export class DatabaseService {
       .subscribe((userData) => this.loggedUserUid.next(userData?.uid));
 
     this.getShiftsBackend();
+    this.getAllShiftsBackend();
   }
 
   // loading states for data fetching
   getAreMyShiftsLoading() {
     return this.areMyShiftsLoading.asObservable();
+  }
+
+  getAreAllShiftsLoading() {
+    return this.areAllShiftsLoading.asObservable();
   }
 
   getAreAllUsersLoading() {
@@ -45,6 +52,10 @@ export class DatabaseService {
 
   getMyShiftsObsBackend() {
     return this.myShifts.asObservable();
+  }
+
+  getAllShiftsObsBackend() {
+    return this.allShifts.asObservable();
   }
 
   async addShiftBackend(shift: any) {
@@ -91,6 +102,38 @@ export class DatabaseService {
       );
     } finally {
       this.areMyShiftsLoading.next(false);
+    }
+  }
+
+  public async getAllShiftsBackend() {
+    try {
+      this.areAllShiftsLoading.next(true);
+      const response = await fetch(
+        `http://localhost:8080/api/shifts/get-shifts/`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("data from all shifts", data);
+      this.allShifts.next(data);
+      console.log(data);
+    } catch (error: any) {
+      console.log("eroare mica", error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
+    } finally {
+      this.areAllShiftsLoading.next(false);
     }
   }
 
