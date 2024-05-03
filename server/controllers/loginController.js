@@ -30,24 +30,15 @@ const login = async (req, res) => {
         const user = foundUsers[0];
         const data = {
           id: user._id,
+          role: user.userRole,
         };
         const token = jwt.sign(data, process.env.SECRET_KEY, {
           expiresIn: "7d",
         });
 
         res.cookie("LOGIN_INFO", token, {
-          // can only be accessed by server requests
           httpOnly: true,
-          // path = where the cookie is valid
-          // path: "/",
-          // // domain = what domain the cookie is valid on
-          // domain: "localhost",
-          // // secure = only send cookie over https
-          // secure: false,
-          // // sameSite = only send cookie if the request is coming from the same origin
-          // sameSite: "lax", // "strict" | "lax" | "none" (secure must be true)
-          // // maxAge = how long the cookie is valid for in milliseconds
-          maxAge: 3333600000, // 1 hour
+          maxAge: 3333600000,
         });
 
         console.log(user);

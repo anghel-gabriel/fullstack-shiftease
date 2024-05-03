@@ -23,6 +23,7 @@ export class DatabaseService {
   private areAllUsersLoading = new BehaviorSubject<boolean>(false);
   private myShifts = new BehaviorSubject<[]>([]);
   private allShifts = new BehaviorSubject<any[]>([]);
+  private allUsers = new BehaviorSubject<any[]>([]);
 
   constructor(
     public firestore: Firestore,
@@ -35,11 +36,16 @@ export class DatabaseService {
 
     this.getShiftsBackend();
     this.getAllShiftsBackend();
+    this.getAllUsersBackend();
   }
 
   // loading states for data fetching
   getAreMyShiftsLoading() {
     return this.areMyShiftsLoading.asObservable();
+  }
+
+  getAllUsersObs() {
+    return this.allUsers.asObservable();
   }
 
   getAreAllShiftsLoading() {
@@ -182,51 +188,67 @@ export class DatabaseService {
     }
   }
 
-  // users CRUD
-  updateAllUsers() {
-    return collectionChanges(query(collection(this.firestore, "users"))).pipe(
-      switchMap(async () => {
-        const val = await this.getAllUsers();
-        return val;
-      })
-    );
-  }
-
-  private async getAllUsers() {
-    this.areAllUsersLoading.next(true);
+  private async getAllUsersBackend() {
     try {
-      let queryRef = query(collection(this.firestore, "users"));
-      const docs = await getDocs(queryRef);
-      const shiftsList = [] as any;
+      this.areAllUsersLoading.next(true);
+      const response = await fetch(
+        `http://localhost:8080/api/admin/get-all-users/`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
 
-      docs.forEach((val: any) => {
-        shiftsList.push({
-          id: val.id,
-          ...val.data(),
-        });
-      });
-      return shiftsList;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("data from all shifts", data);
+      this.allUsers.next(data);
+      console.log(data);
     } catch (error: any) {
-      throw new Error(error);
+      console.log("eroare mica", error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
     } finally {
       this.areAllUsersLoading.next(false);
     }
   }
 
   async deleteShiftsByUserId(userId: string) {
-    const shiftsRef = collection(this.firestore, "shifts");
-    const q = query(shiftsRef, where("author", "==", userId));
     try {
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach(async (document) => {
-        try {
-          await deleteDoc(doc(this.firestore, "shifts", document.id));
-        } catch (error: any) {
-          throw new Error(error);
+      this.areAllShiftsLoading.next(true);
+      const response = await fetch(
+        `http://localhost:8080/api/admin/delete-user-shifts/${userId}/`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
         }
-      });
-    } catch (error) {
-      throw new Error("Error deleting shifts:" + error);
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("data from all shifts", data);
+      this.allShifts.next(data);
+      console.log(data);
+    } catch (error: any) {
+      console.log("eroare mica", error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
+    } finally {
+      this.areAllShiftsLoading.next(false);
     }
   }
 

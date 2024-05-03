@@ -1,4 +1,5 @@
 import Shift from "../models/shiftModel.js";
+import User from "../models/userModel.js";
 import shiftsService from "../services/shiftsService.js";
 import { ObjectId } from "mongodb";
 
@@ -131,6 +132,16 @@ const deleteUserShifts = async (req, res, next) => {
   }
 };
 
+// get all users
+const getAllUsers = async (req, res) => {
+  try {
+    const foundUsers = await User.find({});
+    res.status(200).send(foundUsers);
+  } catch (error) {
+    res.status(400).send("An error has occurred while getting shifts.");
+  }
+};
+
 export default {
   addShift,
   deleteShift,
@@ -139,4 +150,5 @@ export default {
   getAllShifts,
   getUserShifts,
   deleteUserShifts,
+  getAllUsers,
 };

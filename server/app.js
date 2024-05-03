@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import authRouter from "./routes/authRouter.js";
 import shiftsRouter from "./routes/shiftsRouter.js";
+import adminRouter from "./routes/adminRouter.js";
 import dotenv from "dotenv";
 import authorizeMdw from "./middlewares/authorize.js";
 import cors from "cors";
@@ -24,8 +25,9 @@ app.use(express.json());
 app.use(express.urlencoded());
 dotenv.config({ path: "./config/.env" });
 
-app.use("/api/shifts", authorizeMdw.checkUserIsAuthenticated, shiftsRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/shifts", authorizeMdw.checkUserIsAuthenticated, shiftsRouter);
+app.use("/api/admin", authorizeMdw.checkUserIsAdmin, adminRouter);
 
 const connectFn = async () => {
   try {

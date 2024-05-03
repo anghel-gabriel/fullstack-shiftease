@@ -38,7 +38,7 @@ export class EmployeesPageComponent {
     private router: Router,
     private messageService: MessageService
   ) {
-    this.db.updateAllUsers().subscribe((users) => {
+    this.db.getAllUsersObs().subscribe((users) => {
       this.users = [...users];
     });
     this.auth.getLoggedUser().subscribe((data) => {
@@ -76,6 +76,7 @@ export class EmployeesPageComponent {
       this.isLoading = true;
       await this.db.deleteShiftsByUserId(employee);
     } catch (error: any) {
+      console.log(error);
       this.showError(
         "An error has occurred while removing data. Please try again."
       );
