@@ -95,7 +95,7 @@ export class AllShiftsPageComponent {
       icon: "pi pi-info-circle",
       acceptButtonStyleClass: "p-button-danger p-button-sm",
       accept: () => {
-        this.onDeleteConfirm(shift.id);
+        this.onDeleteConfirm(shift._id);
       },
       reject: () => {},
     });

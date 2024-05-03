@@ -69,6 +69,9 @@ export class MyShiftsPageComponent {
       this.userPhotoURL = data?.photoURL || defaultPhotoURL;
       this.userFirstName = data?.firstName;
     });
+    this.db
+      .getAreMyShiftsLoading()
+      .subscribe((value) => (this.isLoading = value));
   }
 
   showError(message: any) {
@@ -152,7 +155,7 @@ export class MyShiftsPageComponent {
       icon: "pi pi-info-circle",
       acceptButtonStyleClass: "p-button-danger p-button-sm",
       accept: () => {
-        this.onDeleteConfirm(shift.id);
+        this.onDeleteConfirm(shift._id);
       },
       reject: () => {},
     });
@@ -160,7 +163,7 @@ export class MyShiftsPageComponent {
   async onDeleteConfirm(shiftId: any) {
     this.loading = true;
     try {
-      await this.db.deleteShift(shiftId);
+      await this.db.deleteShiftBackend(shiftId);
     } catch (error: any) {
       this.showError(
         "An error has occured while deleting shift. Please try again."

@@ -70,6 +70,7 @@ export class DatabaseService {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
+      await this.getShiftsBackend();
     } catch (error: any) {
       throw new Error(error);
     }
@@ -115,12 +116,50 @@ export class DatabaseService {
     }
   }
 
+  async editShiftBackend(shiftId: string, newData: any) {
+    const shiftRef = doc(this.firestore, "shifts", shiftId);
+    try {
+      await updateDoc(shiftRef, newData);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
   async deleteShift(shiftId: string) {
     try {
       const shiftRef = doc(this.firestore, "shifts", shiftId);
       await deleteDoc(shiftRef);
     } catch (error: any) {
       throw new Error(error);
+    }
+  }
+
+  async deleteShiftBackend(shiftId: string) {
+    try {
+      this.areMyShiftsLoading.next(true);
+      const response = await fetch(
+        `http://localhost:8080/api/shifts/delete-shift/${shiftId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      this.getShiftsBackend();
+    } catch (error: any) {
+      console.log("eroare mica", error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
+    } finally {
+      this.areMyShiftsLoading.next(false);
     }
   }
 
