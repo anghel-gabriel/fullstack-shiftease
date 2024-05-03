@@ -117,9 +117,16 @@ export class DatabaseService {
   }
 
   async editShiftBackend(shiftId: string, newData: any) {
-    const shiftRef = doc(this.firestore, "shifts", shiftId);
     try {
-      await updateDoc(shiftRef, newData);
+      await fetch(`http://localhost:8080/api/shifts/update-shift/${shiftId}`, {
+        method: "PUT",
+        body: JSON.stringify(newData),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      await this.getShiftsBackend();
     } catch (error: any) {
       throw new Error(error);
     }

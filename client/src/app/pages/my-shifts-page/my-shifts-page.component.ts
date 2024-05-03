@@ -133,7 +133,7 @@ export class MyShiftsPageComponent {
     try {
       this.loading = true;
       this.editModalVisible = false;
-      await this.db.editShift(this.selectedShift.id, editedShift);
+      await this.db.editShiftBackend(this.selectedShift._id, editedShift);
     } catch (error: any) {
       this.showError(
         "An error has occured while updating shift. Please try again."
