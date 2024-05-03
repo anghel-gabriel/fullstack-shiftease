@@ -1,14 +1,12 @@
 import { Injectable } from "@angular/core";
 import {
   Firestore,
-  addDoc,
   collection,
   getDocs,
   doc,
   deleteDoc,
   updateDoc,
   collectionChanges,
-  orderBy,
   query,
   where,
 } from "@angular/fire/firestore";
@@ -47,17 +45,6 @@ export class DatabaseService {
 
   getMyShiftsObsBackend() {
     return this.myShifts.asObservable();
-  }
-
-  async addShift(shift: any) {
-    try {
-      await addDoc(collection(this.firestore, "shifts"), {
-        ...shift,
-        author: this.auth.getAuthUser()?.uid,
-      });
-    } catch (error: any) {
-      throw new Error(error);
-    }
   }
 
   async addShiftBackend(shift: any) {
@@ -107,15 +94,6 @@ export class DatabaseService {
     }
   }
 
-  async editShift(shiftId: string, newData: any) {
-    const shiftRef = doc(this.firestore, "shifts", shiftId);
-    try {
-      await updateDoc(shiftRef, newData);
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  }
-
   async editShiftBackend(shiftId: string, newData: any) {
     try {
       await fetch(`http://localhost:8080/api/shifts/update-shift/${shiftId}`, {
@@ -127,15 +105,6 @@ export class DatabaseService {
         },
       });
       await this.getShiftsBackend();
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  }
-
-  async deleteShift(shiftId: string) {
-    try {
-      const shiftRef = doc(this.firestore, "shifts", shiftId);
-      await deleteDoc(shiftRef);
     } catch (error: any) {
       throw new Error(error);
     }

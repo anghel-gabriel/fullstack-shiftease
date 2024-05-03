@@ -73,7 +73,7 @@ export class AllShiftsPageComponent {
     this.loading = true;
     this.editModalVisible = false;
     try {
-      await this.db.editShift(this.selectedShift.id, editedShift);
+      await this.db.editShiftBackend(this.selectedShift._id, editedShift);
     } catch (error: any) {
       this.showError(
         "An error has occured while updating shift. Please try again."
@@ -103,7 +103,7 @@ export class AllShiftsPageComponent {
   async onDeleteConfirm(shiftId: any) {
     this.loading = true;
     try {
-      await this.db.deleteShift(shiftId);
+      await this.db.deleteShiftBackend(shiftId);
     } catch (error: any) {
       this.showError(
         "An error occurred while updating shift. Please try again."

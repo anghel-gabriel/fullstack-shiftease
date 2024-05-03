@@ -1,26 +1,14 @@
 import { Injectable } from "@angular/core";
 import {
   Auth,
-  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-  signInWithEmailAndPassword,
   updateEmail,
   updatePassword,
 } from "@angular/fire/auth";
-import {
-  Firestore,
-  doc,
-  setDoc,
-  getDoc,
-  query,
-  collection,
-  where,
-  getDocs,
-} from "@angular/fire/firestore";
+import { Firestore, doc, setDoc, getDoc } from "@angular/fire/firestore";
 import { RegisterInterface, UserInterface } from "../utils/interfaces";
 import { BehaviorSubject, Observable } from "rxjs";
 import { defaultPhotoURL } from "../utils/defaultProfileImage";
-import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root",
@@ -29,11 +17,7 @@ export class AuthenticationService {
   private loggedUser = new BehaviorSubject<any>(null);
   private authStateChecked = new BehaviorSubject<boolean>(false);
 
-  constructor(
-    public auth: Auth,
-    public firestore: Firestore,
-    private http: HttpClient
-  ) {
+  constructor(public auth: Auth, public firestore: Firestore) {
     this.initializeLoggedUser();
     this.auth.onAuthStateChanged(this.handleAuthStateChange.bind(this));
   }
