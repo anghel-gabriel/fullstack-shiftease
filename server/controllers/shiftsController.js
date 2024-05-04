@@ -19,16 +19,11 @@ const getShift = async (req, res, next) => {
 // get shifts by user id
 const getUserShifts = async (req, res, next) => {
   const id = req.tokenData.id;
-  console.log("idtkn", id);
-  console.log("reqtkndt", req.tokenData);
-
   try {
     const userId = ObjectId.createFromHexString(id);
-    console.log("yserud", userId);
     const foundShifts = await shiftsService.getUserShifts(userId);
     res.status(200).send(foundShifts);
   } catch (error) {
-    console.log(error);
     res.status(400).send("An error has occured while getting user shifts.");
   }
 };
@@ -74,9 +69,7 @@ const addShift = async (req, res, next) => {
       author: userId,
     });
     res.status(200).send("Your shift has been added");
-  } catch (error) {
-    console.log("An error has occured while adding your shift.", error);
-  }
+  } catch (error) {}
 };
 
 // update shift by shift id
@@ -96,9 +89,7 @@ const updateShift = async (req, res, next) => {
     const shiftId = ObjectId.createFromHexString(id);
     await shiftsService.updateShiftById(shiftId, req.body);
     res.status(200).send("Your shift has been added");
-  } catch (error) {
-    console.log("An error has occured while adding your shift.", error);
-  }
+  } catch (error) {}
 };
 
 // delete shift by shift id
@@ -107,14 +98,11 @@ const deleteShift = async (req, res, next) => {
   // adding shift to database
   try {
     const shiftId = ObjectId.createFromHexString(id);
-    console.log(shiftId);
     const result = await shiftsService.deleteShift(shiftId);
     if (!result || result.length === 0)
       res.status(404).send(`Shift with id: ${id} not found.`);
     else res.status(200).send("Your shift has been deleted.");
-  } catch (error) {
-    console.log("An error has occured while deleting your shift.", error);
-  }
+  } catch (error) {}
 };
 
 // delete all shifts by user id
@@ -125,9 +113,7 @@ const deleteUserShifts = async (req, res, next) => {
     const userId = ObjectId.createFromHexString(id);
     await shiftsService.deleteUserShifts(userId);
     res.status(200).send("Your shift has been deleted.");
-  } catch (error) {
-    console.log("An error has occured while deleting your shift.", error);
-  }
+  } catch (error) {}
 };
 
 // get all users
@@ -140,6 +126,23 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// get all users
+const getUser = async (req, res) => {
+  const { id } = req.params;
+  const userId = ObjectId.createFromHexString(id);
+  try {
+    const userData = await User.findOne({ _id: userId });
+    res.status(200).send(userData);
+  } catch (error) {
+    res.status(400).send("An error has occurred while getting shifts.");
+  }
+};
+// try {//   const result = await shiftsService.deleteShift(shiftId);
+//   if (!result || result.length === 0)
+//     res.status(404).send(`Shift with id: ${id} not found.`);
+//   else res.status(200).send("Your shift has been deleted.");
+// } catch (error) {// }
+
 export default {
   addShift,
   deleteShift,
@@ -149,4 +152,5 @@ export default {
   getUserShifts,
   deleteUserShifts,
   getAllUsers,
+  getUser,
 };

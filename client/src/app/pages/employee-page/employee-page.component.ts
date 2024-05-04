@@ -49,8 +49,11 @@ export class EmployeePageComponent {
 
   async fillFieldsWithEmployeeData() {
     try {
-      const employeeData = await this.auth.getEmployeeData(this.employeeId);
-      if (!employeeData || !employeeData["uid"]) this.router.navigate(["/404"]);
+      const employeeData = await this.auth.getEmployeeDataBackend(
+        this.employeeId
+      );
+      console.log("empldata", employeeData);
+      if (!employeeData || !employeeData["_id"]) this.router.navigate(["/404"]);
       else {
         this.firstName = employeeData["firstName"];
         this.lastName = employeeData["lastName"];

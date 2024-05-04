@@ -13,7 +13,6 @@ const checkCredentials = async (req, res) => {
 
   // data validation
   if (!username || !emailAddress || !password || !confirmPassword) {
-    console.log("Every field must be completed.");
     return res.status(400).send("Please fill al the mandatory fields.");
   }
 
@@ -55,7 +54,6 @@ const checkCredentials = async (req, res) => {
         .send("This username is already in use. Please choose another one.");
     else res.status(200).send();
   } catch (error) {
-    console.log(error);
     res.status(500).send("An error has occured. Please try again.");
   }
 };
@@ -84,7 +82,6 @@ const registerUser = async (req, res) => {
     !birthDate ||
     !gender
   ) {
-    console.log("Every field must be completed.");
     return res.status(400).send("Please fill al the mandatory fields.");
   }
 
@@ -113,11 +110,9 @@ const registerUser = async (req, res) => {
     try {
       await registerService.register(userData);
       if (err) {
-        console.log(err);
         res.status(500).send("An error has occured while registering.");
       } else res.status(200).send("New user was added to database.");
     } catch (error) {
-      console.log(error);
       res.status(500).send("An error has occured while registering.");
     }
   });

@@ -8,7 +8,6 @@ import authorizeMdw from "./middlewares/authorize.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-console.log(process.env.PORT);
 const PORT = process.env.PORT ?? 8080;
 const app = express();
 

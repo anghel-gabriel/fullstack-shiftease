@@ -109,17 +109,27 @@ export class AuthenticationService {
     });
   }
 
-  async getEmployeeData(userId: string) {
-    const userRef = doc(this.firestore, "users", userId);
+  async getEmployeeDataBackend(userId: string) {
     try {
-      const docSnap = await getDoc(userRef);
-      if (docSnap.exists()) {
-        return docSnap.data();
-      } else {
-        return null;
-      }
+      const response = await fetch(
+        `http://localhost:8080/api/admin/get-user/${userId}/`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+
+      const data = await response.json();
+      return data;
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
     }
   }
 

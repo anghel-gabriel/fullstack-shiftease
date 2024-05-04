@@ -10,4 +10,6 @@ adminRouter.delete(
 
 adminRouter.get("/get-all-users", shiftsController.getAllUsers);
 
+adminRouter.get("/get-user/:id", shiftsController.getUser);
+
 export default adminRouter;

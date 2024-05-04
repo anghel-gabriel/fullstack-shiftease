@@ -41,8 +41,6 @@ const login = async (req, res) => {
           maxAge: 3333600000,
         });
 
-        console.log(user);
-
         res.status(200).send({
           status: 200,
           bearer: token,

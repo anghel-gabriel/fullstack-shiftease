@@ -22,9 +22,7 @@ const updateShiftById = async (shiftId, newData) => {
 };
 
 const deleteShift = async (shiftId) => {
-  console.log("Deleting shifts for user ID:", userId);
   const result = await Shift.deleteMany({ author: userId });
-  console.log(`${result.deletedCount} shifts were deleted.`);
   return result;
 };
 
