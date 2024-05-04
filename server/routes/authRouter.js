@@ -31,4 +31,9 @@ authRouter.get("/validate-session", async (req, res) => {
   }
 });
 
+authRouter.get("/log-out", async (req, res) => {
+  res.clearCookie("LOGIN_INFO");
+  res.status(200).send();
+});
+
 export default authRouter;

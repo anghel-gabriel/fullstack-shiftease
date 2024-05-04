@@ -27,11 +27,16 @@ export class AuthenticationService {
   }
 
   async logOut() {
-    try {
-      this.loggedUser.next(null);
-    } catch (error: any) {
-      throw new Error(error);
-    }
+    this.http
+      .get("http://localhost:8080/api/auth/log-out", {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.loggedUser.next(null);
+        },
+        error: (error) => console.log(error),
+      });
   }
 
   async updateUserPhoto(userId: string, photoURL: string) {
@@ -100,18 +105,6 @@ export class AuthenticationService {
 
   onUserStateChanged(fn: any) {
     return this.auth.onAuthStateChanged(fn);
-  }
-
-  getUserDataAtRefresh() {
-    this.auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const loggedUserRef = doc(this.firestore, `users/${user.uid}`);
-        const loggedUserDoc = await getDoc(loggedUserRef);
-        this.loggedUser.next(loggedUserDoc.data());
-      } else {
-        this.loggedUser.next(null);
-      }
-    });
   }
 
   async getEmployeeDataBackend(userId: string) {
