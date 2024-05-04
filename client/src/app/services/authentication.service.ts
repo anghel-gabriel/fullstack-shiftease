@@ -9,13 +9,18 @@ import { Firestore, doc, setDoc, getDoc } from "@angular/fire/firestore";
 import { RegisterInterface, UserInterface } from "../utils/interfaces";
 import { BehaviorSubject, Observable } from "rxjs";
 import { defaultPhotoURL } from "../utils/defaultProfileImage";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthenticationService {
   private loggedUser = new BehaviorSubject<any>(null);
-  constructor(public auth: Auth, public firestore: Firestore) {}
+  constructor(
+    public auth: Auth,
+    public firestore: Firestore,
+    public http: HttpClient
+  ) {}
 
   getLoggedUser() {
     return this.loggedUser.asObservable();
@@ -212,5 +217,19 @@ export class AuthenticationService {
     } catch (error: any) {
       throw new Error(error);
     }
+  }
+
+  async checkAuthentication() {
+    this.http
+      .get("http://localhost:8080/api/auth/validate-session", {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (res: any) => {
+          console.log(res);
+          this.loggedUser.next(res);
+        },
+        error: () => this.loggedUser.next(null),
+      });
   }
 }
