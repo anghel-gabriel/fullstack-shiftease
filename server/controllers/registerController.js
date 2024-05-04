@@ -8,10 +8,10 @@ import {
 } from "../utils/validation.js";
 
 const checkCredentials = async (req, res) => {
-  // getting body data (first step of the form)
+  // Getting request data
   const { username, emailAddress, password, confirmPassword } = req.body;
 
-  // data validation
+  // Validation
   if (!username || !emailAddress || !password || !confirmPassword) {
     return res.status(400).send("Please fill al the mandatory fields.");
   }
@@ -36,30 +36,30 @@ const checkCredentials = async (req, res) => {
     return res.status(400).send("Passwords do not match.");
   }
 
-  // checking if entered username or email address are already existing
+  // Check if username or email address is already existing
   try {
     const isEmailAddressAlreadyExisting =
       await registerService.checkEmailAddressExisting(emailAddress);
     const isUsernameAlreadyExisting =
       await registerService.checkUsernameExisting(username);
-    if (isEmailAddressAlreadyExisting)
+    if (isEmailAddressAlreadyExisting) {
       res
         .status(409)
         .send(
           "This email address is already in use. Please choose another one."
         );
-    else if (isUsernameAlreadyExisting)
+    } else if (isUsernameAlreadyExisting) {
       res
         .status(409)
         .send("This username is already in use. Please choose another one.");
-    else res.status(200).send();
+    } else res.status(200).send();
   } catch (error) {
     res.status(500).send("An error has occured. Please try again.");
   }
 };
 
 const registerUser = async (req, res) => {
-  // getting body data
+  // Getting request data
   const {
     username,
     emailAddress,
@@ -71,7 +71,7 @@ const registerUser = async (req, res) => {
     gender,
   } = req.body;
 
-  // data validation
+  // Validation
   if (
     !username ||
     !emailAddress ||

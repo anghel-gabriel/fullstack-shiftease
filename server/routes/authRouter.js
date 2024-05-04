@@ -10,7 +10,9 @@ const authRouter = express.Router();
 authRouter.post("/register", registerController.registerUser);
 authRouter.post("/login", loginController.login);
 
-// this is used to check if username and email address are already existing
+/* This endpoint is used for the first step of the register form. 
+It checks if username or email address is already existing, 
+if password respects the requested format and if the passwords. */
 authRouter.post("/credentials", registerController.checkCredentials);
 
 authRouter.get("/validate-session", async (req, res) => {

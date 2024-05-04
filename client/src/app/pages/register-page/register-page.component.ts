@@ -78,31 +78,11 @@ export class RegisterPageComponent {
     });
   }
 
-  // form validation on pressing next
   async handleNext() {
-    // first step validation
+    // First step validation
     if (this.activeIndex === 0) {
-      if (!isEmailValid(this.emailAddress)) {
-        this.showError("Please use a valid email address.");
-        return;
-      }
-      if (this.username.length < 6) {
-        this.showError("Your username must be at least 6 characters long.");
-        return;
-      }
-      if (!isUsernameValid(this.username)) {
-        this.showError("Your username must be alphanumeric.");
-        return;
-      }
-      if (!isPasswordValid(this.password)) {
-        this.showError("Your password must respect the requested format.");
-        return;
-      }
-      if (this.password !== this.confirmPassword) {
-        this.showError("Your passwords must match.");
-        return;
-      }
-      // check if username or email already existing
+      /* Check if input fields respect the requested format.
+      Check if username or email address is already existing. */
       try {
         this.isLoading = true;
         await this.auth.checkCredentialsBackend(
