@@ -153,7 +153,6 @@ export class RegisterPageComponent {
       lastName: this.lastName,
       birthDate: new Date(this.birthDate).toISOString(),
       gender: this.gender,
-      role: "user",
     };
     try {
       await this.auth.registerBackend(newUserData);
@@ -161,11 +160,11 @@ export class RegisterPageComponent {
         severity: "success",
         summary: "Success",
         detail:
-          "You have successfully registered. You will be redirected to Shifts page.",
+          "You have successfully registered. You will be redirected to login page.",
       });
       // Adding a delay before redirecting user to have enough time to read the notifications
       await new Promise((resolve) => setTimeout(resolve, 4000));
-      this.router.navigate(["/"]);
+      this.router.navigate(["/sign-in"]);
     } catch (error: any) {
       console.log(error);
       this.showError("Registration failed. Please contact an admin.");
