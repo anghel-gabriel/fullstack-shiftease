@@ -4,7 +4,6 @@
   [readonly]="false"
   [readonly]="true"
   styleClass="max-w-[920px] mx-auto" />
-
 <!-- 1. CREDENTIALS -->
 @if (currentStep === 0) {
 <p-card styleClass="max-w-[920px] mt-[60px] mx-auto">
@@ -96,7 +95,6 @@
   </div>
 </p-card>
 }
-
 <!-- 2. PERSONAL INFO -->
 @if (currentStep === 1) {
 <p-card *ngIf="currentStep === 1" styleClass="max-w-[920px] my-[60px] mx-auto">
@@ -178,7 +176,6 @@
   </div>
 </p-card>
 }
-
 <!-- 3. CONFIRM REGISTER DATA -->
 @if (currentStep === 2) {
 <p-card *ngIf="currentStep === 2" styleClass="max-w-[920px] my-[60px] mx-auto">
@@ -291,7 +288,6 @@
   </div>
 </p-card>
 }
-
 <!-- Already have an account -->
 @if (currentStep === 0) {
 <p class="mb-[60px] p-4 text-center text-indigo-700">
@@ -301,11 +297,9 @@
   >.
 </p>
 }
-
 <!-- Loading spinner -->
 @if (isLoading) {
 <app-spinner></app-spinner>
 }
-
 <!-- Toast notification -->
 <p-toast></p-toast>

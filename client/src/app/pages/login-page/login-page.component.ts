@@ -3,6 +3,17 @@ import { AuthenticationService } from "../../services/authentication.service";
 import { MessageService } from "primeng/api";
 import { Router } from "@angular/router";
 
+interface ILoginMethodDesktopOptions {
+  label: string;
+  value: string;
+  disabled: boolean;
+}
+
+interface ILoginMethodMobileOptions {
+  label: string;
+  value: string;
+}
+
 @Component({
   selector: "app-login-page",
   templateUrl: "./login-page.component.html",
@@ -10,13 +21,15 @@ import { Router } from "@angular/router";
   providers: [MessageService],
 })
 export class LoginPageComponent {
-  isLoading = false;
-  usernameOrEmail = "";
-  password = "";
-  loginWay = "email";
+  // Username or email address (depending on login method)
+  usernameOrEmail: string = "";
+  password: string = "";
+  loginMethod: "email" | "username" = "email";
+  // Loading state
+  isLoading: boolean = false;
 
-  // login way toggle for desktop
-  desktopSelectOptions: any[] = [
+  // Login method toggle for desktop
+  desktopSelectOptions: ILoginMethodDesktopOptions[] = [
     {
       label: "Sign in with email",
       value: "email",
@@ -28,8 +41,9 @@ export class LoginPageComponent {
       disabled: false,
     },
   ];
-  // login way toggle for mobile
-  mobileSelectOptions = [
+
+  // Login method toggle for mobile
+  mobileSelectOptions: ILoginMethodMobileOptions[] = [
     { label: "Sign in with email", value: "email" },
     { label: "Sign in with username", value: "username" },
   ];
@@ -40,19 +54,20 @@ export class LoginPageComponent {
     private router: Router
   ) {}
 
+  // Prevent user selecting/unselecting both login ways on desktop viewport
   onDesktopSelectChange(): void {
-    // prevent unselecting both login ways
     const isAlreadySelected = this.desktopSelectOptions.find(
-      (option) => option.value === this.loginWay && option.disabled
+      (option) => option.value === this.loginMethod && option.disabled
     );
     if (isAlreadySelected) return;
-    // update the options to disable the selected one
+    // Update the options to disable the selected one
     this.desktopSelectOptions = this.desktopSelectOptions.map((option) => ({
       ...option,
-      disabled: option.value === this.loginWay,
+      disabled: option.value === this.loginMethod,
     }));
   }
 
+  // Show error toast function
   showError(message: string) {
     this.toast.add({
       severity: "error",
@@ -61,20 +76,19 @@ export class LoginPageComponent {
     });
   }
 
+  // Login function
   async onSubmit() {
     if (!this.password || !this.usernameOrEmail) {
       this.showError("Please enter your login credentials.");
       return;
     }
-
     try {
       this.isLoading = true;
       await this.auth.loginBackend(
         this.usernameOrEmail,
         this.password,
-        this.loginWay
+        this.loginMethod
       );
-
       this.router.navigate(["/"]);
     } catch (error: any) {
       this.showError(error.message.split(":")[1].trim());

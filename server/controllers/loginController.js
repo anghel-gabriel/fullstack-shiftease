@@ -3,31 +3,30 @@ import jwt from "jsonwebtoken";
 import loginService from "../services/loginService.js";
 
 const login = async (req, res) => {
-  // getting body data
+  // Getting request data
   const { usernameOrEmail, password, loginMethod } = req.body;
 
-  if (!usernameOrEmail || !password || !loginMethod)
-    return res.status(400).send("Bad request.");
-
+  if (!usernameOrEmail || !password || !loginMethod) {
+    return res.status(400).send("Please fill al the mandatory fields.");
+  }
   try {
-    // looking for the user in database
-    let foundUsers;
+    // Looking for the user in database
+    let foundUser;
     if (loginMethod === "email")
-      foundUsers = await loginService.getUserByEmailAddress(usernameOrEmail);
+      foundUser = await loginService.getUserByEmailAddress(usernameOrEmail);
     else if (loginMethod === "username")
-      foundUsers = await loginService.getUserByUsername(usernameOrEmail);
-    // TODO: choose another message
-    else res.status(400).send("Please select a login method.");
+      foundUser = await loginService.getUserByUsername(usernameOrEmail);
+    else res.status(400).send("Please select a valid login method.");
 
-    if (!foundUsers || !foundUsers.length)
+    if (!foundUser)
       return res
         .status(400)
         .send(`Account with entered ${loginMethod} doesn't exist.`);
-    const userPassword = foundUsers[0].password;
-    // checking if entered password is equal to 'decrypted' hash password from database
+    const userPassword = foundUser.password;
+    // Checking if entered password is equal to 'decrypted' hash password from database
     bcrypt.compare(password, userPassword, (err, result) => {
       if (result) {
-        const user = foundUsers[0];
+        const user = foundUser;
         const data = {
           id: user._id,
           role: user.userRole,
@@ -35,12 +34,12 @@ const login = async (req, res) => {
         const token = jwt.sign(data, process.env.SECRET_KEY, {
           expiresIn: "7d",
         });
-
+        // Setting the cookie
         res.cookie("LOGIN_INFO", token, {
           httpOnly: true,
-          maxAge: 3333600000,
+          maxAge: 604800000, // The equivalent of 7 days
         });
-
+        // Returning user's data
         res.status(200).send({
           status: 200,
           bearer: token,

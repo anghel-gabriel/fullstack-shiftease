@@ -65,6 +65,7 @@ export class RegisterPageComponent {
     this.isViewPortAtLeastMedium = window.innerWidth >= 640;
   }
 
+  // Triggering previous step
   handlePrevious() {
     if (this.currentStep !== 0) this.currentStep--;
   }
@@ -137,6 +138,7 @@ export class RegisterPageComponent {
     }
   }
 
+  // Register function
   async onSubmit() {
     this.messageService.add({
       severity: "warn",

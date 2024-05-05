@@ -6,14 +6,14 @@
       <!-- desktop version of login way select -->
       <p-selectButton
         (onChange)="onDesktopSelectChange()"
-        [(ngModel)]="loginWay"
+        [(ngModel)]="loginMethod"
         [options]="desktopSelectOptions"
         optionLabel="label"
         optionValue="value"
         styleClass="hidden sm:block w-full"></p-selectButton>
       <!-- mobile version of login way select -->
       <p-dropdown
-        [(ngModel)]="loginWay"
+        [(ngModel)]="loginMethod"
         [options]="mobileSelectOptions"
         class="sm:hidden"
         optionLabel="label"
@@ -33,7 +33,7 @@
               pInputText
               type="text" />
             <label for="email">{{
-              loginWay === "username" ? "Username" : "Email address"
+              loginMethod === "username" ? "Username" : "Email address"
             }}</label>
           </span>
         </span>
