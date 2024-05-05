@@ -72,6 +72,7 @@ const registerUser = async (req, res) => {
   } = req.body;
 
   // Validation
+  // TODO: avoid repetition
   if (
     !username ||
     !emailAddress ||
@@ -83,6 +84,26 @@ const registerUser = async (req, res) => {
     !gender
   ) {
     return res.status(400).send("Please fill al the mandatory fields.");
+  }
+
+  if (username.length < 6)
+    return res.status(400).send("Username must be at least 6 characters long.");
+
+  if (!isUsernameValid(username))
+    return res.status(400).send("Username must be alphanumeric.");
+
+  if (!isEmailValid(emailAddress))
+    return res
+      .status(400)
+      .send("The email address doesn't respect the requested format.");
+
+  if (!isPasswordValid(password))
+    return res
+      .status(400)
+      .send("Password do not respect the requested format.");
+
+  if (password !== confirmPassword) {
+    return res.status(400).send("Passwords do not match.");
   }
 
   if (firstName.length < 2 || lastName.length < 2)
