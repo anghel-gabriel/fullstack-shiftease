@@ -121,7 +121,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// get all users
+// Get all users
 const getUser = async (req, res) => {
   const { id } = req.params;
   const userId = ObjectId.createFromHexString(id);

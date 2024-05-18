@@ -29,18 +29,13 @@ export class ChangeEmailFormComponent {
         this.errorEvent.emit("Your email addresses must match.");
         return;
       }
-      // const isEmailAddressAvailable = this.auth.isEmailAvailable(this.newEmail);
-      // if (!isEmailAddressAvailable) {
-      //   this.errorEvent.emit(
-      //     "The new email address is unavailable. Please choose another one.",
-      //   );
-      // }
       this.closeForm.emit();
-      await this.auth.changeEmail(this.newEmail);
+      await this.auth.changeEmailBackend(this.newEmail);
       this.successEvent.emit("Email address changed successfully.");
     } catch (error: any) {
+      console.log(error);
       this.errorEvent.emit(
-        "An error has occured while changing email address. Please reauthenticate and try again.",
+        "An error has occured while changing email address. Please reauthenticate and try again."
       );
     } finally {
       this.setLoadingSpinner.emit(false);

@@ -15,6 +15,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.primengConfig.ripple = true;
-    this.authService.checkAuthentication();
+    this.authService.checkAuthenticationBackend();
   }
 }

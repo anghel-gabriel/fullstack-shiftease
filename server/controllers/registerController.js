@@ -168,10 +168,10 @@ const registerUser = async (req, res) => {
           .status(409)
           .send("This username is already in use. Please choose another one.");
       }
-      await registerService.register(userData);
       if (err) {
         res.status(500).send("An error has occured while registering.");
       } else {
+        await registerService.register(userData);
         res.status(200).send("New user was added to database.");
       }
     } catch (error) {

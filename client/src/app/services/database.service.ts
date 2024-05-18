@@ -1,18 +1,6 @@
 import { Injectable } from "@angular/core";
-import {
-  Firestore,
-  collection,
-  getDocs,
-  doc,
-  deleteDoc,
-  updateDoc,
-  collectionChanges,
-  query,
-  where,
-} from "@angular/fire/firestore";
-import { BehaviorSubject, switchMap } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { AuthenticationService } from "./authentication.service";
-import { user } from "@angular/fire/auth";
 
 @Injectable({
   providedIn: "root",
@@ -26,20 +14,15 @@ export class DatabaseService {
   private allShifts = new BehaviorSubject<any[]>([]);
   private allUsers = new BehaviorSubject<any[]>([]);
 
-  constructor(
-    public firestore: Firestore,
-    private auth: AuthenticationService
-  ) {
+  constructor(private auth: AuthenticationService) {
     this.auth
       .getLoggedUser()
       .subscribe((userData) => this.loggedUserUid.next(userData?.uid));
-
     this.getShiftsBackend();
     this.getAllShiftsBackend();
     this.getAllUsersBackend();
   }
 
-  // loading states for data fetching
   getAreMyShiftsLoading() {
     return this.areMyShiftsLoading.asObservable();
   }

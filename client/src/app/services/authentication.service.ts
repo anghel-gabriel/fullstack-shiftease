@@ -26,19 +26,6 @@ export class AuthenticationService {
     return this.loggedUser.asObservable();
   }
 
-  async logOut() {
-    this.http
-      .get("http://localhost:8080/api/auth/log-out", {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res: any) => {
-          this.loggedUser.next(null);
-        },
-        error: (error) => console.log(error),
-      });
-  }
-
   async updateUserPhoto(userId: string, photoURL: string) {
     const userRef = doc(this.firestore, `users/${userId}`);
     try {
@@ -73,25 +60,53 @@ export class AuthenticationService {
     }
   }
 
-  async changeEmail(newEmail: string) {
+  async changeEmailBackend(newEmail: string) {
     try {
-      const user = this.auth.currentUser;
-      if (user) {
-        await updateEmail(user, newEmail);
-        const userRef = doc(this.firestore, `users/${user.uid}`);
-        await setDoc(userRef, { email: newEmail }, { merge: true });
-      }
+      const response = await fetch(
+        `http://localhost:8080/api/profile/change-email/`,
+        {
+          method: "PUT",
+          credentials: "include",
+          body: JSON.stringify({
+            emailAddress: newEmail,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
-      throw new Error(error);
+      console.log("error123", error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
     }
   }
 
-  async changePassword(newPassword: string) {
+  async changePasswordBackend(newPassword: string) {
     try {
-      if (this.auth.currentUser)
-        await updatePassword(this.auth.currentUser, newPassword);
+      const response = await fetch(
+        `http://localhost:8080/api/profile/change-password/`,
+        {
+          method: "PUT",
+          credentials: "include",
+          body: JSON.stringify({
+            password: newPassword,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
-      throw new Error(error);
+      console.log("error123", error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
     }
   }
 
@@ -101,10 +116,6 @@ export class AuthenticationService {
     } catch (error: any) {
       throw new Error(error);
     }
-  }
-
-  onUserStateChanged(fn: any) {
-    return this.auth.onAuthStateChanged(fn);
   }
 
   async getEmployeeDataBackend(userId: string) {
@@ -212,7 +223,7 @@ export class AuthenticationService {
     }
   }
 
-  async checkAuthentication() {
+  async checkAuthenticationBackend() {
     this.http
       .get("http://localhost:8080/api/auth/validate-session", {
         withCredentials: true,
@@ -223,6 +234,19 @@ export class AuthenticationService {
           this.loggedUser.next(res);
         },
         error: () => this.loggedUser.next(null),
+      });
+  }
+
+  async logOutBackend() {
+    this.http
+      .get("http://localhost:8080/api/auth/log-out", {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.loggedUser.next(null);
+        },
+        error: (error) => console.log(error),
       });
   }
 }

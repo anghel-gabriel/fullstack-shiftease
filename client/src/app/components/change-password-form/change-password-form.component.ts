@@ -29,11 +29,11 @@ export class ChangePasswordFormComponent {
         return;
       }
       this.closeForm.emit();
-      await this.auth.changePassword(this.newPassword);
+      await this.auth.changePasswordBackend(this.newPassword);
       this.successEvent.emit("Password changed succesfully.");
     } catch (error) {
       this.errorEvent.emit(
-        "An error has occured while changing your password. Please reauthenticate and try again.",
+        "An error has occured while changing your password. Please reauthenticate and try again."
       );
     } finally {
       this.setLoadingSpinner.emit(false);
