@@ -1,10 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-  Auth,
-  sendPasswordResetEmail,
-  updateEmail,
-  updatePassword,
-} from "@angular/fire/auth";
+import { Auth, sendPasswordResetEmail } from "@angular/fire/auth";
 import { Firestore, doc, setDoc, getDoc } from "@angular/fire/firestore";
 import { RegisterInterface, UserInterface } from "../utils/interfaces";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -49,14 +44,26 @@ export class AuthenticationService {
     }
   }
 
-  async editProfile(userId: string, newData: UserInterface) {
+  async editProfileBackend(newData: UserInterface) {
     try {
-      if (!userId) return;
-      const userRef = doc(this.firestore, `users/${userId}`);
-      await setDoc(userRef, newData, { merge: true });
-      const updatedUserDoc = await getDoc(userRef);
+      const response = await fetch(
+        `http://localhost:8080/api/profile/update-profile/`,
+        {
+          method: "PUT",
+          credentials: "include",
+          body: JSON.stringify(newData),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
-      throw new Error(error.message);
+      console.log("error123", error);
+      throw new Error(
+        `Failed to fetch shifts: ${error.message || error.toString()}`
+      );
     }
   }
 
@@ -88,7 +95,7 @@ export class AuthenticationService {
   async changePasswordBackend(newPassword: string) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/profile/change-password/`,
+        `http://localhost:8080/api/profile/change-email/`,
         {
           method: "PUT",
           credentials: "include",

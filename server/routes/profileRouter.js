@@ -9,4 +9,7 @@ profileRouter.put("/change-email", profileController.changeEmailAddress);
 // This endpoint is used by users to change their own email address
 profileRouter.put("/change-password", profileController.changePassword);
 
+// This endpoint is used by users to update their own profile data
+profileRouter.put("/update-profile", profileController.updateProfile);
+
 export default profileRouter;

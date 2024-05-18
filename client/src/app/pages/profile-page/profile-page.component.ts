@@ -162,7 +162,7 @@ export class ProfilePageComponent {
         birthDate: this.birthDate.toISOString(),
         gender: this.gender,
       };
-      await this.auth.editProfile(this.uid, newData as any);
+      await this.auth.editProfileBackend(newData as any);
       this.messageService.add({
         severity: "success",
         detail: "Changes saved succesfully",

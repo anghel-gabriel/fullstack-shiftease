@@ -54,4 +54,31 @@ const changePassword = async (req, res) => {
   });
 };
 
-export default { changeEmailAddress, changePassword };
+// This function is used by users to change their own profile data
+const updateProfile = async (req, res) => {
+  const { username, firstName, lastName, birthDate, gender } = req.body;
+  const userId = req.tokenData.id;
+  try {
+    const isUsernameAlreadyExisting =
+      await registerService.checkUsernameExisting(username);
+
+    if (isUsernameAlreadyExisting) {
+      return res
+        .status(409)
+        .send("This username is already in use. Please choose another one.");
+    }
+    await profileService.updateProfile(userId, {
+      username,
+      firstName,
+      lastName,
+      birthDate,
+      gender,
+    });
+    res.status(200).send();
+  } catch (error) {
+    console.log(error);
+    // TODO: handle error
+  }
+};
+
+export default { changeEmailAddress, changePassword, updateProfile };

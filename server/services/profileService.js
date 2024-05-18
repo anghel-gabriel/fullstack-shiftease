@@ -21,4 +21,13 @@ const changePassword = async (userId, newPassword) => {
   }
 };
 
-export default { changeEmailAddress, changePassword };
+const updateProfile = async (userId, newData) => {
+  try {
+    await User.updateOne({ _id: userId }, { $set: newData });
+    console.log("Email address updated successfully");
+  } catch (error) {
+    console.error("Error updating email address:", error);
+  }
+};
+
+export default { changeEmailAddress, changePassword, updateProfile };

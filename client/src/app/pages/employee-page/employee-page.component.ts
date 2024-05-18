@@ -180,7 +180,7 @@ export class EmployeePageComponent {
       ) {
         isFullNameChanged = true;
       }
-      await this.auth.editProfile(this.employeeId, newData as any);
+      // await this.auth.editProfile(this.employeeId, newData as any);
       this.showSuccess("Changes saved succesfully");
     } catch (error) {
       this.showError(
