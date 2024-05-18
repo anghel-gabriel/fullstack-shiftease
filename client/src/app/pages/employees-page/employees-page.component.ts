@@ -75,7 +75,7 @@ export class EmployeesPageComponent {
     console.log("empl", employee);
     try {
       this.isLoading = true;
-      await this.db.deleteShiftsByUserId(employee);
+      await this.db.deleteShiftsByUserIdBackend(employee);
     } catch (error: any) {
       console.log(error);
       this.showError(

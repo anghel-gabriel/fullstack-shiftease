@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="74f74f30-73e1-49bd-9ce3-450fbe6236aa" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/client/.angular/cache/17.0.10/angular-webpack/ca2303f316403ecf212f387fa3a099d7144c459f/0.pack" beforeDir="false" afterPath="$PROJECT_DIR$/client/.angular/cache/17.0.10/angular-webpack/ca2303f316403ecf212f387fa3a099d7144c459f/0.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/.angular/cache/17.0.10/angular-webpack/ca2303f316403ecf212f387fa3a099d7144c459f/index.pack" beforeDir="false" afterPath="$PROJECT_DIR$/client/.angular/cache/17.0.10/angular-webpack/ca2303f316403ecf212f387fa3a099d7144c459f/index.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/.angular/cache/17.0.10/angular-webpack/ca2303f316403ecf212f387fa3a099d7144c459f/index.pack.old" beforeDir="false" afterPath="$PROJECT_DIR$/client/.angular/cache/17.0.10/angular-webpack/ca2303f316403ecf212f387fa3a099d7144c459f/index.pack.old" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/components/add-form/add-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/components/add-form/add-form.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/components/add-form/add-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/components/add-form/add-form.component.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "anghel-gabriel"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/anghel-gabriel/Fullstack-ShiftEase.git",
+    "accountId": "e635d8cb-ee42-490e-b187-cb45ff2e5e08"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2gXmi3UytoxQx5SEzOWZ8xvLuDi" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-2e7d6887c066-JavaScript-WS-241.15989.47" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="74f74f30-73e1-49bd-9ce3-450fbe6236aa" name="Changes" comment="" />
+      <created>1715852420133</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1715852420133</updated>
+      <workItem from="1715852421418" duration="45000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

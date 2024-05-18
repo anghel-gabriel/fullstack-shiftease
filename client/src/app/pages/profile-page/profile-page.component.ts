@@ -154,7 +154,6 @@ export class ProfilePageComponent {
       // }
 
       // update all shifts .authorFullName if firstName or lastName are changed
-      let isFullNameChanged = false;
       const newData = {
         email: this.email,
         username: this.username,
@@ -163,22 +162,7 @@ export class ProfilePageComponent {
         birthDate: this.birthDate.toISOString(),
         gender: this.gender,
       };
-      if (
-        newData.firstName !== this.actualFirstName ||
-        newData.lastName !== this.actualLastName
-      ) {
-        isFullNameChanged = true;
-      }
       await this.auth.editProfile(this.uid, newData as any);
-      if (isFullNameChanged) {
-        const userId = "vrajeala";
-        if (userId) {
-          await this.database.updateShiftAuthorFullName(
-            userId,
-            `${this.firstName} ${this.lastName}`
-          );
-        }
-      }
       this.messageService.add({
         severity: "success",
         detail: "Changes saved succesfully",

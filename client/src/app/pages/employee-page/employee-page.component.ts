@@ -181,14 +181,6 @@ export class EmployeePageComponent {
         isFullNameChanged = true;
       }
       await this.auth.editProfile(this.employeeId, newData as any);
-      if (isFullNameChanged) {
-        if (this.employeeId) {
-          await this.database.updateShiftAuthorFullName(
-            this.employeeId,
-            `${this.firstName} ${this.lastName}`
-          );
-        }
-      }
       this.showSuccess("Changes saved succesfully");
     } catch (error) {
       this.showError(

@@ -174,6 +174,7 @@ export class DatabaseService {
 
       this.getShiftsBackend();
     } catch (error: any) {
+      console.log(error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
@@ -211,11 +212,11 @@ export class DatabaseService {
     }
   }
 
-  async deleteShiftsByUserId(userId: string) {
+  async deleteShiftsByUserIdBackend(userId: string) {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/admin/delete-user-shifts/66354e2bc18369f140213fec/`,
+        `http://localhost:8080/api/admin/delete-user-shifts/${userId}/`,
         {
           method: "DELETE",
           credentials: "include",
@@ -233,20 +234,6 @@ export class DatabaseService {
       );
     } finally {
       this.areAllShiftsLoading.next(false);
-    }
-  }
-
-  async updateShiftAuthorFullName(userId: string, newFullName: string) {
-    const shiftsRef = collection(this.firestore, "shifts");
-    const q = query(shiftsRef, where("author", "==", userId));
-    try {
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach(async (doc) => {
-        const shiftRef = doc.ref;
-        await updateDoc(shiftRef, { authorFullName: newFullName });
-      });
-    } catch (error: any) {
-      throw new Error(`Error updating shift author names: ${error.message}`);
     }
   }
 }

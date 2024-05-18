@@ -5,7 +5,7 @@ const getUserByEmailAddress = async (emailAddress) => {
 };
 
 const getUserByUsername = async (username) => {
-  return await User.findOne({ username: username });
+  return await User.findOne({ username });
 };
 
 export default { getUserByEmailAddress, getUserByUsername };

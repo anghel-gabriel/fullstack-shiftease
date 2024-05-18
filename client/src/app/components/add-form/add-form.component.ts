@@ -12,7 +12,9 @@ import { AuthenticationService } from "src/app/services/authentication.service";
 export class AddFormComponent {
   @Output() submit = new EventEmitter<any>();
   @Output() errorEvent = new EventEmitter<string>();
-  loading = false;
+  // Loading state
+  isLoading = false;
+  // Shift
   workTime: any;
   hourlyWage: any;
   workplace: any;
@@ -22,7 +24,9 @@ export class AddFormComponent {
 
   constructor(private auth: AuthenticationService) {
     this.auth.getLoggedUser().subscribe((value: any) => {
-      this.authorFullName = value.firstName + " " + value.lastName;
+      if (value) {
+        this.authorFullName = value.firstName + " " + value.lastName;
+      }
     });
   }
 

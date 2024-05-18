@@ -4,7 +4,7 @@ const addShift = async (shiftData) => {
   return await Shift.create(shiftData);
 };
 
-// get shifts by user id
+// Get all shifts by user id
 const getUserShifts = async (userId) => {
   return Shift.find({ author: userId });
 };
@@ -21,8 +21,13 @@ const updateShiftById = async (shiftId, newData) => {
   return await Shift.findByIdAndUpdate(shiftId, newData);
 };
 
-const deleteShift = async (shiftId) => {
-  const result = await Shift.deleteMany({ author: userId });
+const deleteShiftByShiftIdAndUserId = async (shiftId, userId) => {
+  const result = await Shift.deleteOne({ _id: shiftId, author: userId });
+  return result;
+};
+
+const deleteShiftById = async (shiftId) => {
+  const result = await Shift.deleteOne({ _id: shiftId });
   return result;
 };
 
@@ -34,8 +39,9 @@ export default {
   getShiftById,
   addShift,
   updateShiftById,
-  deleteShift,
+  deleteShiftByShiftIdAndUserId,
   getAllShifts,
   getUserShifts,
   deleteUserShifts,
+  deleteShiftById,
 };
