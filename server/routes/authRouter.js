@@ -4,12 +4,15 @@ import loginController from "../controllers/loginController.js";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import bcrypt from "bcrypt";
 
 const authRouter = express.Router();
 
 // This endpoint is used to send a reset password link to the user
 authRouter.post("/request-reset-password", async (req, res) => {
+  // Getting body data
   const { email } = req.body;
+  // Check if user with entered email address does exist
   const user = await User.findOne({ emailAddress: email });
   if (!user) {
     return res.status(404).send("User not found");
@@ -19,17 +22,18 @@ authRouter.post("/request-reset-password", async (req, res) => {
   });
   const resetLink = `http://localhost:4200/reset-password/${token}`;
 
-  // Setup email transporter
+  // Email transporter setup
   const transporter = nodemailer.createTransport({
     service: "SendGrid",
     auth: {
-      user: "apikey", // This is the literal string "apikey", not your username
-      pass: "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",
+      user: "apikey",
+      pass: process.env.EMAIL_API_KEY,
     },
   });
 
+  // Email options
   const mailOptions = {
-    from: "shifteaseapp@gmail.com",
+    from: process.env.SENDER_EMAIL,
     to: email,
     subject: "Password Reset",
     html: `<p>Click <a href="${resetLink}">here</a> to reset your password</p>`,
@@ -50,12 +54,15 @@ authRouter.post("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
 
+  console.log(token);
+  console.log(newPassword);
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await User.updateOne({ _id: decoded.id }, { password: hashedPassword });
     res.send("Password reset successful");
   } catch (error) {
+    console.log(error);
     res.status(400).send("Invalid or expired token");
   }
 });

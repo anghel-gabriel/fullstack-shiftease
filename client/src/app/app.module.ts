@@ -61,6 +61,7 @@ import { EmployeePageComponent } from "./pages/employee-page/employee-page.compo
 import { ChartModule } from "primeng/chart";
 import { AdminStatsComponent } from "./components/admin-stats/admin-stats.component";
 import { firebaseConfig } from "./utils/firebaseConfig";
+import { ResetPasswordPageComponent } from './pages/reset-password-page/reset-password-page.component';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { firebaseConfig } from "./utils/firebaseConfig";
     AllShiftsPageComponent,
     EmployeesPageComponent,
     EmployeePageComponent,
-    AdminStatsComponent
+    AdminStatsComponent,
+    ResetPasswordPageComponent
   ],
   imports: [
     CommonModule,
