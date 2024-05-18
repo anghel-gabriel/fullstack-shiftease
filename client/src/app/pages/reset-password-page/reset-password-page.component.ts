@@ -2,6 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
+import { AuthenticationService } from "src/app/services/authentication.service";
+import { isPasswordValid } from "src/app/utils/validation";
 
 @Component({
   selector: "app-reset-password-page",
@@ -19,7 +21,8 @@ export class ResetPasswordPageComponent {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private toast: MessageService
+    private toast: MessageService,
+    private auth: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -34,26 +37,32 @@ export class ResetPasswordPageComponent {
     });
   }
 
-  resetPassword() {
+  async resetPassword() {
+    // Validation
     if (!this.newPassword || !this.confirmNewPassword) {
-      this.showError("All fields are mandatory");
+      return this.showError("All fields are mandatory");
+    }
+    if (!isPasswordValid(this.newPassword)) {
+      return this.showError("Your password must respect the requested format.");
     }
     if (this.newPassword !== this.confirmNewPassword) {
-      this.showError("Passwords must match.");
+      return this.showError("Passwords must match.");
     }
-    this.http
-      .post(`http://localhost:8080/api/auth/reset-password/${this.token}`, {
-        newPassword: this.newPassword,
-      })
-      .subscribe(
-        (response) => {
-          console.log("Password reset successful");
-          this.router.navigate(["/login"]);
-        },
-        (error) => {
-          console.log(321, error.message);
-          this.showError("Error resetting password");
-        }
-      );
+    // Sending password to server
+    try {
+      this.isLoading = true;
+      await this.auth.setNewPasswordBackend(this.token, this.newPassword);
+      this.toast.add({
+        severity: "success",
+        summary: "Sucess",
+        detail: "Password changed successfully!",
+      });
+      setTimeout(() => {
+        this.router.navigate(["/sign-in"]);
+      }, 2000);
+    } catch (error: any) {
+      console.log(error);
+      this.showError(error.message);
+    }
   }
 }

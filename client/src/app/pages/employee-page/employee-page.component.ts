@@ -113,28 +113,7 @@ export class EmployeePageComponent {
     }
   }
 
-  async onUpload(event: any) {
-    this.isLoading = true;
-    for (let file of event.files) {
-      try {
-        const photoURL = await this.fileUpload.uploadFile(
-          file,
-          `users/${file.name}`
-        );
-        if (this.employeeId) {
-          await this.auth.updateUserPhoto(this.employeeId, photoURL);
-          this.photoURL = photoURL;
-        }
-      } catch (error) {
-        this.showError(
-          "An error has occured while updating profile picture. Please try again."
-        );
-      } finally {
-        this.isLoading = false;
-        this.showSuccess("Profile picture updated successfully.");
-      }
-    }
-  }
+  async onUpload(event: any) {}
 
   async handleSaveProfile() {
     try {

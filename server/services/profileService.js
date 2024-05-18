@@ -15,19 +15,34 @@ const changeEmailAddress = async (userId, newEmailAddress) => {
 const changePassword = async (userId, newPassword) => {
   try {
     await User.updateOne({ _id: userId }, { $set: { password: newPassword } });
-    console.log("Email address updated successfully");
+    console.log("Password updated successfully");
   } catch (error) {
-    console.error("Error updating email address:", error);
+    console.error("Error updating password:", error);
   }
 };
 
 const updateProfile = async (userId, newData) => {
   try {
     await User.updateOne({ _id: userId }, { $set: newData });
-    console.log("Email address updated successfully");
+    console.log("Profile updated successfully");
   } catch (error) {
-    console.error("Error updating email address:", error);
+    console.error("Error updating profile:", error);
+    throw error;
   }
 };
 
-export default { changeEmailAddress, changePassword, updateProfile };
+const updateProfilePicture = async (userId, photoURL) => {
+  try {
+    await User.updateOne({ _id: userId }, { $set: { photoURL } });
+    console.log("Profile picture updated successfully");
+  } catch (error) {
+    console.error("Error updating profile picture:", error);
+  }
+};
+
+export default {
+  changeEmailAddress,
+  changePassword,
+  updateProfile,
+  updateProfilePicture,
+};

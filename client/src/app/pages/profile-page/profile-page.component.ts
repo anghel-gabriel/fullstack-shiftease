@@ -181,10 +181,14 @@ export class ProfilePageComponent {
     this.isLoading = true;
     for (let file of event.files) {
       try {
-        const photoURL = await this.fileUpload.uploadFile(
-          file,
-          `users/${file.name}`
-        );
+        // Create a FormData object and append the file
+        const formData = new FormData();
+        formData.append("photo", file);
+
+        // Upload the file and get the photo URL
+        const result = await this.fileUpload.uploadFile(formData);
+        const photoURL = result.photoURL;
+
         const userId = "vrajeala";
         if (userId) {
           await this.auth.updateUserPhoto(userId, photoURL);
@@ -192,7 +196,7 @@ export class ProfilePageComponent {
         }
       } catch (error) {
         this.showError(
-          "An error has occured while updating profile picture. Please try again."
+          "An error has occurred while updating profile picture. Please try again."
         );
       } finally {
         this.isLoading = false;

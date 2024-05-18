@@ -11,6 +11,10 @@ const userSchema = new Schema({
   birthDate: { type: String, required: true },
   gender: { type: Object },
   userRole: { type: String },
+  photoURL: {
+    type: String,
+    default: "https://s3.amazonaws.com/37assets/svn/765-default-avatar.png",
+  },
 });
 
 const User = mongoose.model("User", userSchema);

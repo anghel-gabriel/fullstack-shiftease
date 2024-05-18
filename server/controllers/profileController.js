@@ -9,10 +9,11 @@ const changeEmailAddress = async (req, res) => {
   const userId = req.tokenData.id;
 
   try {
-    if (!isEmailValid(emailAddress))
+    if (!isEmailValid(emailAddress)) {
       return res
         .status(400)
         .send("The email address doesn't respect the requested format.");
+    }
 
     const isEmailAddressAlreadyExisting =
       await registerService.checkEmailAddressExisting(emailAddress);
@@ -22,10 +23,10 @@ const changeEmailAddress = async (req, res) => {
       return res.status(400).send("Chosen email address is already existing.");
     }
     await profileService.changeEmailAddress(userId, emailAddress);
-    res.status(200).send();
+    res.status(200).send("Email address updated successfully");
   } catch (error) {
     console.log(error);
-    // TODO: handle error
+    res.status(500).send("Internal server error");
   }
 };
 
@@ -42,14 +43,14 @@ const changePassword = async (req, res) => {
   bcrypt.hash(password, 8, async (err, hash) => {
     try {
       if (err) {
-        res.status(500).send("An error has occured while registering.");
+        res.status(500).send("An error has occurred while registering.");
       } else {
         await profileService.changePassword(userId, hash);
-        res.status(200).send("New user was added to database.");
+        res.status(200).send("Password updated successfully.");
       }
     } catch (error) {
       console.log(error);
-      // TODO: handle error
+      res.status(500).send("Internal server error");
     }
   });
 };
@@ -74,11 +75,27 @@ const updateProfile = async (req, res) => {
       birthDate,
       gender,
     });
-    res.status(200).send();
+    res.status(200).send("Profile updated successfully");
   } catch (error) {
     console.log(error);
-    // TODO: handle error
+    res.status(500).send("Internal server error");
   }
 };
 
-export default { changeEmailAddress, changePassword, updateProfile };
+// This function is used by users to update their profile photo
+const updateProfilePicture = async (userId, photoURL) => {
+  try {
+    await profileService.updateProfilePicture(userId, photoURL);
+    console.log("Profile picture updated successfully");
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error updating profile picture");
+  }
+};
+
+export default {
+  changeEmailAddress,
+  changePassword,
+  updateProfile,
+  updateProfilePicture,
+};

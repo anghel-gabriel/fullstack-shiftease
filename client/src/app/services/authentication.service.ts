@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Auth, sendPasswordResetEmail } from "@angular/fire/auth";
 import { RegisterInterface, UserInterface } from "../utils/interfaces";
 import { BehaviorSubject } from "rxjs";
-import { defaultPhotoURL } from "../utils/defaultProfileImage";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable({
@@ -10,7 +8,7 @@ import { HttpClient } from "@angular/common/http";
 })
 export class AuthenticationService {
   private loggedUser = new BehaviorSubject<any>(null);
-  constructor(public auth: Auth, public http: HttpClient) {}
+  constructor(public http: HttpClient) {}
 
   getLoggedUser() {
     return this.loggedUser.asObservable();
@@ -22,6 +20,35 @@ export class AuthenticationService {
 
   async removeUserPhoto(userId: string) {
     // TODO:
+  }
+
+  async setNewPasswordBackend(token: string, newPassword: string) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/reset-password/${token}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ newPassword: newPassword }),
+        }
+      );
+
+      const data = response.json();
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ text: "An error occurred" }));
+        throw new Error(errorData.text || "Failed to reset password");
+      }
+
+      console.log("Password reset successful");
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   async editProfileBackend(newData: UserInterface) {

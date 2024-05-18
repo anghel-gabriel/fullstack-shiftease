@@ -15,7 +15,7 @@ authRouter.post("/request-reset-password", async (req, res) => {
   // Check if user with entered email address does exist
   const user = await User.findOne({ emailAddress: email });
   if (!user) {
-    return res.status(404).send("User not found");
+    return res.status(404).send("User with entered email address not found.");
   }
   const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
     expiresIn: "1h",
@@ -44,7 +44,7 @@ authRouter.post("/request-reset-password", async (req, res) => {
       console.error("Error sending email:", error);
     } else {
       console.log("Email sent:", info.response);
-      return res.status(200).send();
+      return res.status(200).send("Password reset link sent successfully!");
     }
   });
 });
@@ -53,16 +53,12 @@ authRouter.post("/request-reset-password", async (req, res) => {
 authRouter.post("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
-
-  console.log(token);
-  console.log(newPassword);
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await User.updateOne({ _id: decoded.id }, { password: hashedPassword });
-    res.send("Password reset successful");
+    res.status(200).send("Password reset successful");
   } catch (error) {
-    console.log(error);
     res.status(400).send("Invalid or expired token");
   }
 });
