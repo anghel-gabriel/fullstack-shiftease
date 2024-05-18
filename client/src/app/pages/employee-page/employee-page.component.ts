@@ -52,7 +52,6 @@ export class EmployeePageComponent {
       const employeeData = await this.auth.getEmployeeDataBackend(
         this.employeeId
       );
-      console.log("empldata", employeeData);
       if (!employeeData || !employeeData["_id"]) this.router.navigate(["/404"]);
       else {
         this.firstName = employeeData["firstName"];

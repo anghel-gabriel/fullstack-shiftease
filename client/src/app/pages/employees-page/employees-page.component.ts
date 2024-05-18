@@ -72,12 +72,10 @@ export class EmployeesPageComponent {
 
   // delete all employee shifts
   async onDeleteEmployeeShifts(employee: any) {
-    console.log("empl", employee);
     try {
       this.isLoading = true;
       await this.db.deleteShiftsByUserIdBackend(employee);
     } catch (error: any) {
-      console.log(error);
       this.showError(
         "An error has occurred while removing data. Please try again."
       );

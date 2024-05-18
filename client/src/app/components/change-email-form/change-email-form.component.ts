@@ -33,7 +33,6 @@ export class ChangeEmailFormComponent {
       await this.auth.changeEmailBackend(this.newEmail);
       this.successEvent.emit("Email address changed successfully.");
     } catch (error: any) {
-      console.log(error);
       this.errorEvent.emit(
         "An error has occured while changing email address. Please reauthenticate and try again."
       );

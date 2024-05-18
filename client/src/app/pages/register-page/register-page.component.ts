@@ -168,7 +168,6 @@ export class RegisterPageComponent {
       await new Promise((resolve) => setTimeout(resolve, 4000));
       this.router.navigate(["/sign-in"]);
     } catch (error: any) {
-      console.log(error);
       this.showError("Registration failed. Please contact an admin.");
     } finally {
       this.isLoading = false;

@@ -157,7 +157,6 @@ export class DatabaseService {
 
       this.getShiftsBackend();
     } catch (error: any) {
-      console.log(error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );

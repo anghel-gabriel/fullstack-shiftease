@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Auth, sendPasswordResetEmail } from "@angular/fire/auth";
-import { Firestore, doc, setDoc, getDoc } from "@angular/fire/firestore";
 import { RegisterInterface, UserInterface } from "../utils/interfaces";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { defaultPhotoURL } from "../utils/defaultProfileImage";
 import { HttpClient } from "@angular/common/http";
 
@@ -11,37 +10,18 @@ import { HttpClient } from "@angular/common/http";
 })
 export class AuthenticationService {
   private loggedUser = new BehaviorSubject<any>(null);
-  constructor(
-    public auth: Auth,
-    public firestore: Firestore,
-    public http: HttpClient
-  ) {}
+  constructor(public auth: Auth, public http: HttpClient) {}
 
   getLoggedUser() {
     return this.loggedUser.asObservable();
   }
 
   async updateUserPhoto(userId: string, photoURL: string) {
-    const userRef = doc(this.firestore, `users/${userId}`);
-    try {
-      await setDoc(userRef, { photoURL: photoURL }, { merge: true });
-      const updatedUserDoc = await getDoc(userRef);
-    } catch (error: any) {
-      throw new Error(error);
-    }
+    // TODO:
   }
 
   async removeUserPhoto(userId: string) {
-    if (!userId) {
-      throw new Error("User ID is required to remove photo.");
-    }
-    const userRef = doc(this.firestore, `users/${userId}`);
-    try {
-      await setDoc(userRef, { photoURL: defaultPhotoURL }, { merge: true });
-      const updatedUserDoc = await getDoc(userRef);
-    } catch (error: any) {
-      throw new Error(`Error removing user photo: ${error.message}`);
-    }
+    // TODO:
   }
 
   async editProfileBackend(newData: UserInterface) {
@@ -60,7 +40,6 @@ export class AuthenticationService {
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
-      console.log("error123", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
@@ -85,7 +64,6 @@ export class AuthenticationService {
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
-      console.log("error123", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
@@ -117,9 +95,26 @@ export class AuthenticationService {
     }
   }
 
-  async sendPasswordResetEmail(email: string) {
+  async sendPasswordResetEmailBackend(email: string) {
     try {
-      await sendPasswordResetEmail(this.auth, email);
+      const response = await fetch(
+        "http://localhost:8080/api/auth/request-reset-password",
+        {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify({
+            email,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
+      }
     } catch (error: any) {
       throw new Error(error);
     }
@@ -200,7 +195,6 @@ export class AuthenticationService {
     password: string,
     loginMethod: string
   ) {
-    console.log(usernameOrEmail);
     try {
       const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
@@ -216,14 +210,11 @@ export class AuthenticationService {
       });
 
       if (!response.ok) {
-        console.log(response);
         const errorMsg = await response.text();
-        console.log(errorMsg);
         throw new Error(errorMsg);
       } else {
         const res = await response.json();
         this.loggedUser.next(res.user);
-        console.log("obiect user", res.user);
       }
     } catch (error: any) {
       throw new Error(error);
@@ -237,7 +228,6 @@ export class AuthenticationService {
       })
       .subscribe({
         next: (res: any) => {
-          console.log(res);
           this.loggedUser.next(res);
         },
         error: () => this.loggedUser.next(null),

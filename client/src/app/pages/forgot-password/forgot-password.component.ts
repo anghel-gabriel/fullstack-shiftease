@@ -14,13 +14,13 @@ export class ForgotPasswordComponent {
 
   constructor(
     private auth: AuthenticationService,
-    public toast: MessageService,
+    public toast: MessageService
   ) {}
 
   async onSubmit() {
     try {
       this.isLoading = true;
-      await this.auth.sendPasswordResetEmail(this.email);
+      await this.auth.sendPasswordResetEmailBackend(this.email);
     } catch (error: any) {
       this.toast.add({
         severity: "error",
