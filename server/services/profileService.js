@@ -40,9 +40,22 @@ const updateProfilePicture = async (userId, photoURL) => {
   }
 };
 
+const removeProfilePicture = async (userId, photoURL) => {
+  try {
+    await User.updateOne(
+      { _id: userId },
+      { $set: { photoURL: "http://localhost:8080/pictures/defaultPhoto.png" } }
+    );
+    console.log("Profile picture updated successfully");
+  } catch (error) {
+    console.error("Error updating profile picture:", error);
+  }
+};
+
 export default {
   changeEmailAddress,
   changePassword,
   updateProfile,
   updateProfilePicture,
+  removeProfilePicture,
 };

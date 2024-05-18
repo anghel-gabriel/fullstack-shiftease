@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const checkUserIsAuthenticated = (req, res, next) => {
+  console.log("sunt in middleware");
   const token = req.cookies["LOGIN_INFO"];
   if (!token) return res.status(401).send("Authentication token is required.");
 

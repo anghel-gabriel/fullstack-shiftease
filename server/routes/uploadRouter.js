@@ -55,6 +55,50 @@ uploadRouter.post(
   }
 );
 
+uploadRouter.delete("/profile-picture", async (req, res) => {
+  console.log("Delete request received");
+  const { photoURL } = req.body;
+  const userId = req.tokenData.id; // Assuming userId is available in tokenData
+  console.log("Photo URL:", photoURL);
+  console.log("User ID:", userId);
+
+  if (!photoURL) {
+    console.log("No photoURL provided");
+    return res.status(400).json({ message: "photoURL is required" });
+  }
+
+  try {
+    console.log("123123123123");
+    // Update the user's profile picture URL to the default one
+    await profileService.removeProfilePicture(userId);
+    console.log("Profile picture updated successfully");
+
+    // Extract the filename from the photoURL
+    const filename = path.basename(photoURL);
+    const filePath = path.join(__dirname, "../pictures", filename);
+
+    // Check if the file exists before trying to delete it
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log("Error deleting file:", err);
+          return res.status(500).json({ message: "Internal server error" });
+        }
+        console.log("File deleted successfully");
+        res
+          .status(200)
+          .json({ message: "Profile picture removed successfully" });
+      });
+    } else {
+      console.log("File not found:", filePath);
+      res.status(404).json({ message: "File not found" });
+    }
+  } catch (error) {
+    console.log("Error removing profile picture:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // Serve the pictures directory statically
 uploadRouter.use(
   "/pictures",

@@ -43,18 +43,5 @@ export class FileUploadService {
     }
   }
 
-  async deleteFile(path: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const fileRef = this.storage.ref(path);
-      fileRef
-        .delete()
-        .toPromise()
-        .then(() => {
-          resolve();
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }
+  async deleteFile(path: string): Promise<void> {}
 }

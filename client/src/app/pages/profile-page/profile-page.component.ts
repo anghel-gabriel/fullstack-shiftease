@@ -31,7 +31,6 @@ export class ProfilePageComponent {
   checked = false;
   isLoading = true;
   isViewPortAtLeastMedium: boolean = false;
-  defaultPhotoURL = defaultPhotoURL;
   isChangingPasswordModalVisible = false;
   isChangingEmailModalVisible = false;
   actualFirstName = "";
@@ -82,7 +81,7 @@ export class ProfilePageComponent {
       this.username = data.username;
       this.birthDate = new Date(data.birthDate);
       this.gender = data.gender || { name: "Unknown", value: "unknown" };
-      this.photoURL = data.photoURL || this.defaultPhotoURL;
+      this.photoURL = data.photoURL;
       this.actualFirstName = data.firstName;
       this.actualLastName = data.lastName;
       this.actualUsername = data.username;
@@ -140,20 +139,6 @@ export class ProfilePageComponent {
 
       this.isLoading = true;
 
-      // // check for username availability if there is a new username
-      // if (this.username !== this.actualUsername) {
-      //   const isUsernameAvailable = await this.auth.isUsernameAvailable(
-      //     this.username,
-      //   );
-      //   if (!isUsernameAvailable) {
-      //     this.showError(
-      //       "The new username is not available. Please choose another one.",
-      //     );
-      //     return;
-      //   }
-      // }
-
-      // update all shifts .authorFullName if firstName or lastName are changed
       const newData = {
         email: this.email,
         username: this.username,
@@ -206,26 +191,38 @@ export class ProfilePageComponent {
   }
 
   async removePhoto() {
+    console.log(this.photoURL);
     this.isLoading = true;
     try {
-      const userId = "vrajeala";
-      if (userId) {
-        await this.auth.removeUserPhoto(userId);
-        await this.fileUpload.deleteFile(this.photoURL);
-        this.photoURL = this.defaultPhotoURL;
+      // Call the backend to remove the photo
+      const response = await fetch(
+        "http://localhost:8080/api/upload/profile-picture",
+        {
+          method: "DELETE", // Change method to DELETE
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json", // Add this header
+          },
+          body: JSON.stringify({ photoURL: this.photoURL }),
+        }
+      );
+
+      if (!response.ok) {
+        console.log(123);
+        throw new Error("Failed to remove the profile picture");
       }
-    } catch (error: any) {
-      if (
-        !error.message.includes(
-          "expected a child path but got a URL, use refFromURL instead"
-        )
-      )
-        this.showError(
-          "An error has occured while removing profile picture. Please try again."
-        );
+
+      // Update the user profile photo to the default one
+      const defaultPhoto = defaultPhotoURL;
+      this.photoURL = defaultPhoto;
+      this.showSuccess("Profile picture removed successfully.");
+    } catch (error) {
+      console.log(error);
+      this.showError(
+        "An error has occurred while removing the profile picture. Please try again."
+      );
     } finally {
       this.isLoading = false;
-      this.showSuccess("Profile picture removed successfully.");
     }
   }
 }
