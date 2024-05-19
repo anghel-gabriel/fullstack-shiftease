@@ -22,7 +22,7 @@ export class MyShiftsPageComponent {
   loading: boolean = false;
   isLoading: boolean = false;
   // Logged user data
-  userPhotoURL: any;
+  userPhotoURL: string = "";
   userFirstName: string = "";
   // Modals
   addModalVisible: boolean = false;
@@ -165,11 +165,10 @@ export class MyShiftsPageComponent {
   async onDeleteConfirm(shiftId: string) {
     this.loading = true;
     try {
-      await this.db.deleteShiftBackend(shiftId);
+      await this.db.deleteShift(shiftId);
+      this.showSuccess("Shift has beeen deleted successfully.");
     } catch (error: any) {
-      this.showError(
-        "An error has occured while deleting shift. Please try again."
-      );
+      this.showError(error.message);
     } finally {
       this.loading = false;
     }

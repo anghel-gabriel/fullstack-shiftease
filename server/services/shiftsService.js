@@ -8,22 +8,31 @@ const addShift = async (shiftData) => {
   }
 };
 
-const updateShiftById = async (shiftId, userId, newData) => {
+const updateShiftById = async (_id, author, newData) => {
   try {
     // userId is used to ensure that the author of the shift is the logged-in user
-    await Shift.findOneAndUpdate({ _id: shiftId, author: userId }, newData);
+    await Shift.findOneAndUpdate({ _id, author }, newData);
   } catch (error) {
     throw new Error(error);
   }
 };
 
-const getShiftById = async (shiftId) => {
-  return await Shift.findById(shiftId);
+const deleteShiftById = async (_id, author) => {
+  try {
+    // userId is used to ensure that the author of the shift is the logged-in user
+    await Shift.deleteOne({ _id, author });
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
-// Get all shifts by user id
-const getUserShifts = async (userId) => {
-  return Shift.find({ author: userId });
+const getUserShifts = async (author) => {
+  try {
+    const shifts = await Shift.find({ author });
+    return shifts;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const getAllShifts = async () => {
@@ -35,17 +44,11 @@ const deleteShiftByShiftIdAndUserId = async (shiftId, userId) => {
   return result;
 };
 
-const deleteShiftById = async (shiftId) => {
-  const result = await Shift.deleteOne({ _id: shiftId });
-  return result;
-};
-
 const deleteUserShifts = async (userId) => {
   return await Shift.deleteMany({ author: userId });
 };
 
 export default {
-  getShiftById,
   addShift,
   updateShiftById,
   deleteShiftByShiftIdAndUserId,

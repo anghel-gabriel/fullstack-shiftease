@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import computation from "../utils/computation.js";
 import { isWorkplaceValid } from "../utils/validation.js";
 
-// This functions is used to add new shifts
+// This function is used by users to add new shifts
 const addShift = async (req, res) => {
   // Getting request data
   const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
@@ -50,7 +50,7 @@ const addShift = async (req, res) => {
   }
 };
 
-// Update shift by shift id
+// This function is used by users to update their own shifts
 const updateShift = async (req, res) => {
   // Getting request data
   const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
@@ -96,6 +96,36 @@ const updateShift = async (req, res) => {
   }
 };
 
+// This function is used to delete their own shifts by their _id property
+const deleteShift = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.tokenData.id;
+  try {
+    const shiftId = ObjectId.createFromHexString(id);
+    // userId is used to ensure that the author of the shift is the logged-in user
+    await shiftsService.deleteShiftById(shiftId, userId);
+    res.status(200).send({ message: "Your shift has been deleted." });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "An error occurred while deleting the shift." });
+  }
+};
+
+// This function is used by users to get their own shifts
+const getUserShifts = async (req, res) => {
+  const id = req.tokenData.id;
+  try {
+    const userId = ObjectId.createFromHexString(id);
+    const foundShifts = await shiftsService.getUserShifts(userId);
+    res.status(200).send(foundShifts);
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "An error has occured while getting your shifts." });
+  }
+};
+
 // This function allows admin to view get all shifts
 const getAllShifts = async (req, res) => {
   try {
@@ -116,39 +146,6 @@ const getAllShifts = async (req, res) => {
     res.status(200).send(transformedShifts);
   } catch (error) {
     res.status(400).send("An error has occurred while getting shifts.");
-  }
-};
-
-// This function is used to get all shifts by user id (author property in shift objects)
-const getUserShifts = async (req, res) => {
-  const id = req.tokenData.id;
-  try {
-    const userId = ObjectId.createFromHexString(id);
-    const foundShifts = await shiftsService.getUserShifts(userId);
-    res.status(200).send(foundShifts);
-  } catch (error) {
-    res.status(400).send("An error has occured while getting user shifts.");
-  }
-};
-
-// This function is used to delete shifts by their _id property
-const deleteShift = async (req, res) => {
-  const { id } = req.params;
-  const userId = req.tokenData.id;
-  try {
-    const shiftId = ObjectId.createFromHexString(id);
-    let result;
-    // If the user is not an admin, I ensure that the authorId property of their shift matches the user's _id
-    if (req.tokenData.role == "user") {
-      result = await shiftsService.deleteShiftById(shiftId, userId);
-    } else if (req.tokenData.role === "admin") {
-      result = await shiftsService.deleteShiftById(shiftId);
-    }
-    if (!result || result.length === 0)
-      res.status(404).send(`Shift with id: ${id} not found.`);
-    else res.status(200).send("Your shift has been deleted.");
-  } catch (error) {
-    res.status(500).send("An error occurred while deleting the shift.");
   }
 };
 
@@ -194,3 +191,5 @@ export default {
   getAllUsers,
   getUser,
 };
+
+// TODO: check for ids bla bla

@@ -98,7 +98,7 @@ export class AllShiftsPageComponent {
   async onDeleteConfirm(shiftId: any) {
     this.loading = true;
     try {
-      await this.db.deleteShiftBackend(shiftId);
+      await this.db.deleteShift(shiftId);
     } catch (error: any) {
       this.showError(
         "An error occurred while updating shift. Please try again."

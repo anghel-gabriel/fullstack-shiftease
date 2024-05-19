@@ -19,7 +19,7 @@ export class DatabaseService {
     this.auth
       .getLoggedUser()
       .subscribe((userData) => this.loggedUserUid.next(userData?.uid));
-    this.getShiftsBackend();
+    this.getShifts();
     this.getAllShiftsBackend();
     this.getAllUsersBackend();
   }
@@ -65,14 +65,62 @@ export class DatabaseService {
       if (!response.ok) {
         throw new Error(result.message);
       } else {
-        await this.getShiftsBackend();
+        await this.getShifts();
       }
     } catch (error: any) {
       throw new Error(error.message);
     }
   }
 
-  public async getShiftsBackend() {
+  async editShift(shiftId: string, newData: IShift) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/shifts/update-shift/${shiftId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(newData),
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+      await this.getShifts();
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteShift(shiftId: string) {
+    try {
+      this.areMyShiftsLoading.next(true);
+      const response = await fetch(
+        `http://localhost:8080/api/shifts/delete-shift/${shiftId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+      this.getShifts();
+    } catch (error: any) {
+      throw new Error(error.message);
+    } finally {
+      this.areMyShiftsLoading.next(false);
+    }
+  }
+
+  async getShifts() {
     try {
       this.areMyShiftsLoading.next(true);
       const response = await fetch(
@@ -85,17 +133,13 @@ export class DatabaseService {
           },
         }
       );
-
+      const result = await response.json();
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(result.message);
       }
-
-      const data = await response.json();
-      this.myShifts.next(data);
+      this.myShifts.next(result);
     } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
-      );
+      throw new Error(error.message);
     } finally {
       this.areMyShiftsLoading.next(false);
     }
@@ -127,55 +171,6 @@ export class DatabaseService {
       );
     } finally {
       this.areAllShiftsLoading.next(false);
-    }
-  }
-
-  async editShift(shiftId: string, newData: IShift) {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/shifts/update-shift/${shiftId}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(newData),
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-      await this.getShiftsBackend();
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
-  }
-
-  async deleteShiftBackend(shiftId: string) {
-    try {
-      this.areMyShiftsLoading.next(true);
-      const response = await fetch(
-        `http://localhost:8080/api/shifts/delete-shift/${shiftId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      this.getShiftsBackend();
-    } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
-      );
-    } finally {
-      this.areMyShiftsLoading.next(false);
     }
   }
 
