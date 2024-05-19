@@ -91,7 +91,7 @@ export class LoginPageComponent {
       );
       this.router.navigate(["/"]);
     } catch (error: any) {
-      this.showError(error.message.split(":")[1].trim());
+      this.showError(error.message);
     } finally {
       this.isLoading = false;
     }

@@ -43,5 +43,27 @@ export class FileUploadService {
     }
   }
 
-  async deleteFile(path: string): Promise<void> {}
+  async deleteFile(photoURL: string): Promise<void> {
+    try {
+      // Call the backend to remove the photo
+      const response = await fetch(
+        "http://localhost:8080/api/upload/profile-picture",
+        {
+          method: "DELETE", // Change method to DELETE
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json", // Add this header
+          },
+          body: JSON.stringify({ photoURL }),
+        }
+      );
+
+      if (!response.ok) {
+        console.log(123);
+        throw new Error("Failed to remove the profile picture");
+      }
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
 }

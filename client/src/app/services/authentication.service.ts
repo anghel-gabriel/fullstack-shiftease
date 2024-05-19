@@ -226,25 +226,18 @@ export class AuthenticationService {
       const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
         credentials: "include",
-        body: JSON.stringify({
-          usernameOrEmail: usernameOrEmail,
-          password: password,
-          loginMethod: loginMethod,
-        }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
+        body: JSON.stringify({ usernameOrEmail, password, loginMethod }),
       });
-
+      const result = await response.json();
       if (!response.ok) {
-        const errorMsg = await response.text();
-        throw new Error(errorMsg);
-      } else {
-        const res = await response.json();
-        this.loggedUser.next(res.user);
+        throw new Error(result.message);
       }
+      this.loggedUser.next(result.user);
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(error.message);
     }
   }
 

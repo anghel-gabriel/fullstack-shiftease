@@ -62,7 +62,10 @@ uploadRouter.delete("/profile-picture", async (req, res) => {
   console.log("Photo URL:", photoURL);
   console.log("User ID:", userId);
 
-  if (!photoURL) {
+  if (
+    !photoURL ||
+    photoURL === "http://localhost:8080/pictures/defaultPhoto.png"
+  ) {
     console.log("No photoURL provided");
     return res.status(400).json({ message: "photoURL is required" });
   }
@@ -98,11 +101,5 @@ uploadRouter.delete("/profile-picture", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
-// Serve the pictures directory statically
-uploadRouter.use(
-  "/pictures",
-  express.static(path.join(__dirname, "../pictures"))
-);
 
 export default uploadRouter;

@@ -195,26 +195,11 @@ export class ProfilePageComponent {
     this.isLoading = true;
     try {
       // Call the backend to remove the photo
-      const response = await fetch(
-        "http://localhost:8080/api/upload/profile-picture",
-        {
-          method: "DELETE", // Change method to DELETE
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json", // Add this header
-          },
-          body: JSON.stringify({ photoURL: this.photoURL }),
-        }
-      );
-
-      if (!response.ok) {
-        console.log(123);
-        throw new Error("Failed to remove the profile picture");
-      }
+      const response = await this.fileUpload.deleteFile(this.photoURL);
 
       // Update the user profile photo to the default one
       const defaultPhoto = defaultPhotoURL;
-      this.photoURL = defaultPhoto;
+      this.photoURL = "http://localhost:8080/pictures/defaultPhoto.png";
       this.showSuccess("Profile picture removed successfully.");
     } catch (error) {
       console.log(error);

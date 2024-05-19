@@ -19,9 +19,9 @@ const login = async (req, res) => {
     else res.status(400).send("Please select a valid login method.");
 
     if (!foundUser)
-      return res
-        .status(400)
-        .send(`Account with entered ${loginMethod} doesn't exist.`);
+      return res.status(400).send({
+        message: `Account with entered ${loginMethod} doesn't exist.`,
+      });
     const userPassword = foundUser.password;
     // Checking if entered password is equal to 'decrypted' hash password from database
     bcrypt.compare(password, userPassword, (err, result) => {
@@ -54,11 +54,11 @@ const login = async (req, res) => {
           },
         });
       } else {
-        res.status(401).send("You entered a wrong password.");
+        res.status(401).send({ message: "You entered a wrong password." });
       }
     });
   } catch (error) {
-    res.status(500).send("An error has occured while logging in.");
+    res.status(500).send({ message: "An error has occured while logging in." });
   }
 };
 
