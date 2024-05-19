@@ -9,13 +9,12 @@ const getUserByEmailAddress = async (emailAddress) => {
   }
 };
 
-const getUserByUsername = async (username) => {
+const setPassword = async (userId, newPassword) => {
   try {
-    const user = await User.findOne({ username });
-    return user;
+    await User.updateOne({ _id: userId }, { $set: { password: newPassword } });
   } catch (error) {
     throw new Error(error);
   }
 };
 
-export default { getUserByEmailAddress, getUserByUsername };
+export default { setPassword, getUserByEmailAddress };

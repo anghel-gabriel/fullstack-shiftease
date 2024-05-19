@@ -3,15 +3,27 @@ import User from "../models/userModel.js";
 const register = async (userData) => {
   try {
     await User.create(userData);
-  } catch (error) {}
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const checkEmailAddressExisting = async (emailAddress) => {
-  return !!(await User.find({ emailAddress: emailAddress })).length;
+  try {
+    const user = await User.find({ emailAddress: emailAddress });
+    return !!user.length;
+  } catch (error) {
+    throw new Error("Could not check email address. Please try again later.");
+  }
 };
 
 const checkUsernameExisting = async (username) => {
-  return !!(await User.find({ username: username })).length;
+  try {
+    const user = await User.find({ username });
+    return !!user.length;
+  } catch (error) {
+    throw new Error("Could not check email address. Please try again later.");
+  }
 };
 
 export default { register, checkEmailAddressExisting, checkUsernameExisting };

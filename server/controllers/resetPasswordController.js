@@ -1,15 +1,14 @@
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import loginService from "../services/loginService.js";
 import bcrypt from "bcrypt";
 import { isPasswordValid } from "../utils/validation.js";
-import profileService from "../services/profileService.js";
+import resetPasswordService from "../services/resetPasswordService.js";
 
 const requestResetPasswordLink = async (req, res) => {
   // Getting body data
   const { email } = req.body;
   // Check if user with entered email address does exist
-  const user = await loginService.getUserByEmailAddress(email);
+  const user = await resetPasswordService.getUserByEmailAddress(email);
   if (!user) {
     return res
       .status(404)
@@ -64,7 +63,7 @@ const resetPassword = async (req, res) => {
   try {
     const decodedUser = jwt.verify(token, process.env.SECRET_KEY);
     const hashedPassword = await bcrypt.hash(newPassword, 8);
-    await profileService.changePassword(decodedUser.id, hashedPassword);
+    await resetPasswordService.setPassword(decodedUser.id, hashedPassword);
     return res.status(200).send({ message: "Password reset successfully." });
   } catch (error) {
     return res.status(400).send({ message: "Invalid or expired URL." });
