@@ -62,12 +62,11 @@ const resetPassword = async (req, res) => {
     });
   }
   try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const decodedUser = jwt.verify(token, process.env.SECRET_KEY);
     const hashedPassword = await bcrypt.hash(newPassword, 8);
-    await profileService.changePassword(decoded.id, hashedPassword);
+    await profileService.changePassword(decodedUser.id, hashedPassword);
     return res.status(200).send({ message: "Password reset successfully." });
   } catch (error) {
-    console.log(error);
     return res.status(400).send({ message: "Invalid or expired URL." });
   }
 };
