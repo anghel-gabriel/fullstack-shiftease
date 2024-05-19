@@ -191,7 +191,6 @@ export class ProfilePageComponent {
   }
 
   async removePhoto() {
-    console.log(this.photoURL);
     this.isLoading = true;
     try {
       // Call the backend to remove the photo
@@ -202,7 +201,6 @@ export class ProfilePageComponent {
       this.photoURL = "http://localhost:8080/pictures/defaultPhoto.png";
       this.showSuccess("Profile picture removed successfully.");
     } catch (error) {
-      console.log(error);
       this.showError(
         "An error has occurred while removing the profile picture. Please try again."
       );

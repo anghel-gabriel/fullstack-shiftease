@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
 
 const checkUserIsAuthenticated = (req, res, next) => {
-  console.log("sunt in middleware");
   const token = req.cookies["LOGIN_INFO"];
-  if (!token) return res.status(401).send("Authentication token is required.");
+  if (!token)
+    return res
+      .status(401)
+      .send({ message: "Authentication token is required." });
 
   try {
     const deserializedToken = jwt.verify(token, process.env.SECRET_KEY);
@@ -11,8 +13,8 @@ const checkUserIsAuthenticated = (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === "JsonWebTokenError")
-      return res.status(401).send("Invalid token.");
-    else return res.status(403).send("Unauthorized access!");
+      return res.status(401).send({ message: "Invalid token." });
+    else return res.status(403).send({ message: "Unauthorized access!" });
   }
 };
 

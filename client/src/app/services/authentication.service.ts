@@ -44,8 +44,6 @@ export class AuthenticationService {
           .catch(() => ({ text: "An error occurred" }));
         throw new Error(errorData.text || "Failed to reset password");
       }
-
-      console.log("Password reset successful");
     } catch (error: any) {
       throw new Error(error.message);
     }
@@ -115,7 +113,6 @@ export class AuthenticationService {
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
-      console.log("error123", error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );
@@ -217,11 +214,7 @@ export class AuthenticationService {
     }
   }
 
-  async loginBackend(
-    usernameOrEmail: string,
-    password: string,
-    loginMethod: string
-  ) {
+  async login(usernameOrEmail: string, password: string, loginMethod: string) {
     try {
       const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
@@ -263,7 +256,9 @@ export class AuthenticationService {
         next: (res: any) => {
           this.loggedUser.next(null);
         },
-        error: (error) => console.log(error),
+        error: (error) => {
+          throw new Error(error);
+        },
       });
   }
 }

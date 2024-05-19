@@ -16,8 +16,11 @@ const login = async (req, res) => {
       foundUser = await loginService.getUserByEmailAddress(usernameOrEmail);
     else if (loginMethod === "username")
       foundUser = await loginService.getUserByUsername(usernameOrEmail);
-    else res.status(400).send("Please select a valid login method.");
-
+    else
+      return res
+        .status(400)
+        .send({ message: "Please select a valid login method." });
+    // Notice user that his username/email address is wrong
     if (!foundUser)
       return res.status(400).send({
         message: `Account with entered ${loginMethod} doesn't exist.`,
@@ -25,6 +28,11 @@ const login = async (req, res) => {
     const userPassword = foundUser.password;
     // Checking if entered password is equal to 'decrypted' hash password from database
     bcrypt.compare(password, userPassword, (err, result) => {
+      if (err) {
+        return res
+          .status(500)
+          .send({ message: "An error occurred while logging in." });
+      }
       if (result) {
         const user = foundUser;
         const data = {
@@ -41,8 +49,6 @@ const login = async (req, res) => {
         });
         // Returning user's data
         res.status(200).send({
-          status: 200,
-          bearer: token,
           user: {
             username: user.username,
             firstName: user.firstName,
@@ -54,7 +60,9 @@ const login = async (req, res) => {
           },
         });
       } else {
-        res.status(401).send({ message: "You entered a wrong password." });
+        return res
+          .status(401)
+          .send({ message: "You entered a wrong password." });
       }
     });
   } catch (error) {
@@ -63,3 +71,5 @@ const login = async (req, res) => {
 };
 
 export default { login };
+
+// TODO: check if keeping both expiration dates is needed

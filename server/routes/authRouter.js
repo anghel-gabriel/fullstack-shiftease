@@ -8,6 +8,10 @@ import bcrypt from "bcrypt";
 
 const authRouter = express.Router();
 
+authRouter.post("/register", registerController.registerUser);
+
+authRouter.post("/login", loginController.login);
+
 // This endpoint is used to send a reset password link to the user
 authRouter.post("/request-reset-password", async (req, res) => {
   // Getting body data
@@ -15,7 +19,9 @@ authRouter.post("/request-reset-password", async (req, res) => {
   // Check if user with entered email address does exist
   const user = await User.findOne({ emailAddress: email });
   if (!user) {
-    return res.status(404).send("User with entered email address not found.");
+    return res
+      .status(404)
+      .send({ message: "User with entered email address not found." });
   }
   const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
     expiresIn: "1h",
@@ -63,10 +69,6 @@ authRouter.post("/reset-password/:token", async (req, res) => {
   }
 });
 
-authRouter.post("/register", registerController.registerUser);
-
-authRouter.post("/login", loginController.login);
-
 /* 
 This endpoint is used for the first step of the register form. 
 It checks if username or email address is already existing, 
@@ -80,8 +82,10 @@ or refreshing the page
 */
 authRouter.get("/validate-session", async (req, res) => {
   const token = req.cookies["LOGIN_INFO"];
-  if (!token) return res.status(401).send("Authentication token is required.");
-
+  if (!token)
+    return res
+      .status(401)
+      .send({ message: "Authentication token is required." });
   try {
     const deserializedToken = jwt.verify(token, process.env.SECRET_KEY);
     const userId = deserializedToken.id;
@@ -89,8 +93,8 @@ authRouter.get("/validate-session", async (req, res) => {
     res.status(200).send(userData);
   } catch (error) {
     if (error.name === "JsonWebTokenError")
-      return res.status(401).send("Invalid token.");
-    else return res.status(403).send("Unauthorized access!");
+      return res.status(401).send({ message: "Invalid token." });
+    else return res.status(403).send({ message: "Unauthorized access!" });
   }
 });
 

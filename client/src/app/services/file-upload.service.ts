@@ -25,19 +25,16 @@ export class FileUploadService {
       } else {
         try {
           const result = await response.json();
-          console.log(result);
           console.error("Failed to upload photo");
           throw new Error("Failed to upload photo");
         } catch (jsonError) {
           // Handle non-JSON responses
           const text = await response.text();
-          console.log(text);
           console.error("Failed to upload photo:", text);
           throw new Error(`Failed to upload photo: ${text}`);
         }
       }
     } catch (error) {
-      console.log(error);
       console.error("An error occurred while uploading the photo:", error);
       throw error;
     }
@@ -59,7 +56,6 @@ export class FileUploadService {
       );
 
       if (!response.ok) {
-        console.log(123);
         throw new Error("Failed to remove the profile picture");
       }
     } catch (error: any) {

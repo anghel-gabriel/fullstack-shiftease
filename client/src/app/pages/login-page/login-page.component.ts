@@ -57,34 +57,36 @@ export class LoginPageComponent {
   // Prevent user selecting/unselecting both login ways on desktop viewport
   onDesktopSelectChange(): void {
     const isAlreadySelected = this.desktopSelectOptions.find(
-      (option) => option.value === this.loginMethod && option.disabled
+      (option: ILoginMethodDesktopOptions) =>
+        option.value === this.loginMethod && option.disabled
     );
     if (isAlreadySelected) return;
     // Update the options to disable the selected one
-    this.desktopSelectOptions = this.desktopSelectOptions.map((option) => ({
-      ...option,
-      disabled: option.value === this.loginMethod,
-    }));
+    this.desktopSelectOptions = this.desktopSelectOptions.map(
+      (option: ILoginMethodDesktopOptions) => ({
+        ...option,
+        disabled: option.value === this.loginMethod,
+      })
+    );
   }
 
   // Show error toast function
-  showError(message: string) {
+  showError(message: string): void {
     this.toast.add({
       severity: "error",
       summary: "Error",
-      detail: message,
+      detail: message as string,
     });
   }
 
   // Login function
   async onSubmit() {
     if (!this.password || !this.usernameOrEmail) {
-      this.showError("Please enter your login credentials.");
-      return;
+      return this.showError("Please enter your login credentials.");
     }
     try {
       this.isLoading = true;
-      await this.auth.loginBackend(
+      await this.auth.login(
         this.usernameOrEmail,
         this.password,
         this.loginMethod

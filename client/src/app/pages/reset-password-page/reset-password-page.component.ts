@@ -61,7 +61,6 @@ export class ResetPasswordPageComponent {
         this.router.navigate(["/sign-in"]);
       }, 2000);
     } catch (error: any) {
-      console.log(error);
       this.showError(error.message);
     }
   }
