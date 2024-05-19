@@ -47,19 +47,27 @@ export class DatabaseService {
     return this.allShifts.asObservable();
   }
 
-  async addShiftBackend(shift: any) {
+  async addShift(shift: any) {
     try {
-      await fetch("http://localhost:8080/api/shifts/add-shift", {
-        method: "POST",
-        body: JSON.stringify(shift),
-        credentials: "include",
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
-      await this.getShiftsBackend();
+      const response = await fetch(
+        "http://localhost:8080/api/shifts/add-shift",
+        {
+          method: "POST",
+          body: JSON.stringify(shift),
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      } else {
+        await this.getShiftsBackend();
+      }
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(error.message);
     }
   }
 

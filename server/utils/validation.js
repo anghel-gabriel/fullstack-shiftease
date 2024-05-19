@@ -34,3 +34,9 @@ export function isUserAgeBetween6And130(date) {
 export function isDateBefore(firstDate, secondDate) {
   return firstDate < secondDate;
 }
+
+export function isWorkplaceValid(workplace) {
+  return ["Frontend", "Backend", "Data Analyst", "Fullstack", "SQL"].includes(
+    workplace
+  );
+}

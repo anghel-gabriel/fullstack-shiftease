@@ -2,6 +2,8 @@ import Shift from "../models/shiftModel.js";
 import User from "../models/userModel.js";
 import shiftsService from "../services/shiftsService.js";
 import { ObjectId } from "mongodb";
+import computation from "../utils/computation.js";
+import { isWorkplaceValid } from "../utils/validation.js";
 
 // This function allows admin to view get all shifts
 const getAllShifts = async (req, res) => {
@@ -40,9 +42,25 @@ const getUserShifts = async (req, res) => {
 
 // This functions is used to add new shifts
 const addShift = async (req, res) => {
-  // Getting body data
+  // Getting request data
   const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
   const userId = req.tokenData.id;
+  // Validation
+  if (!startTime || !endTime || !computation.isDateBefore(startTime, endTime)) {
+    return res.status(400).send({
+      message: "The start time must be before the end time.",
+    });
+  }
+  if (!hourlyWage || isNaN(hourlyWage) || hourlyWage <= 0) {
+    return res.status(400).send({
+      message: "Hourly wage must be greater than 0.",
+    });
+  }
+  if (!workplace || !isWorkplaceValid(workplace)) {
+    return res.status(400).send({
+      message: "Please select a valid workplace.",
+    });
+  }
   // Adding shift to database
   try {
     await shiftsService.addShift({
@@ -52,10 +70,18 @@ const addShift = async (req, res) => {
       workplace,
       comments,
       author: userId,
+      profit: computation.calculateProfit(
+        new Date(startTime),
+        new Date(endTime),
+        hourlyWage
+      ),
     });
-    res.status(200).send("Your shift has been added");
+    res.status(200).send({ message: "Your shift has been added" });
   } catch (error) {
-    // TODO: handle error
+    res.status(500).send({
+      message:
+        "An error occurred while adding the shift. Please try again later.",
+    });
   }
 };
 

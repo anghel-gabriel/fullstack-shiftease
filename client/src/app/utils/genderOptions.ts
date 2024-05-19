@@ -4,8 +4,8 @@ export interface IGenderOption {
 }
 
 export const genderOptionList: IGenderOption[] = [
-  { name: 'Unknown', value: 'unknown' },
-  { name: 'Male', value: 'male' },
-  { name: 'Female', value: 'female' },
-  { name: 'Other', value: 'other' },
+  { name: "Unknown", value: "unknown" },
+  { name: "Male", value: "male" },
+  { name: "Female", value: "female" },
+  { name: "Other", value: "other" },
 ];

@@ -98,36 +98,42 @@ export class MyShiftsPageComponent {
     this.bestMonthModalVisible = false;
   }
 
-  // add shift modal
+  // Open add shift modal
   onAddClick() {
     this.addModalVisible = true;
   }
+  // Close add shift modal
+  onAddModalClose() {
+    this.addModalVisible = false;
+  }
+
+  // Add shift function
   async onAddSubmit(addedShift: any) {
     this.loading = true;
     this.addModalVisible = false;
     try {
-      await this.db.addShiftBackend(addedShift);
-    } catch (error: any) {
-      this.showError(
-        "An error has occured while adding shift. Please try again."
-      );
-    } finally {
-      this.loading = false;
+      await this.db.addShift(addedShift);
       this.toast.add({
         severity: "success",
         summary: "Success",
         detail: "Shift added successfully.",
       });
+    } catch (error: any) {
+      this.showError(error.message);
+    } finally {
+      this.loading = false;
     }
   }
-  onAddModalClose() {
-    this.addModalVisible = false;
-  }
 
-  // edit modal
+  // Open edit shift modal
   onEditClick(shift: any) {
     this.selectedShift = shift;
     this.editModalVisible = true;
+  }
+  // Close edit shift modal
+  onEditModalClose() {
+    this.selectedShift = null;
+    this.editModalVisible = false;
   }
   async onEditSubmit(editedShift: any) {
     try {
@@ -141,10 +147,6 @@ export class MyShiftsPageComponent {
     } finally {
       this.loading = false;
     }
-  }
-  onEditModalClose() {
-    this.selectedShift = null;
-    this.editModalVisible = false;
   }
 
   // delete confirmation popup

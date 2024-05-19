@@ -1,7 +1,11 @@
 import Shift from "../models/shiftModel.js";
 
 const addShift = async (shiftData) => {
-  return await Shift.create(shiftData);
+  try {
+    await Shift.create(shiftData);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 // Get all shifts by user id
