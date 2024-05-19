@@ -190,27 +190,30 @@ export class AuthenticationService {
           },
         }
       );
-
+      const result = await response.json();
       if (!response.ok) {
-        const errorMsg = await response.text();
-        throw new Error(errorMsg);
+        throw new Error(result.message);
       }
     } catch (error: any) {
       throw new Error(error.message);
     }
   }
 
-  async registerBackend(registerData: RegisterInterface) {
+  async register(registerData: RegisterInterface) {
     try {
-      await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
         body: JSON.stringify(registerData),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(error.message);
     }
   }
 

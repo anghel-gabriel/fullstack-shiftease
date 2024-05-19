@@ -7,7 +7,9 @@ const login = async (req, res) => {
   const { usernameOrEmail, password, loginMethod } = req.body;
 
   if (!usernameOrEmail || !password || !loginMethod) {
-    return res.status(400).send("Please fill al the mandatory fields.");
+    return res
+      .status(400)
+      .send({ message: "Please fill al the mandatory fields." });
   }
   try {
     // Looking for the user in database

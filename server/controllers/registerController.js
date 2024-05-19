@@ -30,27 +30,31 @@ const checkCredentials = async (req, res) => {
 
   // Validation
   if (!username || !emailAddress || !password || !confirmPassword) {
-    return res.status(400).send("Please fill al the mandatory fields.");
+    return res
+      .status(400)
+      .send({ message: "Please fill al the mandatory fields." });
   }
 
   if (username.length < 6)
-    return res.status(400).send("Username must be at least 6 characters long.");
-
-  if (!isUsernameValid(username))
-    return res.status(400).send("Username must be alphanumeric.");
-
-  if (!isEmailValid(emailAddress))
     return res
       .status(400)
-      .send("The email address doesn't respect the requested format.");
+      .send({ message: "Username must be at least 6 characters long." });
+
+  if (!isUsernameValid(username))
+    return res.status(400).send({ message: "Username must be alphanumeric." });
+
+  if (!isEmailValid(emailAddress))
+    return res.status(400).send({
+      message: "The email address doesn't respect the requested format.",
+    });
 
   if (!isPasswordValid(password))
     return res
       .status(400)
-      .send("Password do not respect the requested format.");
+      .send({ message: "Password do not respect the requested format." });
 
   if (password !== confirmPassword) {
-    return res.status(400).send("Passwords do not match.");
+    return res.status(400).send({ message: "Passwords do not match." });
   }
 
   // Check if username or email address is already existing
@@ -60,20 +64,23 @@ const checkCredentials = async (req, res) => {
     const isUsernameAlreadyExisting =
       await registerService.checkUsernameExisting(username);
     if (isEmailAddressAlreadyExisting) {
-      res
-        .status(409)
-        .send(
-          "This email address is already in use. Please choose another one."
-        );
+      return res.status(409).send({
+        message:
+          "This email address is already in use. Please choose another one.",
+      });
     } else if (isUsernameAlreadyExisting) {
-      res
-        .status(409)
-        .send("This username is already in use. Please choose another one.");
+      return res.status(409).send({
+        message: "This username is already in use. Please choose another one.",
+      });
     } else {
-      res.status(200).send();
+      return res.status(200).send({
+        message: "User with entered username and email address doesn't exist.",
+      });
     }
   } catch (error) {
-    res.status(500).send("An error has occured. Please try again.");
+    res
+      .status(500)
+      .send({ message: "An error has occured. Please try again." });
   }
 };
 
@@ -101,44 +108,48 @@ const registerUser = async (req, res) => {
     !birthDate ||
     !gender
   ) {
-    return res.status(400).send("Please fill al the mandatory fields.");
+    return res
+      .status(400)
+      .send({ message: "Please fill al the mandatory fields." });
   }
 
   /* 
   I use the same validation process for checking credentials. This approach prevents users from bypassing validation by only using the registration endpoint. By enforcing the same checks at both stages, I can more reliably prevent unauthorized or improperly formatted data from entering our system. 
   */
   if (username.length < 6)
-    return res.status(400).send("Username must be at least 6 characters long.");
-
-  if (!isUsernameValid(username))
-    return res.status(400).send("Username must be alphanumeric.");
-
-  if (!isEmailValid(emailAddress))
     return res
       .status(400)
-      .send("The email address doesn't respect the requested format.");
+      .send({ message: "Username must be at least 6 characters long." });
+
+  if (!isUsernameValid(username))
+    return res.status(400).send({ message: "Username must be alphanumeric." });
+
+  if (!isEmailValid(emailAddress))
+    return res.status(400).send({
+      message: "The email address doesn't respect the requested format.",
+    });
 
   if (!isPasswordValid(password))
     return res
       .status(400)
-      .send("Password do not respect the requested format.");
+      .send({ message: "Password do not respect the requested format." });
 
   if (password !== confirmPassword) {
-    return res.status(400).send("Passwords do not match.");
+    return res.status(400).send({ message: "Passwords do not match." });
   }
 
   if (firstName.length < 2 || lastName.length < 2)
-    return res
-      .status(400)
-      .send("First name and last name must be at least 2 characters long.");
+    return res.status(400).send({
+      message: "First name and last name must be at least 2 characters long.",
+    });
 
   if (!isUserAgeBetween6And130(birthDate))
-    return res
-      .status(400)
-      .send("User must be between 6 and 130 years old in order to register.");
+    return res.status(400).send({
+      message: "User must be between 6 and 130 years old in order to register.",
+    });
 
   if (!validateGender(gender))
-    return res.status(400).send("The gender provided is invalid.");
+    return res.status(400).send({ message: "The gender provided is invalid." });
 
   bcrypt.hash(password, 8, async (err, hash) => {
     const userData = {
@@ -158,26 +169,32 @@ const registerUser = async (req, res) => {
       const isUsernameAlreadyExisting =
         await registerService.checkUsernameExisting(username);
       if (isEmailAddressAlreadyExisting) {
-        return res
-          .status(409)
-          .send(
-            "This email address is already in use. Please choose another one."
-          );
+        return res.status(409).send({
+          message:
+            "This email address is already in use. Please choose another one.",
+        });
       } else if (isUsernameAlreadyExisting) {
-        return res
-          .status(409)
-          .send("This username is already in use. Please choose another one.");
+        return res.status(409).send({
+          message:
+            "This username is already in use. Please choose another one.",
+        });
       }
       if (err) {
-        res.status(500).send("An error has occured while registering.");
+        res
+          .status(500)
+          .send({ message: "An error has occured while registering." });
       } else {
         await registerService.register(userData);
-        res.status(200).send("New user was added to database.");
+        res.status(200).send({ message: "New user was added to database." });
       }
     } catch (error) {
-      res.status(500).send("An error has occured while registering.");
+      res
+        .status(500)
+        .send({ message: "An error has occured while registering." });
     }
   });
 };
 
 export default { registerUser, checkCredentials };
+
+// TODO: check all statuses

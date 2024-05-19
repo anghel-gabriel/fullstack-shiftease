@@ -84,24 +84,23 @@ export class RegisterPageComponent {
     // First step validation
     if (this.currentStep === 0) {
       if (!isEmailValid(this.emailAddress)) {
-        this.showError("Please use a valid email address.");
-        return;
+        return this.showError("Please use a valid email address.");
       }
       if (this.username.length < 6) {
-        this.showError("Your username must be at least 6 characters long.");
-        return;
+        return this.showError(
+          "Your username must be at least 6 characters long."
+        );
       }
       if (!isUsernameValid(this.username)) {
-        this.showError("Your username must be alphanumeric.");
-        return;
+        return this.showError("Your username must be alphanumeric.");
       }
       if (!isPasswordValid(this.password)) {
-        this.showError("Your password must respect the requested format.");
-        return;
+        return this.showError(
+          "Your password must respect the requested format."
+        );
       }
       if (this.password !== this.confirmPassword) {
-        this.showError("Your passwords must match.");
-        return;
+        return this.showError("Your passwords must match.");
       }
       // Check if username or email already existing
       try {
@@ -112,8 +111,7 @@ export class RegisterPageComponent {
           this.password,
           this.confirmPassword
         );
-        this.currentStep++;
-        return;
+        return this.currentStep++;
       } catch (error: any) {
         this.showError(error.message);
       } finally {
@@ -123,16 +121,14 @@ export class RegisterPageComponent {
     // 2. Second step validation
     if (this.currentStep === 1) {
       if (this.firstName.length < 2 || this.lastName.length < 2) {
-        this.showError(
+        return this.showError(
           "First name and last name must be at least 2 characters long."
         );
-        return;
       }
       if (!this.birthDate || !isUserAgeBetween6And130(this.birthDate)) {
-        this.showError(
+        return this.showError(
           "You must be between 6 and 130 years old in order to register."
         );
-        return;
       }
       this.currentStep++;
     }
@@ -157,7 +153,7 @@ export class RegisterPageComponent {
       gender: this.gender,
     };
     try {
-      await this.auth.registerBackend(newUserData);
+      await this.auth.register(newUserData);
       this.messageService.add({
         severity: "success",
         summary: "Success",

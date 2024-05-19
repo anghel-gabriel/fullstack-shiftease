@@ -75,7 +75,7 @@ export class LoginPageComponent {
     this.toast.add({
       severity: "error",
       summary: "Error",
-      detail: message as string,
+      detail: message,
     });
   }
 
