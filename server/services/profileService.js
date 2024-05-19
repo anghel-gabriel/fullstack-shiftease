@@ -15,7 +15,6 @@ const changeEmailAddress = async (userId, newEmailAddress) => {
 const changePassword = async (userId, newPassword) => {
   try {
     await User.updateOne({ _id: userId }, { $set: { password: newPassword } });
-    console.log("Password updated successfully");
   } catch (error) {
     console.error("Error updating password:", error);
   }

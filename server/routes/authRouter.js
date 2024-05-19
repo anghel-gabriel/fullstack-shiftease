@@ -3,8 +3,7 @@ import registerController from "../controllers/registerController.js";
 import loginController from "../controllers/loginController.js";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
-import bcrypt from "bcrypt";
+import resetPasswordController from "../controllers/resetPasswordController.js";
 
 const authRouter = express.Router();
 
@@ -13,61 +12,16 @@ authRouter.post("/register", registerController.registerUser);
 authRouter.post("/login", loginController.login);
 
 // This endpoint is used to send a reset password link to the user
-authRouter.post("/request-reset-password", async (req, res) => {
-  // Getting body data
-  const { email } = req.body;
-  // Check if user with entered email address does exist
-  const user = await User.findOne({ emailAddress: email });
-  if (!user) {
-    return res
-      .status(404)
-      .send({ message: "User with entered email address not found." });
-  }
-  const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
-    expiresIn: "1h",
-  });
-  const resetLink = `http://localhost:4200/reset-password/${token}`;
-
-  // Email transporter setup
-  const transporter = nodemailer.createTransport({
-    service: "SendGrid",
-    auth: {
-      user: "apikey",
-      pass: process.env.EMAIL_API_KEY,
-    },
-  });
-
-  // Email options
-  const mailOptions = {
-    from: process.env.SENDER_EMAIL,
-    to: email,
-    subject: "Password Reset",
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password</p>`,
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error("Error sending email:", error);
-    } else {
-      console.log("Email sent:", info.response);
-      return res.status(200).send("Password reset link sent successfully!");
-    }
-  });
-});
+authRouter.post(
+  "/request-reset-password",
+  resetPasswordController.requestResetPasswordLink
+);
 
 // Reset password
-authRouter.post("/reset-password/:token", async (req, res) => {
-  const { token } = req.params;
-  const { newPassword } = req.body;
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await User.updateOne({ _id: decoded.id }, { password: hashedPassword });
-    res.status(200).send("Password reset successful");
-  } catch (error) {
-    res.status(400).send("Invalid or expired token");
-  }
-});
+authRouter.post(
+  "/reset-password/:token",
+  resetPasswordController.resetPassword
+);
 
 /* 
 This endpoint is used for the first step of the register form. 

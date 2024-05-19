@@ -20,12 +20,17 @@ export class ForgotPasswordComponent {
   async onSubmit() {
     try {
       this.isLoading = true;
-      await this.auth.sendPasswordResetEmailBackend(this.email);
+      await this.auth.sendPasswordResetEmail(this.email);
+      this.toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Reset password email sent successfully.",
+      });
     } catch (error: any) {
       this.toast.add({
         severity: "error",
-        summary: "Invalid email address",
-        detail: "Provided email address is invalid. Please try again.",
+        summary: "Error",
+        detail: error.message as string,
       });
     } finally {
       this.isLoading = false;

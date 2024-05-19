@@ -151,6 +151,7 @@ const registerUser = async (req, res) => {
   if (!validateGender(gender))
     return res.status(400).send({ message: "The gender provided is invalid." });
 
+  // TODO: check if possible with await bcrypt.hash(newPassword, 8);
   bcrypt.hash(password, 8, async (err, hash) => {
     const userData = {
       username: username,

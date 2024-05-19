@@ -36,13 +36,9 @@ export class AuthenticationService {
         }
       );
 
-      const data = response.json();
-
+      const result = await response.json();
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ text: "An error occurred" }));
-        throw new Error(errorData.text || "Failed to reset password");
+        throw new Error(result.message);
       }
     } catch (error: any) {
       throw new Error(error.message);
@@ -119,7 +115,7 @@ export class AuthenticationService {
     }
   }
 
-  async sendPasswordResetEmailBackend(email: string) {
+  async sendPasswordResetEmail(email: string) {
     try {
       const response = await fetch(
         "http://localhost:8080/api/auth/request-reset-password",
@@ -134,13 +130,12 @@ export class AuthenticationService {
           },
         }
       );
-
+      const result = await response.json();
       if (!response.ok) {
-        const errorMsg = await response.text();
-        throw new Error(errorMsg);
+        throw new Error(result.message);
       }
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(error.message);
     }
   }
 

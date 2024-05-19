@@ -1,4 +1,3 @@
-import Shift from "../models/shiftModel.js";
 import User from "../models/userModel.js";
 
 const register = async (userData) => {
