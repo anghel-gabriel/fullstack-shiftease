@@ -21,9 +21,36 @@ export interface UserInterface {
 }
 
 export interface IShift {
+  _id?: string;
   startTime: string;
   endTime: string;
   hourlyWage: number;
   workplace: string;
   comments: string;
+}
+
+export interface IWorkplace {
+  label: string;
+  value: string;
+  imgUrl: string;
+}
+
+export interface IData {
+  labels: string[];
+  datasets: {
+    data: Array<number>;
+    backgroundColor: string;
+    hoverBackgroundColor: string;
+  }[];
+}
+
+export interface IOptions {
+  plugins: {
+    legend: {
+      labels: {
+        usePointStyle: boolean;
+        color: string;
+      };
+    };
+  };
 }

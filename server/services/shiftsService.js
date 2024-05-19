@@ -8,21 +8,26 @@ const addShift = async (shiftData) => {
   }
 };
 
-// Get all shifts by user id
-const getUserShifts = async (userId) => {
-  return Shift.find({ author: userId });
+const updateShiftById = async (shiftId, userId, newData) => {
+  try {
+    // userId is used to ensure that the author of the shift is the logged-in user
+    await Shift.findOneAndUpdate({ _id: shiftId, author: userId }, newData);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const getShiftById = async (shiftId) => {
   return await Shift.findById(shiftId);
 };
 
-const getAllShifts = async () => {
-  return await Shift.find();
+// Get all shifts by user id
+const getUserShifts = async (userId) => {
+  return Shift.find({ author: userId });
 };
 
-const updateShiftById = async (shiftId, newData) => {
-  return await Shift.findByIdAndUpdate(shiftId, newData);
+const getAllShifts = async () => {
+  return await Shift.find();
 };
 
 const deleteShiftByShiftIdAndUserId = async (shiftId, userId) => {

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { AuthenticationService } from "./authentication.service";
+import { IShift } from "../utils/interfaces";
 
 @Injectable({
   providedIn: "root",
@@ -47,7 +48,7 @@ export class DatabaseService {
     return this.allShifts.asObservable();
   }
 
-  async addShift(shift: any) {
+  async addShift(shift: IShift) {
     try {
       const response = await fetch(
         "http://localhost:8080/api/shifts/add-shift",
@@ -129,19 +130,26 @@ export class DatabaseService {
     }
   }
 
-  async editShiftBackend(shiftId: string, newData: any) {
+  async editShift(shiftId: string, newData: IShift) {
     try {
-      await fetch(`http://localhost:8080/api/shifts/update-shift/${shiftId}`, {
-        method: "PUT",
-        body: JSON.stringify(newData),
-        credentials: "include",
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/shifts/update-shift/${shiftId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(newData),
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
       await this.getShiftsBackend();
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(error.message);
     }
   }
 
@@ -158,11 +166,9 @@ export class DatabaseService {
           },
         }
       );
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       this.getShiftsBackend();
     } catch (error: any) {
       throw new Error(

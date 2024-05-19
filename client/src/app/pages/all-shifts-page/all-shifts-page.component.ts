@@ -70,11 +70,9 @@ export class AllShiftsPageComponent {
     this.loading = true;
     this.editModalVisible = false;
     try {
-      await this.db.editShiftBackend(this.selectedShift._id, editedShift);
+      await this.db.editShift(this.selectedShift._id, editedShift);
     } catch (error: any) {
-      this.showError(
-        "An error has occured while updating shift. Please try again."
-      );
+      this.showError(error.message);
     } finally {
       this.loading = false;
     }

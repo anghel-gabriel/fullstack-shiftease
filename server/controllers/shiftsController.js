@@ -5,41 +5,6 @@ import { ObjectId } from "mongodb";
 import computation from "../utils/computation.js";
 import { isWorkplaceValid } from "../utils/validation.js";
 
-// This function allows admin to view get all shifts
-const getAllShifts = async (req, res) => {
-  try {
-    /* 
-    The "populate" method from Mongoose is used to retrieve the firstName and lastName 
-    fields from the user document referenced by the "author" property in each shift 
-    object. This ensures that each shift includes the author's full name. 
-    */
-    const populatedShifts = await Shift.find({}).populate(
-      "author",
-      "firstName lastName"
-    );
-    const transformedShifts = populatedShifts.map((shift) => ({
-      ...shift.toJSON(),
-      authorFullName: `${shift.author.firstName} ${shift.author.lastName}`,
-      authorId: shift.author._id,
-    }));
-    res.status(200).send(transformedShifts);
-  } catch (error) {
-    res.status(400).send("An error has occurred while getting shifts.");
-  }
-};
-
-// This function is used to get all shifts by user id (author property in shift objects)
-const getUserShifts = async (req, res) => {
-  const id = req.tokenData.id;
-  try {
-    const userId = ObjectId.createFromHexString(id);
-    const foundShifts = await shiftsService.getUserShifts(userId);
-    res.status(200).send(foundShifts);
-  } catch (error) {
-    res.status(400).send("An error has occured while getting user shifts.");
-  }
-};
-
 // This functions is used to add new shifts
 const addShift = async (req, res) => {
   // Getting request data
@@ -87,22 +52,82 @@ const addShift = async (req, res) => {
 
 // Update shift by shift id
 const updateShift = async (req, res) => {
-  // Getting body data
+  // Getting request data
   const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
   const { id } = req.params;
+  const userId = req.tokenData.id;
+  // Validation
+  if (!startTime || !endTime || !computation.isDateBefore(startTime, endTime)) {
+    return res.status(400).send({
+      message: "The start time must be before the end time.",
+    });
+  }
+  if (!hourlyWage || isNaN(hourlyWage) || hourlyWage <= 0) {
+    return res.status(400).send({
+      message: "Hourly wage must be greater than 0.",
+    });
+  }
+  if (!workplace || !isWorkplaceValid(workplace)) {
+    return res.status(400).send({
+      message: "Please select a valid workplace.",
+    });
+  }
   // Updating shift
   try {
     const shiftId = ObjectId.createFromHexString(id);
-    await shiftsService.updateShiftById(shiftId, {
+    // userId is used to ensure that the author of the shift is the logged-in user
+    await shiftsService.updateShiftById(shiftId, userId, {
       startTime,
       endTime,
       hourlyWage,
       workplace,
       comments,
+      profit: computation.calculateProfit(
+        new Date(startTime),
+        new Date(endTime),
+        hourlyWage
+      ),
     });
-    res.status(200).send("Your shift has been added");
+    res.status(200).send({ message: "Your shift has been added." });
   } catch (error) {
-    // TODO: handle error
+    res
+      .status(500)
+      .send({ message: "An error occurred while updating the shift." });
+  }
+};
+
+// This function allows admin to view get all shifts
+const getAllShifts = async (req, res) => {
+  try {
+    /* 
+    The "populate" method from Mongoose is used to retrieve the firstName and lastName 
+    fields from the user document referenced by the "author" property in each shift 
+    object. This ensures that each shift includes the author's full name. 
+    */
+    const populatedShifts = await Shift.find({}).populate(
+      "author",
+      "firstName lastName"
+    );
+    const transformedShifts = populatedShifts.map((shift) => ({
+      ...shift.toJSON(),
+      authorFullName: `${shift.author.firstName} ${shift.author.lastName}`,
+      authorId: shift.author._id,
+    }));
+    res.status(200).send(transformedShifts);
+  } catch (error) {
+    res.status(400).send("An error has occurred while getting shifts.");
+  }
+};
+
+// This function is used to get all shifts by user id (author property in shift objects)
+const getUserShifts = async (req, res) => {
+  const id = req.tokenData.id;
+  try {
+    const userId = ObjectId.createFromHexString(id);
+    const foundShifts = await shiftsService.getUserShifts(userId);
+    res.status(200).send(foundShifts);
+  } catch (error) {
+    res.status(400).send("An error has occured while getting user shifts.");
   }
 };
 

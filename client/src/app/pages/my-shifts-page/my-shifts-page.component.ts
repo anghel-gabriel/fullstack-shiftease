@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import * as FileSaver from "file-saver";
 import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
@@ -7,6 +7,7 @@ import { AuthenticationService } from "src/app/services/authentication.service";
 import { defaultPhotoURL } from "src/app/utils/defaultProfileImage";
 import { getImageUrl } from "src/app/utils/workplaces";
 import { DatabaseService } from "src/app/services/database.service";
+import { IData, IOptions, IShift } from "src/app/utils/interfaces";
 
 @Component({
   selector: "app-my-shifts-page",
@@ -17,26 +18,26 @@ import { DatabaseService } from "src/app/services/database.service";
 export class MyShiftsPageComponent {
   @ViewChild("dt") dt: Table | undefined;
   @ViewChild("op") overlayPanel!: OverlayPanel;
-  // loading states
+  // Loading states
   loading: boolean = false;
   isLoading: boolean = false;
-  // user data
+  // Logged user data
   userPhotoURL: any;
   userFirstName: string = "";
-  // modals
-  addModalVisible = false;
-  editModalVisible = false;
-  bestMonthModalVisible = false;
-  statisticsModalVisible = false;
-  // comment
+  // Modals
+  addModalVisible: boolean = false;
+  editModalVisible: boolean = false;
+  bestMonthModalVisible: boolean = false;
+  statisticsModalVisible: boolean = false;
+  // Current displayed comment
   currentComments: string = "";
-  // shifts
-  shifts: any = [];
-  selectedShift: any = null;
+  // Shifts
+  shifts: IShift[] = [];
+  selectedShift: IShift | null = null;
   getWorkplaceImage = getImageUrl;
 
-  // chart options
-  data = {
+  // Chart options
+  data: IData = {
     labels: ["A", "B", "C"],
     datasets: [
       {
@@ -46,7 +47,7 @@ export class MyShiftsPageComponent {
       },
     ],
   };
-  options = {
+  options: IOptions = {
     plugins: {
       legend: {
         labels: {
@@ -64,7 +65,6 @@ export class MyShiftsPageComponent {
     private toast: MessageService
   ) {
     this.db.getMyShiftsObsBackend().subscribe((data) => (this.shifts = data));
-
     this.auth.getLoggedUser().subscribe((data) => {
       this.userPhotoURL = data?.photoURL || defaultPhotoURL;
       this.userFirstName = data?.firstName;
@@ -74,15 +74,15 @@ export class MyShiftsPageComponent {
       .subscribe((value) => (this.isLoading = value));
   }
 
-  showError(message: any) {
+  // Toast notification methods
+  showError(message: string) {
     this.toast.add({
       severity: "error",
       summary: "Error",
       detail: message,
     });
   }
-
-  showSuccess(message: any) {
+  showSuccess(message: string) {
     this.toast.add({
       severity: "success",
       summary: "Success",
@@ -90,7 +90,7 @@ export class MyShiftsPageComponent {
     });
   }
 
-  // best month modal
+  // TODO: check best month modal is working
   onBestMonthClick() {
     this.bestMonthModalVisible = true;
   }
@@ -106,9 +106,8 @@ export class MyShiftsPageComponent {
   onAddModalClose() {
     this.addModalVisible = false;
   }
-
-  // Add shift function
-  async onAddSubmit(addedShift: any) {
+  // Add shift method
+  async onAddSubmit(addedShift: IShift) {
     this.loading = true;
     this.addModalVisible = false;
     try {
@@ -126,43 +125,44 @@ export class MyShiftsPageComponent {
   }
 
   // Open edit shift modal
-  onEditClick(shift: any) {
+  onEditClick(shift: IShift) {
     this.selectedShift = shift;
     this.editModalVisible = true;
   }
   // Close edit shift modal
   onEditModalClose() {
-    this.selectedShift = null;
+    this.selectedShift = this.shifts[0];
     this.editModalVisible = false;
   }
-  async onEditSubmit(editedShift: any) {
+  // Edit shift method
+  async onEditSubmit(editedShift: IShift) {
     try {
       this.loading = true;
       this.editModalVisible = false;
-      await this.db.editShiftBackend(this.selectedShift._id, editedShift);
+      if (!this.selectedShift || !this.selectedShift._id)
+        return this.showError("No shift selected for editing");
+      await this.db.editShift(this.selectedShift?._id, editedShift);
     } catch (error: any) {
-      this.showError(
-        "An error has occured while updating shift. Please try again."
-      );
+      this.showError(error.message);
     } finally {
       this.loading = false;
     }
   }
 
-  // delete confirmation popup
-  onDeleteClick(event: Event, shift: any) {
+  // Delete confirmation popup
+  onDeleteClick(event: Event, shift: IShift) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: "Are you sure?",
       icon: "pi pi-info-circle",
       acceptButtonStyleClass: "p-button-danger p-button-sm",
       accept: () => {
-        this.onDeleteConfirm(shift._id);
+        this.onDeleteConfirm(shift._id as string);
       },
       reject: () => {},
     });
   }
-  async onDeleteConfirm(shiftId: any) {
+  async onDeleteConfirm(shiftId: string) {
     this.loading = true;
     try {
       await this.db.deleteShiftBackend(shiftId);
@@ -175,12 +175,12 @@ export class MyShiftsPageComponent {
     }
   }
 
-  // search input (by workplace)
-  applyFilterGlobal($event: any, stringVal: any) {
+  // Search by workplace
+  applyFilterGlobal($event: any, stringVal: string) {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
-  // view comment button overlay panel
+  // View comment overlay panel
   toggleOverlayPanel(event: any, comments: string): void {
     if (comments) {
       this.currentComments = comments;
@@ -188,7 +188,7 @@ export class MyShiftsPageComponent {
     } else this.overlayPanel.hide();
   }
 
-  // shifts to excel
+  // Export shifts to excel
   async exportExcel() {
     this.isLoading = true;
     try {

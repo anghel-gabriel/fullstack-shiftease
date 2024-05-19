@@ -1,14 +1,7 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { isDateBefore } from "src/app/utils/validation";
-import { calculateProfit } from "../../utils/computation";
 import { workplaces } from "src/app/utils/workplaces";
-import { IShift } from "src/app/utils/interfaces";
-
-interface IWorkplace {
-  label: string;
-  value: string;
-  imgUrl: string;
-}
+import { IShift, IWorkplace } from "src/app/utils/interfaces";
 
 @Component({
   selector: "app-add-form",
