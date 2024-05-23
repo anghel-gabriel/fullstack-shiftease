@@ -1,10 +1,8 @@
 import express from "express";
-import shiftsController from "../controllers/shiftsController.js";
+import shiftsController from "../../controllers/shiftsController.js";
 
 const shiftsRouter = express.Router();
 
-// Get all shifts
-shiftsRouter.get("/get-shifts", shiftsController.getAllShifts);
 // Get shifts by user id
 shiftsRouter.get("/get-user-shifts", shiftsController.getUserShifts);
 // Add new shift

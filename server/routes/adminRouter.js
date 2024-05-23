@@ -8,6 +8,9 @@ adminRouter.delete(
   shiftsController.deleteUserShifts
 );
 
+// Get all shifts
+adminRouter.get("/get-shifts", shiftsController.getAllShifts);
+
 adminRouter.get("/get-all-users", shiftsController.getAllUsers);
 
 adminRouter.get("/get-user/:id", shiftsController.getUser);

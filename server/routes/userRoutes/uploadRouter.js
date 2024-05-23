@@ -3,7 +3,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import profileService from "../services/profileService.js";
+import profileService from "../../services/profileService.js";
 
 const uploadRouter = express.Router();
 
@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 // Configure multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../pictures"));
+    cb(null, path.join(__dirname, "../../pictures"));
   },
   filename: function (req, file, cb) {
     // Append the current timestamp to the file name
@@ -24,8 +24,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Ensure the "pictures" folder exists
-if (!fs.existsSync(path.join(__dirname, "../pictures"))) {
-  fs.mkdirSync(path.join(__dirname, "../pictures"));
+if (!fs.existsSync(path.join(__dirname, "../../pictures"))) {
+  fs.mkdirSync(path.join(__dirname, "../../pictures"));
 }
 
 // Endpoint to handle file uploads
@@ -78,7 +78,7 @@ uploadRouter.delete("/profile-picture", async (req, res) => {
 
     // Extract the filename from the photoURL
     const filename = path.basename(photoURL);
-    const filePath = path.join(__dirname, "../pictures", filename);
+    const filePath = path.join(__dirname, "../../pictures", filename);
 
     // Check if the file exists before trying to delete it
     if (fs.existsSync(filePath)) {

@@ -36,7 +36,13 @@ const getUserShifts = async (author) => {
 };
 
 const getAllShifts = async () => {
-  return await Shift.find();
+  console.log("pe toate");
+  try {
+    const allShifts = await Shift.find();
+    return allShifts;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const deleteShiftByShiftIdAndUserId = async (shiftId, userId) => {

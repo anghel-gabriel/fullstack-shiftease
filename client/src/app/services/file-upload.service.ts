@@ -1,17 +1,15 @@
 import { Injectable } from "@angular/core";
-import { AngularFireStorage } from "@angular/fire/compat/storage";
-import { finalize } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",
 })
 export class FileUploadService {
-  constructor(private storage: AngularFireStorage) {}
+  constructor() {}
 
   async uploadFile(photo: FormData): Promise<{ photoURL: string }> {
     try {
       const response = await fetch(
-        "http://localhost:8080/api/upload/profile-picture",
+        "http://localhost:8080/api/user/upload/profile-picture",
         {
           method: "POST",
           body: photo,
@@ -44,7 +42,7 @@ export class FileUploadService {
     try {
       // Call the backend to remove the photo
       const response = await fetch(
-        "http://localhost:8080/api/upload/profile-picture",
+        "http://localhost:8080/api/user/upload/profile-picture",
         {
           method: "DELETE", // Change method to DELETE
           credentials: "include",

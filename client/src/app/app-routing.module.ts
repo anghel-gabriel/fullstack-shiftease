@@ -12,7 +12,6 @@ import { EmployeesPageComponent } from "./pages/employees-page/employees-page.co
 import { AllShiftsPageComponent } from "./pages/all-shifts-page/all-shifts-page.component";
 import { EmployeePageComponent } from "./pages/employee-page/employee-page.component";
 import { AdminGuard } from "./guards/admin-guard.guard";
-import { Auth } from "@angular/fire/auth";
 import { ResetPasswordPageComponent } from "./pages/reset-password-page/reset-password-page.component";
 
 const routes: Routes = [

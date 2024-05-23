@@ -51,7 +51,7 @@ export class DatabaseService {
   async addShift(shift: IShift) {
     try {
       const response = await fetch(
-        "http://localhost:8080/api/shifts/add-shift",
+        "http://localhost:8080/api/user/shifts/add-shift",
         {
           method: "POST",
           body: JSON.stringify(shift),
@@ -75,7 +75,7 @@ export class DatabaseService {
   async editShift(shiftId: string, newData: IShift) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/shifts/update-shift/${shiftId}`,
+        `http://localhost:8080/api/user/shifts/update-shift/${shiftId}`,
         {
           method: "PUT",
           body: JSON.stringify(newData),
@@ -99,7 +99,7 @@ export class DatabaseService {
     try {
       this.areMyShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/shifts/delete-shift/${shiftId}`,
+        `http://localhost:8080/api/user/shifts/delete-shift/${shiftId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -124,7 +124,7 @@ export class DatabaseService {
     try {
       this.areMyShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/shifts/get-user-shifts/`,
+        `http://localhost:8080/api/user/shifts/get-user-shifts/`,
         {
           method: "GET",
           credentials: "include",
@@ -149,7 +149,7 @@ export class DatabaseService {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/shifts/get-shifts/`,
+        `http://localhost:8080/api/admin/get-shifts/`,
         {
           method: "GET",
           credentials: "include",
@@ -166,6 +166,7 @@ export class DatabaseService {
       const data = await response.json();
       this.allShifts.next(data);
     } catch (error: any) {
+      console.log(error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );

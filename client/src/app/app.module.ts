@@ -5,7 +5,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from "@angular/common/http";
 
 // angular pages
 import { MyShiftsPageComponent } from "./pages/my-shifts-page/my-shifts-page.component";
@@ -43,17 +43,12 @@ import { SliderModule } from "primeng/slider";
 import { MultiSelectModule } from "primeng/multiselect";
 import { OverlayPanelModule } from "primeng/overlaypanel";
 import { ConfirmPopupModule } from "primeng/confirmpopup";
-import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
-import { getAuth, provideAuth } from "@angular/fire/auth";
-import { getFirestore, provideFirestore } from "@angular/fire/firestore";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { SpinnerComponent } from "./components/spinner/spinner.component";
 import { ChangePasswordFormComponent } from "./components/change-password-form/change-password-form.component";
 import { ChangeEmailFormComponent } from "./components/change-email-form/change-email-form.component";
 import { ForgotPasswordComponent } from "./pages/forgot-password/forgot-password.component";
 import { EditFormComponent } from "./components/edit-form/edit-form.component";
-import { AngularFireStorageModule } from "@angular/fire/compat/storage";
-import { AngularFireModule } from "@angular/fire/compat";
 import { BestMonthComponent } from "./components/best-month/best-month.component";
 import { AllShiftsPageComponent } from "./pages/all-shifts-page/all-shifts-page.component";
 import { EmployeesPageComponent } from "./pages/employees-page/employees-page.component";
@@ -61,8 +56,7 @@ import { EmployeePageComponent } from "./pages/employee-page/employee-page.compo
 import { ChartModule } from "primeng/chart";
 import { AdminStatsComponent } from "./components/admin-stats/admin-stats.component";
 import { firebaseConfig } from "./utils/firebaseConfig";
-import { ResetPasswordPageComponent } from './pages/reset-password-page/reset-password-page.component';
-
+import { ResetPasswordPageComponent } from "./pages/reset-password-page/reset-password-page.component";
 
 @NgModule({
   declarations: [
@@ -84,7 +78,7 @@ import { ResetPasswordPageComponent } from './pages/reset-password-page/reset-pa
     EmployeesPageComponent,
     EmployeePageComponent,
     AdminStatsComponent,
-    ResetPasswordPageComponent
+    ResetPasswordPageComponent,
   ],
   imports: [
     CommonModule,
@@ -118,12 +112,7 @@ import { ResetPasswordPageComponent } from './pages/reset-password-page/reset-pa
     OverlayPanelModule,
     ProgressSpinnerModule,
     ConfirmPopupModule,
-    AngularFireStorageModule,
-    AngularFireModule.initializeApp(firebaseConfig),
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
