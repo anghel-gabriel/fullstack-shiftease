@@ -14,6 +14,8 @@ export class AuthenticationService {
     return this.loggedUser.asObservable();
   }
 
+  // REGULAR USERS METHODS
+
   async updateUserPhoto(userId: string, photoURL: string) {
     // TODO:
   }
@@ -48,7 +50,7 @@ export class AuthenticationService {
   async editProfileBackend(newData: UserInterface) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/profile/update-profile/`,
+        `http://localhost:8080/api/user/profile/update-profile/`,
         {
           method: "PUT",
           credentials: "include",

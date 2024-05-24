@@ -103,8 +103,8 @@ export class RegisterPageComponent {
         return this.showError("Your passwords must match.");
       }
       // Check if username or email already existing
+      this.isLoading = true;
       try {
-        this.isLoading = true;
         await this.auth.checkCredentialsBackend(
           this.emailAddress,
           this.username,

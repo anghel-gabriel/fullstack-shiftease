@@ -91,8 +91,8 @@ export class EmployeePageComponent {
   }
 
   async removePhoto() {
+    this.isLoading = true;
     try {
-      this.isLoading = true;
       if (this.employeeId) {
         await this.auth.removeUserPhoto(this.employeeId);
         await this.fileUpload.deleteFile(this.photoURL);

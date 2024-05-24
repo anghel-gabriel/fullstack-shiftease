@@ -18,8 +18,8 @@ export class ForgotPasswordComponent {
   ) {}
 
   async onSubmit() {
+    this.isLoading = true;
     try {
-      this.isLoading = true;
       await this.auth.sendPasswordResetEmail(this.email);
       this.toast.add({
         severity: "success",

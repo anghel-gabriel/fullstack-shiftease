@@ -1,5 +1,15 @@
 import Shift from "../models/shiftModel.js";
 
+// REGULAR USERS
+const getUserShifts = async (author) => {
+  try {
+    const shifts = await Shift.find({ author });
+    return shifts;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const addShift = async (shiftData) => {
   try {
     await Shift.create(shiftData);
@@ -19,24 +29,15 @@ const updateShiftById = async (_id, author, newData) => {
 
 const deleteShiftById = async (_id, author) => {
   try {
-    // userId is used to ensure that the author of the shift is the logged-in user
+    // userId is used to ensure that the logged user is the author of the shift
     await Shift.deleteOne({ _id, author });
   } catch (error) {
     throw new Error(error);
   }
 };
 
-const getUserShifts = async (author) => {
-  try {
-    const shifts = await Shift.find({ author });
-    return shifts;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
+// ADMIN USERS
 const getAllShifts = async () => {
-  console.log("pe toate");
   try {
     const allShifts = await Shift.find();
     return allShifts;
@@ -45,19 +46,29 @@ const getAllShifts = async () => {
   }
 };
 
-const deleteShiftByShiftIdAndUserId = async (shiftId, userId) => {
-  const result = await Shift.deleteOne({ _id: shiftId, author: userId });
-  return result;
+const deleteShiftAsAdmin = async (shiftId, userId) => {
+  try {
+    const result = await Shift.deleteOne({ _id: shiftId });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const deleteUserShifts = async (userId) => {
-  return await Shift.deleteMany({ author: userId });
+  try {
+    // TODO: add loggers
+    const result = await Shift.deleteMany({ author: userId });
+    console.log(result.deletedCount);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 export default {
   addShift,
   updateShiftById,
-  deleteShiftByShiftIdAndUserId,
+  deleteShiftAsAdmin,
   getAllShifts,
   getUserShifts,
   deleteUserShifts,

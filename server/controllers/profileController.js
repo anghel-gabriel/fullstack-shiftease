@@ -2,6 +2,50 @@ import profileService from "../services/profileService.js";
 import registerService from "../services/registerService.js";
 import { isEmailValid, isPasswordValid } from "../utils/validation.js";
 import bcrypt from "bcrypt";
+import { ObjectId } from "mongodb";
+
+// REGULAR USERS
+
+// This function is used by users to change their own profile data
+const updateProfile = async (req, res) => {
+  const { username, firstName, lastName, birthDate, gender } = req.body;
+  const reqUserId = req.tokenData.id;
+
+  try {
+    let isUsernameTheSame = false;
+    let isUsernameAlreadyExisting = false;
+    const actualUserData = await profileService.getProfile(reqUserId);
+
+    // If username is the same, we don't check if it already exists
+    if (actualUserData.username === username) isUsernameTheSame = true;
+
+    // If it is a new username, we check the availability
+    if (!isUsernameTheSame)
+      isUsernameAlreadyExisting = await registerService.checkUsernameExisting(
+        username
+      );
+
+    if (isUsernameAlreadyExisting) {
+      return res
+        .status(409)
+        .send({
+          message:
+            "This username is already in use. Please choose another one.",
+        });
+    }
+    await profileService.updateProfile(reqUserId, {
+      username,
+      firstName,
+      lastName,
+      birthDate,
+      gender,
+    });
+    res.status(200).send("Profile updated successfully");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
+  }
+};
 
 // This function is used by users to change their own email address
 const changeEmailAddress = async (req, res) => {
@@ -23,10 +67,10 @@ const changeEmailAddress = async (req, res) => {
       return res.status(400).send("Chosen email address is already existing.");
     }
     await profileService.changeEmailAddress(userId, emailAddress);
-    res.status(200).send("Email address updated successfully");
+    res.status(200).send({ message: "Email address updated successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal server error");
+    res.status(500).send({ message: "Internal server error" });
   }
 };
 
@@ -53,33 +97,6 @@ const changePassword = async (req, res) => {
       res.status(500).send("Internal server error");
     }
   });
-};
-
-// This function is used by users to change their own profile data
-const updateProfile = async (req, res) => {
-  const { username, firstName, lastName, birthDate, gender } = req.body;
-  const userId = req.tokenData.id;
-  try {
-    const isUsernameAlreadyExisting =
-      await registerService.checkUsernameExisting(username);
-
-    if (isUsernameAlreadyExisting) {
-      return res
-        .status(409)
-        .send("This username is already in use. Please choose another one.");
-    }
-    await profileService.updateProfile(userId, {
-      username,
-      firstName,
-      lastName,
-      birthDate,
-      gender,
-    });
-    res.status(200).send("Profile updated successfully");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Internal server error");
-  }
 };
 
 // This function is used by users to update their profile photo

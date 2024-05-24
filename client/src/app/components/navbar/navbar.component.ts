@@ -86,8 +86,8 @@ export class NavbarComponent implements OnInit {
   }
 
   async onSignOut() {
+    this.isLoading = true;
     try {
-      this.isLoading = true;
       await this.auth.logOutBackend();
       await this.router.navigate(["/sign-in"]);
     } catch (error: any) {

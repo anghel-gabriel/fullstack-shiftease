@@ -20,13 +20,13 @@ export function isUserAgeBetween6And130(date: any) {
   const sixYearsAgo = new Date(
     currentDate.getFullYear() - 6,
     currentDate.getMonth(),
-    currentDate.getDate()
+    currentDate.getDate(),
   );
 
   const oneHundredThirtyYearsAgo = new Date(
     currentDate.getFullYear() - 130,
     currentDate.getMonth(),
-    currentDate.getDate()
+    currentDate.getDate(),
   );
   return givenDate <= sixYearsAgo && givenDate >= oneHundredThirtyYearsAgo;
 }

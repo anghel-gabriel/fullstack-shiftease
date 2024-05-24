@@ -1,5 +1,14 @@
 import User from "../models/userModel.js";
 
+const getProfile = async (_id) => {
+  try {
+    const foundProfile = await User.findOne({ _id });
+    return foundProfile;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const changeEmailAddress = async (userId, newEmailAddress) => {
   try {
     await User.updateOne(
@@ -52,6 +61,7 @@ const removeProfilePicture = async (userId, photoURL) => {
 };
 
 export default {
+  getProfile,
   changeEmailAddress,
   changePassword,
   updateProfile,

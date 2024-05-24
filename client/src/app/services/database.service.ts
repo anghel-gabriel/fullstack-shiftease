@@ -7,23 +7,24 @@ import { IShift } from "../utils/interfaces";
   providedIn: "root",
 })
 export class DatabaseService {
-  loggedUserUid = new BehaviorSubject<string>("");
+  loggedUserData = new BehaviorSubject<any>(null);
   private areMyShiftsLoading = new BehaviorSubject<boolean>(false);
   private areAllShiftsLoading = new BehaviorSubject<boolean>(false);
   private areAllUsersLoading = new BehaviorSubject<boolean>(false);
-  private myShifts = new BehaviorSubject<[]>([]);
-  private allShifts = new BehaviorSubject<any[]>([]);
+  private myShifts = new BehaviorSubject<IShift[]>([]);
+  private allShifts = new BehaviorSubject<IShift[]>([]);
   private allUsers = new BehaviorSubject<any[]>([]);
 
   constructor(private auth: AuthenticationService) {
     this.auth
       .getLoggedUser()
-      .subscribe((userData) => this.loggedUserUid.next(userData?.uid));
-    this.getShifts();
+      .subscribe((userData) => this.loggedUserData.next(userData));
+    this.getUserShifts();
     this.getAllShiftsBackend();
     this.getAllUsersBackend();
   }
 
+  // Observables
   getAreMyShiftsLoading() {
     return this.areMyShiftsLoading.asObservable();
   }
@@ -48,79 +49,8 @@ export class DatabaseService {
     return this.allShifts.asObservable();
   }
 
-  async addShift(shift: IShift) {
-    try {
-      const response = await fetch(
-        "http://localhost:8080/api/user/shifts/add-shift",
-        {
-          method: "POST",
-          body: JSON.stringify(shift),
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message);
-      } else {
-        await this.getShifts();
-      }
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
-  }
-
-  async editShift(shiftId: string, newData: IShift) {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/user/shifts/update-shift/${shiftId}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(newData),
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-      await this.getShifts();
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
-  }
-
-  async deleteShift(shiftId: string) {
-    try {
-      this.areMyShiftsLoading.next(true);
-      const response = await fetch(
-        `http://localhost:8080/api/user/shifts/delete-shift/${shiftId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-      this.getShifts();
-    } catch (error: any) {
-      throw new Error(error.message);
-    } finally {
-      this.areMyShiftsLoading.next(false);
-    }
-  }
-
-  async getShifts() {
+  // REGULAR USERS METHODS
+  async getUserShifts() {
     try {
       this.areMyShiftsLoading.next(true);
       const response = await fetch(
@@ -145,6 +75,79 @@ export class DatabaseService {
     }
   }
 
+  async addShift(shift: IShift) {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/user/shifts/add-shift",
+        {
+          method: "POST",
+          body: JSON.stringify(shift),
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      } else {
+        this.myShifts.next(result);
+      }
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  async editShift(shiftId: string, newData: IShift) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/user/shifts/update-shift/${shiftId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(newData),
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+      this.myShifts.next(result);
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteShift(shiftId: string) {
+    try {
+      this.areMyShiftsLoading.next(true);
+      const response = await fetch(
+        `http://localhost:8080/api/user/shifts/delete-shift/${shiftId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+      this.myShifts.next(result);
+    } catch (error: any) {
+      throw new Error(error.message);
+    } finally {
+      this.areMyShiftsLoading.next(false);
+    }
+  }
+
+  // ADMIN USERS METHODS
   public async getAllShiftsBackend() {
     try {
       this.areAllShiftsLoading.next(true);

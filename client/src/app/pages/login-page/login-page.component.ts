@@ -84,8 +84,8 @@ export class LoginPageComponent {
     if (!this.password || !this.usernameOrEmail) {
       return this.showError("Please enter your login credentials.");
     }
+    this.isLoading = true;
     try {
-      this.isLoading = true;
       await this.auth.login(
         this.usernameOrEmail,
         this.password,

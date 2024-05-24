@@ -90,7 +90,6 @@ export class MyShiftsPageComponent {
     });
   }
 
-  // TODO: check best month modal is working
   onBestMonthClick() {
     this.bestMonthModalVisible = true;
   }
@@ -136,8 +135,8 @@ export class MyShiftsPageComponent {
   }
   // Edit shift method
   async onEditSubmit(editedShift: IShift) {
+    this.loading = true;
     try {
-      this.loading = true;
       this.editModalVisible = false;
       if (!this.selectedShift || !this.selectedShift._id)
         return this.showError("No shift selected for editing");
@@ -227,4 +226,7 @@ export class MyShiftsPageComponent {
       this.showSuccess("Data exported successfully.");
     }
   }
+  // TODO: check if export does work
+  // TODO: check if best month does work
+  // TODO: check if charts work
 }

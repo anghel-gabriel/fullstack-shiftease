@@ -72,8 +72,8 @@ export class EmployeesPageComponent {
 
   // delete all employee shifts
   async onDeleteEmployeeShifts(employee: any) {
+    this.isLoading = true;
     try {
-      this.isLoading = true;
       await this.db.deleteShiftsByUserIdBackend(employee);
     } catch (error: any) {
       this.showError(

@@ -1,4 +1,3 @@
-import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
@@ -19,7 +18,6 @@ export class ResetPasswordPageComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
     private router: Router,
     private toast: MessageService,
     private auth: AuthenticationService
@@ -49,8 +47,8 @@ export class ResetPasswordPageComponent {
       return this.showError("Passwords must match.");
     }
     // Sending password to server
+    this.isLoading = true;
     try {
-      this.isLoading = true;
       await this.auth.setNewPasswordBackend(this.token, this.newPassword);
       this.toast.add({
         severity: "success",

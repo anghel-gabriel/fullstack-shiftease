@@ -1,8 +1,6 @@
 import express from "express";
 import registerController from "../controllers/registerController.js";
 import loginController from "../controllers/loginController.js";
-import User from "../models/userModel.js";
-import jwt from "jsonwebtoken";
 import resetPasswordController from "../controllers/resetPasswordController.js";
 import sessionController from "../controllers/sessionController.js";
 
