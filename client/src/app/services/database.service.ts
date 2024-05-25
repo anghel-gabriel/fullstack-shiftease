@@ -152,7 +152,7 @@ export class DatabaseService {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/admin/get-shifts/`,
+        `http://localhost:8080/api/admin/get-all-shifts/`,
         {
           method: "GET",
           credentials: "include",
@@ -162,16 +162,15 @@ export class DatabaseService {
         }
       );
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(result.message);
       }
 
-      const data = await response.json();
-      this.allShifts.next(data);
+      this.allShifts.next(result.data);
     } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
-      );
+      throw new Error(error.message);
     } finally {
       this.areAllShiftsLoading.next(false);
     }

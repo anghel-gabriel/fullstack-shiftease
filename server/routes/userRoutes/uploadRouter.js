@@ -28,7 +28,7 @@ if (!fs.existsSync(path.join(__dirname, "../../pictures"))) {
   fs.mkdirSync(path.join(__dirname, "../../pictures"));
 }
 
-// Endpoint to handle file uploads
+// Upload photo
 uploadRouter.post(
   "/profile-picture",
   upload.single("photo"),
@@ -54,6 +54,7 @@ uploadRouter.post(
   }
 );
 
+// Delete photo
 uploadRouter.delete("/profile-picture", async (req, res) => {
   console.log("Delete request received");
   const { photoURL } = req.body;

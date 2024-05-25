@@ -145,16 +145,16 @@ const getAllShifts = async (req, res) => {
     fields from the user document referenced by the "author" property in each shift 
     object. This ensures that each shift includes the author's full name. 
     */
-    const populatedShifts = await Shift.find({}).populate(
-      "author",
-      "firstName lastName"
-    );
+    const populatedShifts = await shiftsService.getAllShifts();
     const transformedShifts = populatedShifts.map((shift) => ({
       ...shift.toJSON(),
       authorFullName: `${shift.author.firstName} ${shift.author.lastName}`,
       authorId: shift.author._id,
     }));
-    res.status(200).send(transformedShifts);
+    res.status(200).send({
+      message: "Shifts fetched successfully",
+      data: transformedShifts,
+    });
   } catch (error) {
     res
       .status(400)

@@ -39,7 +39,10 @@ const deleteShiftById = async (_id, author) => {
 // ADMIN USERS
 const getAllShifts = async () => {
   try {
-    const allShifts = await Shift.find();
+    const allShifts = await Shift.find().populate(
+      "author",
+      "firstName lastName"
+    );
     return allShifts;
   } catch (error) {
     throw new Error(error);

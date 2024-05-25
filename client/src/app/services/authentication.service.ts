@@ -15,7 +15,7 @@ export class AuthenticationService {
   }
 
   // REGULAR USERS METHODS
-
+  
   async updateUserPhoto(photoURL: string) {
     const currentLoggedUserData = await this.loggedUser.getValue();
     this.loggedUser.next({ ...currentLoggedUserData, photoURL });
