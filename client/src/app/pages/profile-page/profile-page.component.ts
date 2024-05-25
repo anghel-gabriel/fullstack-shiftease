@@ -34,19 +34,18 @@ export class ProfilePageComponent {
   constructor(
     private messageService: MessageService,
     private auth: AuthenticationService,
-    private fileUpload: FileUploadService
+    private fileUpload: FileUploadService,
   ) {
     this.auth.getLoggedUser().subscribe((data) => {
       this.fillProfileFields(data);
-      console.log(data);
     });
   }
 
   // Fill profile input fields with user data
   fillProfileFields(data: any) {
     if (data) {
-      this.username = data.email;
-      this.emailAddress = data.email;
+      this.username = data.username;
+      this.emailAddress = data.emailAddress;
       this.firstName = data.firstName;
       this.lastName = data.lastName;
       this.username = data.username;
@@ -90,13 +89,13 @@ export class ProfilePageComponent {
     }
     if (this.firstName.length < 2 || this.lastName.length < 2) {
       this.showError(
-        "First name and last name must be at least 2 characters long"
+        "First name and last name must be at least 2 characters long",
       );
       return;
     }
     if (!this.birthDate || !isUserAgeBetween6And130(new Date(this.birthDate))) {
       this.showError(
-        "You must be between 18 and 90 years old in order to register"
+        "You must be between 18 and 90 years old in order to register",
       );
       return;
     }
@@ -104,7 +103,7 @@ export class ProfilePageComponent {
     this.setLoadingSpinner(true);
     try {
       const newData = {
-        email: this.emailAddress,
+        emailAddress: this.emailAddress,
         username: this.username,
         firstName: this.firstName,
         lastName: this.lastName,

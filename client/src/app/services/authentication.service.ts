@@ -40,7 +40,7 @@ export class AuthenticationService {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ newPassword: newPassword }),
-        }
+        },
       );
 
       const result = await response.json();
@@ -63,14 +63,24 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        }
+        },
       );
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message);
+      else {
+        const currentData = this.loggedUser.getValue();
+        /* Keep the photoURL, emailAddress and userRole as they are not changed
+         by submitting edit profile form */
+        const newUserData = {
+          ...newData,
+          photoURL: currentData.photoURL,
+          emailAddress: currentData.emailAddress,
+          userRole: currentData.role,
+        };
+        this.loggedUser.next(newUserData);
+      }
     } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
-      );
+      throw new Error(error.message);
     }
   }
 
@@ -87,13 +97,13 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        }
+        },
       );
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
       throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
+        `Failed to fetch shifts: ${error.message || error.toString()}`,
       );
     }
   }
@@ -111,13 +121,13 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        }
+        },
       );
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
       throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
+        `Failed to fetch shifts: ${error.message || error.toString()}`,
       );
     }
   }
@@ -135,7 +145,7 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        }
+        },
       );
       const result = await response.json();
       if (!response.ok) {
@@ -156,7 +166,7 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        }
+        },
       );
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -165,7 +175,7 @@ export class AuthenticationService {
       return data;
     } catch (error: any) {
       throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
+        `Failed to fetch shifts: ${error.message || error.toString()}`,
       );
     }
   }
@@ -174,7 +184,7 @@ export class AuthenticationService {
     emailAddress: string,
     username: string,
     password: string,
-    confirmPassword: string
+    confirmPassword: string,
   ) {
     try {
       const response = await fetch(
@@ -190,7 +200,7 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        }
+        },
       );
       const result = await response.json();
       if (!response.ok) {

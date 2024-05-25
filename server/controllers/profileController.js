@@ -21,17 +21,13 @@ const updateProfile = async (req, res) => {
 
     // If it is a new username, we check the availability
     if (!isUsernameTheSame)
-      isUsernameAlreadyExisting = await registerService.checkUsernameExisting(
-        username
-      );
+      isUsernameAlreadyExisting =
+        await registerService.checkUsernameExisting(username);
 
     if (isUsernameAlreadyExisting) {
-      return res
-        .status(409)
-        .send({
-          message:
-            "This username is already in use. Please choose another one.",
-        });
+      return res.status(409).send({
+        message: "This username is already in use. Please choose another one.",
+      });
     }
     await profileService.updateProfile(reqUserId, {
       username,
@@ -40,10 +36,10 @@ const updateProfile = async (req, res) => {
       birthDate,
       gender,
     });
-    res.status(200).send("Profile updated successfully");
+
+    res.status(200).send({ message: "Profile updated successfully" });
   } catch (error) {
-    console.log(error);
-    res.status(500).send("Internal server error");
+    res.status(500).send({ message: "Internal server error" });
   }
 };
 
