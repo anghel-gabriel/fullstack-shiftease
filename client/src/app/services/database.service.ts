@@ -169,7 +169,6 @@ export class DatabaseService {
       const data = await response.json();
       this.allShifts.next(data);
     } catch (error: any) {
-      console.log(error);
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
       );

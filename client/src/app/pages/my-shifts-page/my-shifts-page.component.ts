@@ -66,7 +66,7 @@ export class MyShiftsPageComponent {
   ) {
     this.db.getMyShiftsObsBackend().subscribe((data) => (this.shifts = data));
     this.auth.getLoggedUser().subscribe((data) => {
-      this.userPhotoURL = data?.photoURL || defaultPhotoURL;
+      this.userPhotoURL = data?.photoURL;
       this.userFirstName = data?.firstName;
     });
     this.db

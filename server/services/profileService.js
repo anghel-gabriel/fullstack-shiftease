@@ -15,9 +15,8 @@ const changeEmailAddress = async (userId, newEmailAddress) => {
       { _id: userId },
       { $set: { emailAddress: newEmailAddress } }
     );
-    console.log("Email address updated successfully");
   } catch (error) {
-    console.error("Error updating email address:", error);
+    throw new Error(error);
   }
 };
 
@@ -25,26 +24,23 @@ const changePassword = async (userId, newPassword) => {
   try {
     await User.updateOne({ _id: userId }, { $set: { password: newPassword } });
   } catch (error) {
-    console.error("Error updating password:", error);
+    throw new Error(error);
   }
 };
 
 const updateProfile = async (userId, newData) => {
   try {
     await User.updateOne({ _id: userId }, { $set: newData });
-    console.log("Profile updated successfully");
   } catch (error) {
-    console.error("Error updating profile:", error);
-    throw error;
+    throw new Error(error);
   }
 };
 
 const updateProfilePicture = async (userId, photoURL) => {
   try {
     await User.updateOne({ _id: userId }, { $set: { photoURL } });
-    console.log("Profile picture updated successfully");
   } catch (error) {
-    console.error("Error updating profile picture:", error);
+    throw new Error(error);
   }
 };
 
@@ -54,9 +50,8 @@ const removeProfilePicture = async (userId, photoURL) => {
       { _id: userId },
       { $set: { photoURL: "http://localhost:8080/pictures/defaultPhoto.png" } }
     );
-    console.log("Profile picture updated successfully");
   } catch (error) {
-    console.error("Error updating profile picture:", error);
+    throw new Error(error);
   }
 };
 

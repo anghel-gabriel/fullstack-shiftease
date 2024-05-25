@@ -7,9 +7,7 @@ import {
 } from "../../utils/validation";
 import { AuthenticationService } from "../../services/authentication.service";
 import { FileUploadService } from "src/app/services/file-upload.service";
-import { defaultPhotoURL } from "src/app/utils/defaultProfileImage";
 import { IGenderOption, genderOptionList } from "src/app/utils/genderOptions";
-import { DatabaseService } from "src/app/services/database.service";
 
 @Component({
   selector: "app-profile-page",
@@ -18,87 +16,56 @@ import { DatabaseService } from "src/app/services/database.service";
   providers: [MessageService],
 })
 export class ProfilePageComponent {
-  // user properties
-  uid = "";
-  email = "";
-  username = "";
-  firstName = "";
-  lastName = "";
-  birthDate: any;
+  // User data
+  emailAddress: string = "";
+  username: string = "";
+  firstName: string = "";
+  lastName: string = "";
+  birthDate: Date | null = null;
+  photoURL: string = "";
+  isLoading = false;
   gender: string | IGenderOption = "";
-  photoURL = "";
-  activeIndex = 0;
-  checked = false;
-  isLoading = true;
-  isViewPortAtLeastMedium: boolean = false;
+  genderOptions: IGenderOption[] = genderOptionList;
+
+  // Modals states
   isChangingPasswordModalVisible = false;
   isChangingEmailModalVisible = false;
-  actualFirstName = "";
-  actualLastName = "";
-  actualUsername = "";
-
-  genderOptions = genderOptionList;
-  // steps component
-  items: MenuItem[] | undefined = [
-    {
-      label: "Credentials",
-    },
-    {
-      label: "Personal",
-    },
-    {
-      label: "Agreement",
-    },
-  ];
 
   constructor(
     private messageService: MessageService,
     private auth: AuthenticationService,
-    private fileUpload: FileUploadService,
-    private database: DatabaseService
+    private fileUpload: FileUploadService
   ) {
-    this.isViewPortAtLeastMedium = window.innerWidth >= 640;
-    this.auth.getLoggedUser().subscribe((data: any) => {
+    this.auth.getLoggedUser().subscribe((data) => {
       this.fillProfileFields(data);
-      if (data) this.isLoading = false;
+      console.log(data);
     });
   }
 
-  // adjust previous&next buttons depending on viewport width
-  @HostListener("window:resize", ["$event"])
-  onResize(event: any) {
-    this.isViewPortAtLeastMedium = window.innerWidth >= 640;
-  }
-
-  // fill profile input fields
+  // Fill profile input fields with user data
   fillProfileFields(data: any) {
     if (data) {
-      this.uid = data.uid;
       this.username = data.email;
-      this.email = data.email;
+      this.emailAddress = data.email;
       this.firstName = data.firstName;
       this.lastName = data.lastName;
       this.username = data.username;
       this.birthDate = new Date(data.birthDate);
       this.gender = data.gender || { name: "Unknown", value: "unknown" };
       this.photoURL = data.photoURL;
-      this.actualFirstName = data.firstName;
-      this.actualLastName = data.lastName;
-      this.actualUsername = data.username;
     }
   }
 
-  // show error toast function
-  showError(message: any) {
+  // Show error toast function
+  showError(message: string) {
     this.messageService.add({
       severity: "error",
       detail: message,
       summary: "Error",
     });
   }
-
-  // show success toast notification
-  showSuccess(message: any) {
+  // Show success toast notification
+  showSuccess(message: string) {
     this.messageService.add({
       severity: "success",
       detail: message,
@@ -106,41 +73,38 @@ export class ProfilePageComponent {
     });
   }
 
-  // set loading spinner
-  setLoadingSpinner(event: any) {
+  // Set loading spinner
+  setLoadingSpinner(event: boolean) {
     this.isLoading = event;
   }
 
-  // form validation
+  // Save profile method
   async handleSaveProfile() {
+    // Form validation
+    if (this.username.length < 6) {
+      this.showError("Your username must be at least 6 characters long");
+    }
+    if (!isUsernameValid(this.username)) {
+      this.showError("Your username must be alphanumeric");
+      return;
+    }
+    if (this.firstName.length < 2 || this.lastName.length < 2) {
+      this.showError(
+        "First name and last name must be at least 2 characters long"
+      );
+      return;
+    }
+    if (!this.birthDate || !isUserAgeBetween6And130(new Date(this.birthDate))) {
+      this.showError(
+        "You must be between 18 and 90 years old in order to register"
+      );
+      return;
+    }
+
+    this.setLoadingSpinner(true);
     try {
-      if (this.username.length < 6) {
-        this.showError("Your username must be at least 6 characters long");
-      }
-      if (!isUsernameValid(this.username)) {
-        this.showError("Your username must be alphanumeric");
-        return;
-      }
-      if (this.firstName.length < 2 || this.lastName.length < 2) {
-        this.showError(
-          "First name and last name must be at least 2 characters long"
-        );
-        return;
-      }
-      if (
-        !this.birthDate ||
-        !isUserAgeBetween6And130(new Date(this.birthDate))
-      ) {
-        this.showError(
-          "You must be between 18 and 90 years old in order to register"
-        );
-        return;
-      }
-
-      this.isLoading = true;
-
       const newData = {
-        email: this.email,
+        email: this.emailAddress,
         username: this.username,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -153,59 +117,52 @@ export class ProfilePageComponent {
         detail: "Changes saved succesfully",
         summary: "Success",
       });
-    } catch (error) {
-      this.showError(
-        "An error has occurred while updating data. Please try again."
-      );
+    } catch (error: any) {
+      this.showError(error.message);
     } finally {
-      this.isLoading = false;
+      this.setLoadingSpinner(false);
     }
   }
 
+  // Photo upload method
   async onUpload(event: any) {
-    this.isLoading = true;
+    this.setLoadingSpinner(true);
     for (let file of event.files) {
       try {
         // Create a FormData object and append the file
         const formData = new FormData();
         formData.append("photo", file);
-
         // Upload the file and get the photo URL
-        const result = await this.fileUpload.uploadFile(formData);
-        const photoURL = result.photoURL;
-
-        const userId = "vrajeala";
-        if (userId) {
-          await this.auth.updateUserPhoto(userId, photoURL);
-          this.photoURL = photoURL;
-        }
-      } catch (error) {
-        this.showError(
-          "An error has occurred while updating profile picture. Please try again."
-        );
-      } finally {
-        this.isLoading = false;
+        const photoURL = await this.fileUpload.uploadFile(formData);
+        await this.auth.updateUserPhoto(photoURL);
         this.showSuccess("Profile picture updated successfully.");
+      } catch (error: any) {
+        this.showError(error.message);
+      } finally {
+        this.setLoadingSpinner(false);
       }
     }
   }
 
+  // Remove photo method
   async removePhoto() {
-    this.isLoading = true;
+    this.setLoadingSpinner(true);
     try {
       // Call the backend to remove the photo
-      const response = await this.fileUpload.deleteFile(this.photoURL);
+      await this.fileUpload.deleteFile(this.photoURL);
 
       // Update the user profile photo to the default one
-      const defaultPhoto = defaultPhotoURL;
+      await this.auth.removeUserPhoto();
       this.photoURL = "http://localhost:8080/pictures/defaultPhoto.png";
       this.showSuccess("Profile picture removed successfully.");
-    } catch (error) {
-      this.showError(
-        "An error has occurred while removing the profile picture. Please try again."
-      );
+    } catch (error: any) {
+      this.showError(error.message);
     } finally {
-      this.isLoading = false;
+      this.setLoadingSpinner(false);
     }
   }
 }
+
+// TODO: add user interface
+// TODO: add error types
+// TODO: check if can throw errors with 'throw error'

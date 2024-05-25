@@ -6,35 +6,24 @@ import { Injectable } from "@angular/core";
 export class FileUploadService {
   constructor() {}
 
-  async uploadFile(photo: FormData): Promise<{ photoURL: string }> {
+  async uploadFile(photo: FormData) {
     try {
       const response = await fetch(
         "http://localhost:8080/api/user/upload/profile-picture",
         {
           method: "POST",
           body: photo,
-          credentials: "include", // Ensure cookies are included in the request
+          credentials: "include",
         }
       );
-
-      if (response.ok) {
-        const result = await response.json();
-        return result;
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
       } else {
-        try {
-          const result = await response.json();
-          console.error("Failed to upload photo");
-          throw new Error("Failed to upload photo");
-        } catch (jsonError) {
-          // Handle non-JSON responses
-          const text = await response.text();
-          console.error("Failed to upload photo:", text);
-          throw new Error(`Failed to upload photo: ${text}`);
-        }
+        return result.photoURL;
       }
-    } catch (error) {
-      console.error("An error occurred while uploading the photo:", error);
-      throw error;
+    } catch (error: any) {
+      throw new Error(error);
     }
   }
 
@@ -53,8 +42,10 @@ export class FileUploadService {
         }
       );
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to remove the profile picture");
+        throw new Error(result.message);
       }
     } catch (error: any) {
       throw new Error(error);

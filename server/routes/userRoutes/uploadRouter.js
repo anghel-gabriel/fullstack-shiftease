@@ -39,7 +39,6 @@ uploadRouter.post(
       const photoURL = `${req.protocol}://${req.get("host")}/pictures/${
         req.file.filename
       }`;
-      console.log(photoURL);
       try {
         await profileService.updateProfilePicture(userId, photoURL);
         res

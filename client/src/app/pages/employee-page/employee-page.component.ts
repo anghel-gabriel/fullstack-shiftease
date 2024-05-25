@@ -94,7 +94,7 @@ export class EmployeePageComponent {
     this.isLoading = true;
     try {
       if (this.employeeId) {
-        await this.auth.removeUserPhoto(this.employeeId);
+        // await this.auth.removeUserPhoto(this.employeeId);
         await this.fileUpload.deleteFile(this.photoURL);
         this.photoURL = this.defaultPhotoURL;
       }

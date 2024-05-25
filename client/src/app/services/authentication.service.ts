@@ -16,12 +16,17 @@ export class AuthenticationService {
 
   // REGULAR USERS METHODS
 
-  async updateUserPhoto(userId: string, photoURL: string) {
-    // TODO:
+  async updateUserPhoto(photoURL: string) {
+    const currentLoggedUserData = await this.loggedUser.getValue();
+    this.loggedUser.next({ ...currentLoggedUserData, photoURL });
   }
 
-  async removeUserPhoto(userId: string) {
-    // TODO:
+  async removeUserPhoto() {
+    const currentLoggedUserData = await this.loggedUser.getValue();
+    this.loggedUser.next({
+      ...currentLoggedUserData,
+      photoURL: "http://localhost:8080/pictures/defaultPhoto.png ",
+    });
   }
 
   async setNewPasswordBackend(token: string, newPassword: string) {
