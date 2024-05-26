@@ -22,8 +22,8 @@ export interface UserInterface {
 
 export interface IShift {
   _id?: string;
-  startTime: string;
-  endTime: string;
+  startTime: string | Date;
+  endTime: string | Date;
   hourlyWage: number;
   workplace: string;
   comments: string;

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import * as FileSaver from "file-saver";
 import { ConfirmationService, MessageService } from "primeng/api";
@@ -13,7 +13,7 @@ import { DatabaseService } from "src/app/services/database.service";
   styleUrl: "./employees-page.component.scss",
   providers: [ConfirmationService, MessageService],
 })
-export class EmployeesPageComponent {
+export class EmployeesPageComponent implements OnInit {
   @ViewChild("dt") dt: Table | undefined;
   @ViewChild("op") overlayPanel!: OverlayPanel;
   // Loading states
@@ -47,6 +47,11 @@ export class EmployeesPageComponent {
       }
     });
     this.db.getAreAllUsersLoading().subscribe((val) => (this.isLoading = val));
+  }
+
+  // Get all employees when accessing the page
+  ngOnInit(): void {
+    this.db.getAllUsers();
   }
 
   // Show error toast notification

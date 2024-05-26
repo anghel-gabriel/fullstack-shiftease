@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import * as FileSaver from "file-saver";
 import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
@@ -15,7 +15,7 @@ import { IData, IOptions, IShift } from "src/app/utils/interfaces";
   styleUrls: ["./my-shifts-page.component.scss"],
   providers: [ConfirmationService, MessageService],
 })
-export class MyShiftsPageComponent {
+export class MyShiftsPageComponent implements OnInit {
   @ViewChild("dt") dt: Table | undefined;
   @ViewChild("op") overlayPanel!: OverlayPanel;
   // Loading states
@@ -72,6 +72,11 @@ export class MyShiftsPageComponent {
     this.db
       .getAreMyShiftsLoading()
       .subscribe((value) => (this.isLoading = value));
+  }
+
+  // Get my shifts when accessing the page
+  ngOnInit() {
+    this.db.getUserShifts();
   }
 
   // Toast notification methods

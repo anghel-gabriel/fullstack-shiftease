@@ -19,9 +19,6 @@ export class DatabaseService {
     this.auth
       .getLoggedUser()
       .subscribe((userData) => this.loggedUserData.next(userData));
-    this.getUserShifts();
-    this.getAllShifts();
-    this.getAllUsers();
   }
 
   // Observables

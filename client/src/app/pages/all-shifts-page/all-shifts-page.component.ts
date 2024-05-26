@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import * as FileSaver from "file-saver";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { OverlayPanel } from "primeng/overlaypanel";
@@ -13,20 +13,21 @@ import { getImageUrl } from "src/app/utils/workplaces";
   styleUrl: "./all-shifts-page.component.scss",
   providers: [ConfirmationService, MessageService],
 })
-export class AllShiftsPageComponent {
+export class AllShiftsPageComponent implements OnInit {
   @ViewChild("dt") dt: Table | undefined;
   @ViewChild("op") overlayPanel!: OverlayPanel;
-  // loading states
+  // Loading states
+  // TODO: check spinner not displaying
   loading: boolean = false;
   isLoading: boolean = false;
 
-  // modals
-  editModalVisible = false;
-  statisticsModalVisible = false;
+  // Modals states
+  editModalVisible: boolean = false;
+  statisticsModalVisible: boolean = false;
   // comment
   currentComments: string = "";
   // shifts
-  shifts: any = [];
+  shifts: any[] = [];
   selectedShift: any = null;
   getWorkplaceImage = getImageUrl;
 
@@ -44,9 +45,16 @@ export class AllShiftsPageComponent {
         };
       });
     });
-    this.db.getAreMyShiftsLoading().subscribe((val) => (this.isLoading = val));
+    this.db.getAreAllShiftsLoading().subscribe((val) => (this.isLoading = val));
   }
-  showError(message: string) {
+
+  // Get all shifts when accessing the page
+  ngOnInit(): void {
+    this.db.getAllShifts();
+  }
+
+  // Show error toast notification
+  showError(message: string): void {
     this.messageService.add({
       severity: "error",
       detail: message,
@@ -54,20 +62,21 @@ export class AllShiftsPageComponent {
     });
   }
 
-  // statistics modal
-  onStatisticsClick() {
+  // Statistics modal actions
+  onStatisticsClick(): void {
     this.statisticsModalVisible = true;
   }
-  onStatisticsModalClose() {
+  onStatisticsModalClose(): void {
     this.statisticsModalVisible = false;
   }
 
-  // edit modal
-  onEditClick(shift: any) {
+  // Open edit modal method
+  onEditClick(shift: IShift): void {
     this.selectedShift = shift;
     this.editModalVisible = true;
   }
-  async onEditSubmit(editedShift: any) {
+  // Edit shift method
+  async onEditSubmit(editedShift: IShift): Promise<void> {
     this.loading = true;
     this.editModalVisible = false;
     try {
@@ -78,13 +87,14 @@ export class AllShiftsPageComponent {
       this.loading = false;
     }
   }
-  onEditModalClose() {
+  // Close edit modal method
+  onEditModalClose(): void {
     this.selectedShift = null;
     this.editModalVisible = false;
   }
 
-  // delete confirmation popup
-  onDeleteClick(event: Event, shift: any) {
+  // Delete confirmation popup
+  onDeleteClick(event: Event, shift: IShift): void {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: "Are you sure?",
@@ -96,7 +106,8 @@ export class AllShiftsPageComponent {
       reject: () => {},
     });
   }
-  async onDeleteConfirm(shiftId: any) {
+  // Delete shift method
+  async onDeleteConfirm(shiftId: any): Promise<void> {
     this.loading = true;
     try {
       await this.db.deleteShiftAsAdmin(shiftId);
@@ -107,12 +118,12 @@ export class AllShiftsPageComponent {
     }
   }
 
-  // search input (by workplace)
-  applyFilterGlobal($event: any, stringVal: any) {
+  // Search input (by workplace)
+  applyFilterGlobal($event: any, stringVal: string): void {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
-  // view comment button overlay panel
+  // View comment button overlay panel
   toggleOverlayPanel(event: any, comments: string): void {
     if (comments) {
       this.currentComments = comments;
@@ -120,13 +131,14 @@ export class AllShiftsPageComponent {
     } else this.overlayPanel.hide();
   }
 
-  // shifts to excel
+  // Export shifts to Excel document
   async exportExcel() {
     this.isLoading = true;
     try {
       const xlsx = await import("xlsx");
       const worksheet = xlsx.utils.json_to_sheet(
         this.shifts.map((shift: any) => ({
+          // TODO: check if authorfullname does exist
           Employee: shift.authorFullName,
           Workplace: shift.workplace,
           "Start Time": shift.startTime.toLocaleString(),
