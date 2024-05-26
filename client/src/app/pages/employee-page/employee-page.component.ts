@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { UsersService } from "src/app/services/users.service";
@@ -16,7 +16,7 @@ import {
   styleUrl: "./employee-page.component.scss",
   providers: [MessageService],
 })
-export class EmployeePageComponent {
+export class EmployeePageComponent implements OnInit {
   // Employee data
   employeeId: string = "";
   firstName: string = "";
@@ -39,10 +39,12 @@ export class EmployeePageComponent {
   constructor(
     private route: ActivatedRoute,
     private usersService: UsersService,
-    private fileUpload: FileUploadService,
+    private fileUploadService: FileUploadService,
     private messageService: MessageService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.employeeId = this.route.snapshot.paramMap.get("employeeId") || "";
     this.fillFieldsWithEmployeeData();
   }
@@ -92,7 +94,7 @@ export class EmployeePageComponent {
     try {
       if (this.employeeId) {
         // await this.usersService.removeUserPhoto(this.employeeId);
-        await this.fileUpload.deleteFile(this.photoURL);
+        await this.fileUploadService.deleteFile(this.photoURL);
         // this.photoURL = this.defaultPhotoURL;
       }
     } catch (error: any) {
@@ -110,7 +112,27 @@ export class EmployeePageComponent {
     }
   }
 
-  async onUpload(event: any): Promise<void> {}
+  async onUpload(event: any): Promise<void> {
+    this.isLoading = true;
+    for (let file of event.files) {
+      try {
+        // Create a FormData object and append the file
+        const formData = new FormData();
+        formData.append("photo", file);
+        // Upload the file and get the photo URL
+        const newPhotoURL = await this.fileUploadService.uploadPhotoAsAdmin(
+          this.employeeId,
+          formData
+        );
+        this.photoURL = newPhotoURL;
+        this.showSuccess("Profile picture updated successfully.");
+      } catch (error: any) {
+        this.showError(error.message);
+      } finally {
+        this.isLoading = false;
+      }
+    }
+  }
 
   async handleSaveProfile(): Promise<void> {
     try {
@@ -148,11 +170,10 @@ export class EmployeePageComponent {
         gender: this.gender,
       };
 
-      const newProfileData = await this.usersService.editProfileAsAdmin(
+      await this.usersService.editProfileAsAdmin(
         this.employeeId,
         newData as any
       );
-      this.fillFieldsWithEmployeeData();
       this.showSuccess("Changes saved succesfully");
     } catch (error: any) {
       this.showError(error.message);

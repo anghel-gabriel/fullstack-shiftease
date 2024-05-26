@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
-const upload = multer({ storage: storage });
+export const upload = multer({ storage: storage });
 
 // Ensure the "pictures" folder exists
 if (!fs.existsSync(path.join(__dirname, "../../pictures"))) {

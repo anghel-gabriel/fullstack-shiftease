@@ -291,9 +291,6 @@ export class UsersService {
       );
       const result = await response.json();
       if (!response.ok) throw new Error(result.message);
-      else {
-        return result.data;
-      }
     } catch (error: any) {
       throw new Error(error.message);
     }

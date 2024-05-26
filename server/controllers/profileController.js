@@ -3,6 +3,7 @@ import registerService from "../services/registerService.js";
 import { isEmailValid, isPasswordValid } from "../utils/validation.js";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
+import { upload } from "../routes/userRoutes/uploadRouter.js";
 
 // REGULAR USERS
 
@@ -104,6 +105,7 @@ const updateProfilePicture = async (userId, photoURL) => {
 
 // ADMIN USERS
 
+// This function is used by admins to get any user's profile data
 const getUser = async (req, res) => {
   const { id } = req.params;
   const userId = ObjectId.createFromHexString(id);
@@ -119,7 +121,7 @@ const getUser = async (req, res) => {
   }
 };
 
-// This function is used to get all users (employees)
+// This function is used by admins to get all users (employees)
 const getAllUsers = async (req, res) => {
   try {
     const foundUsers = await profileService.getAllUsers();
@@ -133,13 +135,12 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// This function is used by users to change their own profile data
+// This function is used by admins to change their own profile data
 const updateProfileAsAdmin = async (req, res) => {
   const { username, firstName, lastName, birthDate, gender } = req.body;
   const { id } = req.params;
   const userId = ObjectId.createFromHexString(id);
 
-  console.log(firstName);
   try {
     let isUsernameTheSame = false;
     let isUsernameAlreadyExisting = false;
@@ -166,12 +167,27 @@ const updateProfileAsAdmin = async (req, res) => {
       birthDate,
       gender,
     });
-    const newUserData = await profileService.getProfile(userId);
-    res
-      .status(200)
-      .send({ message: "Profile updated successfully", data: newUserData });
+    res.status(200).send({ message: "Profile updated successfully" });
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
+  }
+};
+
+// This functions is used by admins to upload new profile photos
+const updateProfilePictureAsAdmin = async (req, res) => {
+  const { id } = req.params;
+  const userId = ObjectId.createFromHexString(id);
+
+  const photoURL = `${req.protocol}://${req.get("host")}/pictures/${
+    req.file.filename
+  }`;
+  try {
+    await profileService.updateProfilePicture(userId, photoURL);
+    return res
+      .status(200)
+      .json({ message: "File uploaded successfully", photoURL });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -183,4 +199,5 @@ export default {
   getAllUsers,
   getUser,
   updateProfileAsAdmin,
+  updateProfilePictureAsAdmin,
 };

@@ -1,4 +1,4 @@
-import { Component, HostListener } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { MenuItem } from "primeng/api";
 import { MessageService } from "primeng/api";
 import {
@@ -26,8 +26,7 @@ export class ProfilePageComponent {
   gender: string | IGenderOption = "";
   genderOptions: IGenderOption[] = genderOptionList;
   // Loading state
-  isLoading = false;
-
+  isLoading: boolean = false;
   // Modals states
   isChangingPasswordModalVisible = false;
   isChangingEmailModalVisible = false;
