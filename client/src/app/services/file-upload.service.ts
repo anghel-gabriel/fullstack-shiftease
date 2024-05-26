@@ -75,5 +75,27 @@ export class FileUploadService {
     }
   }
 
-  async deletePhotoAsAdmin(employeeId: string) {}
+  async deletePhotoAsAdmin(employeeId: string, photoURL: string) {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/admin/upload/profile-picture",
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ employeeId, photoURL }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
 }

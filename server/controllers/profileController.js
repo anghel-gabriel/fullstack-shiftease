@@ -4,6 +4,10 @@ import { isEmailValid, isPasswordValid } from "../utils/validation.js";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 import { upload } from "../routes/userRoutes/uploadRouter.js";
+import path from "path";
+import { __dirname } from "../app.js";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
 // REGULAR USERS
 
@@ -103,6 +107,43 @@ const updateProfilePicture = async (userId, photoURL) => {
   }
 };
 
+const deleteProfilePicture = async (req, res) => {
+  const { photoURL } = req.body;
+  const userId = req.tokenData.id; // Assuming userId is available in tokenData
+
+  if (
+    !photoURL ||
+    photoURL === "http://localhost:8080/pictures/defaultPhoto.png"
+  ) {
+    return res.status(400).json({ message: "photoURL is required" });
+  }
+
+  try {
+    // Update the user's profile picture URL to the default one
+    await profileService.removeProfilePicture(userId);
+
+    // Extract the filename from the photoURL
+    const filename = path.basename(photoURL);
+    const filePath = path.join(__dirname, "../../pictures", filename);
+
+    // Check if the file exists before trying to delete it
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          return res.status(500).json({ message: "Internal server error" });
+        }
+        res
+          .status(200)
+          .json({ message: "Profile picture removed successfully" });
+      });
+    } else {
+      res.status(404).json({ message: "File not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 // ADMIN USERS
 
 // This function is used by admins to get any user's profile data
@@ -191,6 +232,55 @@ const updateProfilePictureAsAdmin = async (req, res) => {
   }
 };
 
+const deleteProfilePictureAsAdmin = async (req, res) => {
+  const { photoURL, employeeId } = req.body;
+  const userId = ObjectId.createFromHexString(employeeId);
+
+  if (
+    !photoURL ||
+    photoURL === "http://localhost:8080/pictures/defaultPhoto.png"
+  ) {
+    return res.status(400).json({ message: "photoURL is required" });
+  }
+
+  try {
+    // Update the user's profile picture URL to the default one
+    await profileService.removeProfilePicture(userId);
+
+    // Extract the filename from the photoURL
+    const filename = path.basename(photoURL);
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    // Adjust the file path to the actual location of the stored files
+    const filePath = path.join(__dirname, "../pictures", filename);
+
+    // Log file path information for debugging
+    console.log("photoURL:", photoURL);
+    console.log("filename:", filename);
+    console.log("filePath:", filePath);
+
+    // Check if the file exists before trying to delete it
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error("Error deleting file:", err);
+          return res.status(500).json({ message: "Internal server error" });
+        }
+        res
+          .status(200)
+          .json({ message: "Profile picture removed successfully" });
+      });
+    } else {
+      console.warn("File not found:", filePath);
+      res.status(404).json({ message: "File not found" });
+    }
+  } catch (error) {
+    console.error("Error during file removal:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export default {
   changeEmailAddress,
   changePassword,
@@ -200,4 +290,6 @@ export default {
   getUser,
   updateProfileAsAdmin,
   updateProfilePictureAsAdmin,
+  deleteProfilePicture,
+  deleteProfilePictureAsAdmin,
 };

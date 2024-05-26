@@ -9,12 +9,17 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 const PORT = process.env.PORT ?? 8080;
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export const __dirname = path.dirname(__filename);
+// Ensure the "pictures" folder exists
+if (!fs.existsSync(path.join(__dirname, "../../pictures"))) {
+  fs.mkdirSync(path.join(__dirname, "../../pictures"));
+}
 
 // Enable CORS
 app.use(

@@ -93,19 +93,17 @@ export class EmployeePageComponent implements OnInit {
     this.isLoading = true;
     try {
       if (this.employeeId) {
-        // await this.usersService.removeUserPhoto(this.employeeId);
-        await this.fileUploadService.deleteFile(this.photoURL);
-        // this.photoURL = this.defaultPhotoURL;
+        await this.fileUploadService.deletePhotoAsAdmin(
+          this.employeeId,
+          this.photoURL
+        );
+        this.photoURL = this.defaultPhotoURL;
       }
     } catch (error: any) {
-      if (
-        !error.message.includes(
-          "expected a child path but got a URL, use refFromURL instead"
-        )
-      )
-        this.showError(
-          "An error has occured while removing profile picture. Please try again."
-        );
+      console.log(error);
+      this.showError(
+        "An error has occured while removing profile picture. Please try again."
+      );
     } finally {
       this.isLoading = false;
       this.showSuccess("Profile picture removed successfully.");
