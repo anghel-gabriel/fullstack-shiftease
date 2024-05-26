@@ -4,6 +4,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
 import { DatabaseService } from "src/app/services/database.service";
+import { IShift } from "src/app/utils/interfaces";
 import { getImageUrl } from "src/app/utils/workplaces";
 
 @Component({
@@ -34,7 +35,7 @@ export class AllShiftsPageComponent {
     private messageService: MessageService,
     private db: DatabaseService
   ) {
-    this.db.getAllShiftsObsBackend().subscribe((shifts) => {
+    this.db.getAllShiftsObs().subscribe((shifts: IShift[]) => {
       this.shifts = [...shifts].map((shift) => {
         return {
           ...shift,
@@ -98,11 +99,9 @@ export class AllShiftsPageComponent {
   async onDeleteConfirm(shiftId: any) {
     this.loading = true;
     try {
-      await this.db.deleteShift(shiftId);
+      await this.db.deleteShiftAsAdmin(shiftId);
     } catch (error: any) {
-      this.showError(
-        "An error occurred while updating shift. Please try again."
-      );
+      this.showError(error.message);
     } finally {
       this.loading = false;
     }

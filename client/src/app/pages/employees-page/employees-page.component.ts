@@ -40,9 +40,11 @@ export class EmployeesPageComponent {
       this.users = [...users];
     });
     this.auth.getLoggedUser().subscribe((data) => {
-      this.myId = data._id;
-      // TODO: check if it is needed
-      this.myRole = data.role;
+      if (data) {
+        this.myId = data._id;
+        // TODO: check if it is needed
+        this.myRole = data.role;
+      }
     });
     this.db.getAreAllUsersLoading().subscribe((val) => (this.isLoading = val));
   }

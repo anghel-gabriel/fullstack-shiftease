@@ -60,13 +60,11 @@ const changeEmailAddress = async (req, res) => {
       await registerService.checkEmailAddressExisting(emailAddress);
 
     if (isEmailAddressAlreadyExisting) {
-      console.log("Email address already existing");
       return res.status(400).send("Chosen email address is already existing.");
     }
     await profileService.changeEmailAddress(userId, emailAddress);
     res.status(200).send({ message: "Email address updated successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).send({ message: "Internal server error" });
   }
 };
@@ -90,7 +88,6 @@ const changePassword = async (req, res) => {
         res.status(200).send("Password updated successfully.");
       }
     } catch (error) {
-      console.log(error);
       res.status(500).send("Internal server error");
     }
   });
@@ -100,20 +97,28 @@ const changePassword = async (req, res) => {
 const updateProfilePicture = async (userId, photoURL) => {
   try {
     await profileService.updateProfilePicture(userId, photoURL);
-    console.log("Profile picture updated successfully");
   } catch (error) {
-    console.log(error);
     throw new Error("Error updating profile picture");
   }
 };
 
 // ADMIN USERS
 
+const getUser = async (req, res) => {
+  const { id } = req.params;
+  const userId = ObjectId.createFromHexString(id);
+  try {
+    const userData = await User.findOne({ _id: userId });
+    res.status(200).send(userData);
+  } catch (error) {
+    res.status(400).send("An error has occurred while getting shifts.");
+  }
+};
+
 // This function is used to get all users (employees)
 const getAllUsers = async (req, res) => {
   try {
     const foundUsers = await profileService.getAllUsers();
-    console.log(foundUsers);
     res
       .status(200)
       .send({ message: "Users fetched successfully!", data: foundUsers });
@@ -130,4 +135,5 @@ export default {
   updateProfile,
   updateProfilePicture,
   getAllUsers,
+  getUser,
 };

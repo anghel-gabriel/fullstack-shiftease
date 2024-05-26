@@ -45,7 +45,7 @@ export class DatabaseService {
     return this.myShifts.asObservable();
   }
 
-  getAllShiftsObsBackend() {
+  getAllShiftsObs() {
     return this.allShifts.asObservable();
   }
 
@@ -216,6 +216,32 @@ export class DatabaseService {
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message);
+      }
+    } catch (error: any) {
+      throw new Error(error.message);
+    } finally {
+      this.areAllShiftsLoading.next(false);
+    }
+  }
+
+  async deleteShiftAsAdmin(shiftId: string) {
+    try {
+      this.areAllShiftsLoading.next(true);
+      const response = await fetch(
+        `http://localhost:8080/api/admin/shifts/delete-shift/${shiftId}/`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      } else {
+        this.allShifts.next(result.data);
       }
     } catch (error: any) {
       throw new Error(error.message);

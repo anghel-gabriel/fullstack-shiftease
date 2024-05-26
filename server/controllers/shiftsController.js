@@ -125,7 +125,7 @@ const deleteShift = async (req, res) => {
 
   try {
     // userId is used to ensure that the author of the shift is the logged-in user
-    await shiftsService.deleteShiftById(shiftId, reqUserId);
+    await shiftsService.deleteShiftByIdAndAuthor(shiftId, reqUserId);
     const newShifts = await shiftsService.getUserShifts(userId);
     res.status(200).send(newShifts);
   } catch (error) {
@@ -162,6 +162,24 @@ const getAllShifts = async (req, res) => {
   }
 };
 
+// This function is used by admins to delete any shift by shiftId
+const deleteShiftAsAdmin = async (req, res) => {
+  const { id } = req.params;
+  const shiftId = ObjectId.createFromHexString(id);
+
+  try {
+    await shiftsService.deleteShiftAsAdmin(shiftId);
+    const newShifts = await shiftsService.getAllShifts();
+    res
+      .status(200)
+      .send({ message: "Shift deleted successfully", data: newShifts });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "An error occurred while deleting the shift." });
+  }
+};
+
 // This function is used to delete all shifts by userId
 const deleteUserShifts = async (req, res) => {
   const { id } = req.params;
@@ -177,18 +195,6 @@ const deleteUserShifts = async (req, res) => {
   }
 };
 
-// Get all users
-const getUser = async (req, res) => {
-  const { id } = req.params;
-  const userId = ObjectId.createFromHexString(id);
-  try {
-    const userData = await User.findOne({ _id: userId });
-    res.status(200).send(userData);
-  } catch (error) {
-    res.status(400).send("An error has occurred while getting shifts.");
-  }
-};
-
 export default {
   addShift,
   deleteShift,
@@ -196,7 +202,7 @@ export default {
   getAllShifts,
   getUserShifts,
   deleteUserShifts,
-  getUser,
+  deleteShiftAsAdmin,
 };
 
 // TODO: check for ids bla bla

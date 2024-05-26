@@ -27,7 +27,7 @@ const updateShiftById = async (_id, author, newData) => {
   }
 };
 
-const deleteShiftById = async (_id, author) => {
+const deleteShiftByIdAndAuthor = async (_id, author) => {
   try {
     // userId is used to ensure that the logged user is the author of the shift
     await Shift.deleteOne({ _id, author });
@@ -51,8 +51,7 @@ const getAllShifts = async () => {
 
 const deleteShiftAsAdmin = async (shiftId, userId) => {
   try {
-    const result = await Shift.deleteOne({ _id: shiftId });
-    return result;
+    await Shift.deleteOne({ _id: shiftId });
   } catch (error) {
     throw new Error(error);
   }
@@ -73,7 +72,7 @@ export default {
   getAllShifts,
   getUserShifts,
   deleteUserShifts,
-  deleteShiftById,
+  deleteShiftByIdAndAuthor,
 };
 
 // TODO: add loggers
