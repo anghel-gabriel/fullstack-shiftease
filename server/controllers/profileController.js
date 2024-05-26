@@ -108,10 +108,14 @@ const getUser = async (req, res) => {
   const { id } = req.params;
   const userId = ObjectId.createFromHexString(id);
   try {
-    const userData = await User.findOne({ _id: userId });
-    res.status(200).send(userData);
+    const userData = await profileService.getProfile(userId);
+    res
+      .status(200)
+      .send({ message: "Profile data fetched successfully", data: userData });
   } catch (error) {
-    res.status(400).send("An error has occurred while getting shifts.");
+    res
+      .status(400)
+      .send({ message: "An error has occurred while getting shifts." });
   }
 };
 

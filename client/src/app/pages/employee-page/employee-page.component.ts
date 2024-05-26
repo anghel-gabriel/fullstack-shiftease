@@ -49,9 +49,7 @@ export class EmployeePageComponent {
 
   async fillFieldsWithEmployeeData() {
     try {
-      const employeeData = await this.auth.getEmployeeDataBackend(
-        this.employeeId
-      );
+      const employeeData = await this.auth.getEmployeeData(this.employeeId);
       if (!employeeData || !employeeData["_id"]) this.router.navigate(["/404"]);
       else {
         this.firstName = employeeData["firstName"];

@@ -15,7 +15,6 @@ export class AuthenticationService {
   }
 
   // REGULAR USERS METHODS
-  
   async updateUserPhoto(photoURL: string) {
     const currentLoggedUserData = await this.loggedUser.getValue();
     this.loggedUser.next({ ...currentLoggedUserData, photoURL });
@@ -40,7 +39,7 @@ export class AuthenticationService {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ newPassword: newPassword }),
-        },
+        }
       );
 
       const result = await response.json();
@@ -63,7 +62,7 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        },
+        }
       );
       const result = await response.json();
       if (!response.ok) throw new Error(result.message);
@@ -97,13 +96,13 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        },
+        }
       );
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
       throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`,
+        `Failed to fetch shifts: ${error.message || error.toString()}`
       );
     }
   }
@@ -121,13 +120,13 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        },
+        }
       );
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
       throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`,
+        `Failed to fetch shifts: ${error.message || error.toString()}`
       );
     }
   }
@@ -145,7 +144,7 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        },
+        }
       );
       const result = await response.json();
       if (!response.ok) {
@@ -156,35 +155,11 @@ export class AuthenticationService {
     }
   }
 
-  async getEmployeeDataBackend(userId: string) {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/admin/get-user/${userId}/`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        },
-      );
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-
-      const data = await response.json();
-      return data;
-    } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`,
-      );
-    }
-  }
-
   async checkCredentialsBackend(
     emailAddress: string,
     username: string,
     password: string,
-    confirmPassword: string,
+    confirmPassword: string
   ) {
     try {
       const response = await fetch(
@@ -200,7 +175,7 @@ export class AuthenticationService {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        },
+        }
       );
       const result = await response.json();
       if (!response.ok) {
@@ -275,5 +250,29 @@ export class AuthenticationService {
           throw new Error(error);
         },
       });
+  }
+
+  // ADMIN USERS METHOD
+
+  async getEmployeeData(userId: string) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/admin/profile/get-user/${userId}/`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message);
+      else {
+        return result.data;
+      }
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 }
