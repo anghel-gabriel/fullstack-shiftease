@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { AuthenticationService } from "../../services/authentication.service";
+import { UsersService } from "../../services/users.service";
 import { MessageService } from "primeng/api";
 import { Router } from "@angular/router";
 
@@ -49,7 +49,7 @@ export class LoginPageComponent {
   ];
 
   constructor(
-    private auth: AuthenticationService,
+    private usersService: UsersService,
     private toast: MessageService,
     private router: Router
   ) {}
@@ -86,7 +86,7 @@ export class LoginPageComponent {
     }
     this.isLoading = true;
     try {
-      await this.auth.login(
+      await this.usersService.login(
         this.usernameOrEmail,
         this.password,
         this.loginMethod

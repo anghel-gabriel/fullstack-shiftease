@@ -5,7 +5,7 @@ import {
   isUsernameValid,
   isUserAgeBetween6And130,
 } from "../../utils/validation";
-import { AuthenticationService } from "../../services/authentication.service";
+import { UsersService } from "../../services/users.service";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { IGenderOption, genderOptionList } from "src/app/utils/genderOptions";
 
@@ -23,9 +23,10 @@ export class ProfilePageComponent {
   lastName: string = "";
   birthDate: Date | null = null;
   photoURL: string = "";
-  isLoading = false;
   gender: string | IGenderOption = "";
   genderOptions: IGenderOption[] = genderOptionList;
+  // Loading state
+  isLoading = false;
 
   // Modals states
   isChangingPasswordModalVisible = false;
@@ -33,10 +34,10 @@ export class ProfilePageComponent {
 
   constructor(
     private messageService: MessageService,
-    private auth: AuthenticationService,
-    private fileUpload: FileUploadService,
+    private usersService: UsersService,
+    private fileUploadService: FileUploadService
   ) {
-    this.auth.getLoggedUser().subscribe((data) => {
+    this.usersService.getLoggedUser().subscribe((data) => {
       this.fillProfileFields(data);
     });
   }
@@ -89,13 +90,13 @@ export class ProfilePageComponent {
     }
     if (this.firstName.length < 2 || this.lastName.length < 2) {
       this.showError(
-        "First name and last name must be at least 2 characters long",
+        "First name and last name must be at least 2 characters long"
       );
       return;
     }
     if (!this.birthDate || !isUserAgeBetween6And130(new Date(this.birthDate))) {
       this.showError(
-        "You must be between 18 and 90 years old in order to register",
+        "You must be between 18 and 90 years old in order to register"
       );
       return;
     }
@@ -110,7 +111,7 @@ export class ProfilePageComponent {
         birthDate: this.birthDate.toISOString(),
         gender: this.gender,
       };
-      await this.auth.editProfileBackend(newData as any);
+      await this.usersService.editProfileBackend(newData as any);
       this.messageService.add({
         severity: "success",
         detail: "Changes saved succesfully",
@@ -132,8 +133,8 @@ export class ProfilePageComponent {
         const formData = new FormData();
         formData.append("photo", file);
         // Upload the file and get the photo URL
-        const photoURL = await this.fileUpload.uploadFile(formData);
-        await this.auth.updateUserPhoto(photoURL);
+        const photoURL = await this.fileUploadService.uploadFile(formData);
+        await this.usersService.updateUserPhoto(photoURL);
         this.showSuccess("Profile picture updated successfully.");
       } catch (error: any) {
         this.showError(error.message);
@@ -148,10 +149,10 @@ export class ProfilePageComponent {
     this.setLoadingSpinner(true);
     try {
       // Call the backend to remove the photo
-      await this.fileUpload.deleteFile(this.photoURL);
+      await this.fileUploadService.deleteFile(this.photoURL);
 
       // Update the user profile photo to the default one
-      await this.auth.removeUserPhoto();
+      await this.usersService.removeUserPhoto();
       this.photoURL = "http://localhost:8080/pictures/defaultPhoto.png";
       this.showSuccess("Profile picture removed successfully.");
     } catch (error: any) {

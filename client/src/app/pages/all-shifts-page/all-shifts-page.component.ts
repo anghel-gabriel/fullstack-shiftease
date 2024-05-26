@@ -3,7 +3,7 @@ import * as FileSaver from "file-saver";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
-import { DatabaseService } from "src/app/services/database.service";
+import { ShiftsService } from "src/app/services/shifts";
 import { IShift } from "src/app/utils/interfaces";
 import { getImageUrl } from "src/app/utils/workplaces";
 
@@ -34,9 +34,9 @@ export class AllShiftsPageComponent implements OnInit {
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private db: DatabaseService
+    private shiftsService: ShiftsService
   ) {
-    this.db.getAllShiftsObs().subscribe((shifts: IShift[]) => {
+    this.shiftsService.getAllShiftsObs().subscribe((shifts: IShift[]) => {
       this.shifts = [...shifts].map((shift) => {
         return {
           ...shift,
@@ -45,12 +45,14 @@ export class AllShiftsPageComponent implements OnInit {
         };
       });
     });
-    this.db.getAreAllShiftsLoading().subscribe((val) => (this.isLoading = val));
+    this.shiftsService
+      .getAreAllShiftsLoading()
+      .subscribe((val) => (this.isLoading = val));
   }
 
   // Get all shifts when accessing the page
   ngOnInit(): void {
-    this.db.getAllShifts();
+    this.shiftsService.getAllShifts();
   }
 
   // Show error toast notification
@@ -80,7 +82,10 @@ export class AllShiftsPageComponent implements OnInit {
     this.loading = true;
     this.editModalVisible = false;
     try {
-      await this.db.editShiftAsAdmin(this.selectedShift._id, editedShift);
+      await this.shiftsService.editShiftAsAdmin(
+        this.selectedShift._id,
+        editedShift
+      );
     } catch (error: any) {
       this.showError(error.message);
     } finally {
@@ -110,7 +115,7 @@ export class AllShiftsPageComponent implements OnInit {
   async onDeleteConfirm(shiftId: any): Promise<void> {
     this.loading = true;
     try {
-      await this.db.deleteShiftAsAdmin(shiftId);
+      await this.shiftsService.deleteShiftAsAdmin(shiftId);
     } catch (error: any) {
       this.showError(error.message);
     } finally {

@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { AuthenticationService } from "./authentication.service";
+import { UsersService } from "./users.service";
 import { IShift } from "../utils/interfaces";
 
 @Injectable({
   providedIn: "root",
 })
-export class DatabaseService {
+export class ShiftsService {
   loggedUserData = new BehaviorSubject<any>(null);
   private areMyShiftsLoading = new BehaviorSubject<boolean>(false);
   private areAllShiftsLoading = new BehaviorSubject<boolean>(false);
@@ -15,8 +15,8 @@ export class DatabaseService {
   private allShifts = new BehaviorSubject<IShift[]>([]);
   private allUsers = new BehaviorSubject<any[]>([]);
 
-  constructor(private auth: AuthenticationService) {
-    this.auth
+  constructor(private usersService: UsersService) {
+    this.usersService
       .getLoggedUser()
       .subscribe((userData) => this.loggedUserData.next(userData));
   }
@@ -173,30 +173,6 @@ export class DatabaseService {
     }
   }
 
-  async getAllUsers() {
-    try {
-      this.areAllUsersLoading.next(true);
-      const response = await fetch(
-        `http://localhost:8080/api/admin/profile/get-all-users/`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } else this.allUsers.next(result.data);
-    } catch (error: any) {
-      throw new Error(error.message);
-    } finally {
-      this.areAllUsersLoading.next(false);
-    }
-  }
-
   async editShiftAsAdmin(shiftId: string, newData: IShift) {
     try {
       const response = await fetch(
@@ -268,6 +244,30 @@ export class DatabaseService {
       throw new Error(error.message);
     } finally {
       this.areAllShiftsLoading.next(false);
+    }
+  }
+
+  async getAllUsers() {
+    try {
+      this.areAllUsersLoading.next(true);
+      const response = await fetch(
+        `http://localhost:8080/api/admin/profile/get-all-users/`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      } else this.allUsers.next(result.data);
+    } catch (error: any) {
+      throw new Error(error.message);
+    } finally {
+      this.areAllUsersLoading.next(false);
     }
   }
 }

@@ -2,16 +2,13 @@ import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
 import { Observable, from } from "rxjs";
 import { map, switchMap, take } from "rxjs/operators";
-import { AuthenticationService } from "../services/authentication.service";
+import { UsersService } from "../services/users.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AdminGuard implements CanActivate {
-  constructor(
-    private authService: AuthenticationService,
-    private router: Router
-  ) {}
+  constructor(private usersService: UsersService, private router: Router) {}
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     // return from(this.authService.waitForAuthStateChecked()).pipe(

@@ -7,7 +7,7 @@ import {
   isUsernameValid,
   isUserAgeBetween6And130,
 } from "../../utils/validation";
-import { AuthenticationService } from "../../services/authentication.service";
+import { UsersService } from "../../services/users.service";
 import { Router } from "@angular/router";
 import { IGenderOption, genderOptionList } from "src/app/utils/genderOptions";
 
@@ -59,7 +59,7 @@ export class RegisterPageComponent {
 
   constructor(
     private messageService: MessageService,
-    private auth: AuthenticationService,
+    private usersService: UsersService,
     private router: Router
   ) {
     this.isViewPortAtLeastMedium = window.innerWidth >= 640;
@@ -105,7 +105,7 @@ export class RegisterPageComponent {
       // Check if username or email already existing
       this.isLoading = true;
       try {
-        await this.auth.checkCredentialsBackend(
+        await this.usersService.checkCredentialsBackend(
           this.emailAddress,
           this.username,
           this.password,
@@ -153,7 +153,7 @@ export class RegisterPageComponent {
       gender: this.gender,
     };
     try {
-      await this.auth.register(newUserData);
+      await this.usersService.register(newUserData);
       this.messageService.add({
         severity: "success",
         summary: "Success",

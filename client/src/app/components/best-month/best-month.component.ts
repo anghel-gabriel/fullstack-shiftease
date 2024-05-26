@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AuthenticationService } from "src/app/services/authentication.service";
-import { DatabaseService } from "src/app/services/database.service";
+import { ShiftsService } from "src/app/services/shifts";
 import { getBestMonthStats } from "src/app/utils/computation";
 
 @Component({
@@ -22,9 +21,9 @@ export class BestMonthComponent {
 
   // constructor(
   //   private auth: AuthenticationService,
-  //   private db: DatabaseService,
+  //   private shiftsService: ShiftsService,
   // ) {
-  //   this.db.updateShifts().subscribe((shifts) => {
+  //   this.shiftsService.updateShifts().subscribe((shifts) => {
   //     const currentId = this.auth?.getAuthUser()?.uid;
   //     const myShifts = shifts.filter(
   //       (shift: any) => shift.author === currentId,

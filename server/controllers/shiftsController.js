@@ -1,5 +1,3 @@
-import Shift from "../models/shiftModel.js";
-import User from "../models/userModel.js";
 import shiftsService from "../services/shiftsService.js";
 import { ObjectId } from "mongodb";
 import computation from "../utils/computation.js";

@@ -1,11 +1,10 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { AuthenticationService } from "src/app/services/authentication.service";
-import { DatabaseService } from "src/app/services/database.service";
+import { UsersService } from "src/app/services/users.service";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { defaultPhotoURL } from "src/app/utils/defaultProfileImage";
-import { genderOptionList } from "src/app/utils/genderOptions";
+import { IGenderOption, genderOptionList } from "src/app/utils/genderOptions";
 import {
   isUserAgeBetween6And130,
   isUsernameValid,
@@ -18,50 +17,50 @@ import {
   providers: [MessageService],
 })
 export class EmployeePageComponent {
-  defaultPhotoURL = defaultPhotoURL;
-  isLoading = true;
-  employeeId: any;
-  // employeeData
-  actualFirstName = "";
-  actualLastName = "";
-  actualUsername = "";
-  firstName = "";
-  lastName = "";
-  username = "";
-  email = "";
-  birthDate: any;
-  gender = "";
-  photoURL = "";
-  genderOptions = genderOptionList;
+  // Employee data
+  employeeId: string = "";
+  firstName: string = "";
+  lastName: string = "";
+  username: string = "";
+  emailAddress: string = "";
+  birthDate: Date | null = null;
+  gender: string | IGenderOption = "";
+  photoURL: string = "";
+  // Modals states
   isChangingPasswordModalVisible = false;
   isChangingEmailModalVisible = false;
+  // Loading state
+  isLoading: boolean = true;
+  // Gender options
+  genderOptions: IGenderOption[] = genderOptionList;
+  // Default photo
+  defaultPhotoURL: string = defaultPhotoURL;
+
   constructor(
     private route: ActivatedRoute,
-    private auth: AuthenticationService,
+    private usersService: UsersService,
     private fileUpload: FileUploadService,
     private messageService: MessageService,
-    private database: DatabaseService,
     private router: Router
   ) {
-    this.employeeId = this.route.snapshot.paramMap.get("employeeId");
+    this.employeeId = this.route.snapshot.paramMap.get("employeeId") || "";
     this.fillFieldsWithEmployeeData();
   }
 
-  async fillFieldsWithEmployeeData() {
+  async fillFieldsWithEmployeeData(): Promise<void> {
     try {
-      const employeeData = await this.auth.getEmployeeData(this.employeeId);
+      const employeeData = await this.usersService.getEmployeeData(
+        this.employeeId
+      );
       if (!employeeData || !employeeData["_id"]) this.router.navigate(["/404"]);
       else {
         this.firstName = employeeData["firstName"];
         this.lastName = employeeData["lastName"];
-        this.actualUsername = employeeData["username"];
         this.username = employeeData["username"];
-        this.email = employeeData["email"];
+        this.emailAddress = employeeData["emailAddress"];
         this.gender = employeeData["gender"];
         this.photoURL = employeeData["photoURL"] || defaultPhotoURL;
         this.birthDate = new Date(employeeData["birthDate"]);
-        this.actualFirstName = employeeData["firstName"];
-        this.actualLastName = employeeData["lastName"];
       }
     } catch (error: any) {
       this.showError("An error occured while loading data. Please try again.");
@@ -88,13 +87,13 @@ export class EmployeePageComponent {
     });
   }
 
-  async removePhoto() {
+  async removePhoto(): Promise<void> {
     this.isLoading = true;
     try {
       if (this.employeeId) {
-        // await this.auth.removeUserPhoto(this.employeeId);
+        // await this.usersService.removeUserPhoto(this.employeeId);
         await this.fileUpload.deleteFile(this.photoURL);
-        this.photoURL = this.defaultPhotoURL;
+        // this.photoURL = this.defaultPhotoURL;
       }
     } catch (error: any) {
       if (
@@ -111,9 +110,9 @@ export class EmployeePageComponent {
     }
   }
 
-  async onUpload(event: any) {}
+  async onUpload(event: any): Promise<void> {}
 
-  async handleSaveProfile() {
+  async handleSaveProfile(): Promise<void> {
     try {
       if (this.username.length < 6) {
         this.showError("Your username must be at least 6 characters long");
@@ -140,28 +139,23 @@ export class EmployeePageComponent {
 
       this.isLoading = true;
 
-      // update all shifts .authorFullName if firstName or lastName are changed
-      let isFullNameChanged = false;
       const newData = {
-        email: this.email,
+        emailAddress: this.emailAddress,
         username: this.username,
         firstName: this.firstName,
         lastName: this.lastName,
         birthDate: this.birthDate.toISOString(),
         gender: this.gender,
       };
-      if (
-        newData.firstName !== this.actualFirstName ||
-        newData.lastName !== this.actualLastName
-      ) {
-        isFullNameChanged = true;
-      }
-      // await this.auth.editProfile(this.employeeId, newData as any);
-      this.showSuccess("Changes saved succesfully");
-    } catch (error) {
-      this.showError(
-        "An error has occurred while updating data. Please try again."
+
+      const newProfileData = await this.usersService.editProfileAsAdmin(
+        this.employeeId,
+        newData as any
       );
+      this.fillFieldsWithEmployeeData();
+      this.showSuccess("Changes saved succesfully");
+    } catch (error: any) {
+      this.showError(error.message);
     } finally {
       this.isLoading = false;
     }

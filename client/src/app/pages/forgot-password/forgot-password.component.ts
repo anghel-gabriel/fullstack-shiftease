@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { AuthenticationService } from "src/app/services/authentication.service";
+import { UsersService } from "src/app/services/users.service";
 import { MessageService } from "primeng/api";
 
 @Component({
@@ -13,14 +13,14 @@ export class ForgotPasswordComponent {
   isLoading = false;
 
   constructor(
-    private auth: AuthenticationService,
+    private usersService: UsersService,
     public toast: MessageService
   ) {}
 
   async onSubmit() {
     this.isLoading = true;
     try {
-      await this.auth.sendPasswordResetEmail(this.email);
+      await this.usersService.sendPasswordResetEmail(this.email);
       this.toast.add({
         severity: "success",
         summary: "Success",

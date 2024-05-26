@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { isEmailValid } from "../../utils/validation";
-import { AuthenticationService } from "../../services/authentication.service";
+import { UsersService } from "../../services/users.service";
 
 @Component({
   selector: "app-change-email-form",
@@ -16,7 +16,7 @@ export class ChangeEmailFormComponent {
   newEmail = "";
   newEmailConfirm = "";
 
-  constructor(private auth: AuthenticationService) {}
+  constructor(private usersService: UsersService) {}
 
   async onSubmit() {
     try {
@@ -30,7 +30,7 @@ export class ChangeEmailFormComponent {
         return;
       }
       this.closeForm.emit();
-      await this.auth.changeEmailBackend(this.newEmail);
+      await this.usersService.changeEmailBackend(this.newEmail);
       this.successEvent.emit("Email address changed successfully.");
     } catch (error: any) {
       this.errorEvent.emit(

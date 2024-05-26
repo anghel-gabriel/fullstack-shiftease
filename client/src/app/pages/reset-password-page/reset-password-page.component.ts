@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { AuthenticationService } from "src/app/services/authentication.service";
+import { UsersService } from "src/app/services/users.service";
 import { isPasswordValid } from "src/app/utils/validation";
 
 @Component({
@@ -20,7 +20,7 @@ export class ResetPasswordPageComponent {
     private route: ActivatedRoute,
     private router: Router,
     private toast: MessageService,
-    private auth: AuthenticationService
+    private usersService: UsersService
   ) {}
 
   ngOnInit() {
@@ -49,7 +49,10 @@ export class ResetPasswordPageComponent {
     // Sending password to server
     this.isLoading = true;
     try {
-      await this.auth.setNewPasswordBackend(this.token, this.newPassword);
+      await this.usersService.setNewPasswordBackend(
+        this.token,
+        this.newPassword
+      );
       this.toast.add({
         severity: "success",
         summary: "Sucess",

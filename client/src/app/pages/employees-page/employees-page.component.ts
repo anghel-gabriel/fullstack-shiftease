@@ -4,8 +4,8 @@ import * as FileSaver from "file-saver";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
-import { AuthenticationService } from "src/app/services/authentication.service";
-import { DatabaseService } from "src/app/services/database.service";
+import { UsersService } from "src/app/services/users.service";
+import { ShiftsService } from "src/app/services/shifts";
 
 @Component({
   selector: "app-employees-page",
@@ -31,27 +31,29 @@ export class EmployeesPageComponent implements OnInit {
   users: any[] = [];
 
   constructor(
-    private db: DatabaseService,
-    private auth: AuthenticationService,
+    private shiftsService: ShiftsService,
+    private usersService: UsersService,
     private router: Router,
     private messageService: MessageService
   ) {
-    this.db.getAllUsersObs().subscribe((users) => {
+    this.shiftsService.getAllUsersObs().subscribe((users) => {
       this.users = [...users];
     });
-    this.auth.getLoggedUser().subscribe((data) => {
+    this.usersService.getLoggedUser().subscribe((data) => {
       if (data) {
         this.myId = data._id;
         // TODO: check if it is needed
         this.myRole = data.role;
       }
     });
-    this.db.getAreAllUsersLoading().subscribe((val) => (this.isLoading = val));
+    this.shiftsService
+      .getAreAllUsersLoading()
+      .subscribe((val) => (this.isLoading = val));
   }
 
   // Get all employees when accessing the page
   ngOnInit(): void {
-    this.db.getAllUsers();
+    this.shiftsService.getAllUsers();
   }
 
   // Show error toast notification
@@ -84,7 +86,7 @@ export class EmployeesPageComponent implements OnInit {
   async onDeleteEmployeeShifts(employee: any) {
     this.isLoading = true;
     try {
-      await this.db.deleteShiftsByUserId(employee);
+      await this.shiftsService.deleteShiftsByUserId(employee);
     } catch (error: any) {
       this.showError(error.message);
     } finally {

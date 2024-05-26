@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AuthenticationService } from "src/app/services/authentication.service";
-import { DatabaseService } from "src/app/services/database.service";
+import { ShiftsService } from "src/app/services/shifts";
 
 @Component({
   selector: "app-admin-stats",
@@ -24,10 +23,10 @@ export class AdminStatsComponent {
   ];
 
   // constructor(
-  //   private db: DatabaseService,
+  //   private shiftsService: ShiftsService,
   //   private auth: AuthenticationService
   // ) {
-  //   this.db.updateShifts().subscribe((shifts) => {
+  //   this.shiftsService.updateShifts().subscribe((shifts) => {
   //     this.allShifts = shifts;
   //   });
   // }

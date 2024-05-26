@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MessageService } from "primeng/api";
-import { AuthenticationService } from "../../services/authentication.service";
+import { UsersService } from "../../services/users.service";
 import { Router } from "@angular/router";
 
 @Component({
@@ -14,13 +14,13 @@ export class NavbarComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    private auth: AuthenticationService,
+    private usersService: UsersService,
     private router: Router,
     private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
-    this.auth.getLoggedUser().subscribe((user) => {
+    this.usersService.getLoggedUser().subscribe((user) => {
       this.updateNavbarItems(!!user, user?.userRole);
     });
   }
@@ -88,7 +88,7 @@ export class NavbarComponent implements OnInit {
   async onSignOut() {
     this.isLoading = true;
     try {
-      await this.auth.logOutBackend();
+      await this.usersService.logOutBackend();
       await this.router.navigate(["/sign-in"]);
     } catch (error: any) {
       this.showError(error);

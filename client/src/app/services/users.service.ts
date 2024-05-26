@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http";
 @Injectable({
   providedIn: "root",
 })
-export class AuthenticationService {
+export class UsersService {
   private loggedUser = new BehaviorSubject<any>(null);
   constructor(public http: HttpClient) {}
 
@@ -261,6 +261,29 @@ export class AuthenticationService {
         {
           method: "GET",
           credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message);
+      else {
+        return result.data;
+      }
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  async editProfileAsAdmin(employeeId: string, newData: UserInterface) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/admin/profile/update-profile/${employeeId}`,
+        {
+          method: "PUT",
+          credentials: "include",
+          body: JSON.stringify(newData),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },

@@ -3,10 +3,10 @@ import * as FileSaver from "file-saver";
 import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { AuthenticationService } from "src/app/services/authentication.service";
+import { UsersService } from "src/app/services/users.service";
 import { defaultPhotoURL } from "src/app/utils/defaultProfileImage";
 import { getImageUrl } from "src/app/utils/workplaces";
-import { DatabaseService } from "src/app/services/database.service";
+import { ShiftsService } from "src/app/services/shifts";
 import { IData, IOptions, IShift } from "src/app/utils/interfaces";
 
 @Component({
@@ -60,23 +60,25 @@ export class MyShiftsPageComponent implements OnInit {
 
   constructor(
     private confirmationService: ConfirmationService,
-    private db: DatabaseService,
-    private auth: AuthenticationService,
+    private shiftsService: ShiftsService,
+    private usersService: UsersService,
     private toast: MessageService
   ) {
-    this.db.getMyShiftsObsBackend().subscribe((data) => (this.shifts = data));
-    this.auth.getLoggedUser().subscribe((data) => {
+    this.shiftsService
+      .getMyShiftsObsBackend()
+      .subscribe((data) => (this.shifts = data));
+    this.usersService.getLoggedUser().subscribe((data) => {
       this.userPhotoURL = data?.photoURL;
       this.userFirstName = data?.firstName;
     });
-    this.db
+    this.shiftsService
       .getAreMyShiftsLoading()
       .subscribe((value) => (this.isLoading = value));
   }
 
   // Get my shifts when accessing the page
   ngOnInit() {
-    this.db.getUserShifts();
+    this.shiftsService.getUserShifts();
   }
 
   // Toast notification methods
@@ -115,7 +117,7 @@ export class MyShiftsPageComponent implements OnInit {
     this.loading = true;
     this.addModalVisible = false;
     try {
-      await this.db.addShift(addedShift);
+      await this.shiftsService.addShift(addedShift);
       this.toast.add({
         severity: "success",
         summary: "Success",
@@ -145,7 +147,7 @@ export class MyShiftsPageComponent implements OnInit {
       this.editModalVisible = false;
       if (!this.selectedShift || !this.selectedShift._id)
         return this.showError("No shift selected for editing");
-      await this.db.editShift(this.selectedShift?._id, editedShift);
+      await this.shiftsService.editShift(this.selectedShift?._id, editedShift);
     } catch (error: any) {
       this.showError(error.message);
     } finally {
@@ -169,7 +171,7 @@ export class MyShiftsPageComponent implements OnInit {
   async onDeleteConfirm(shiftId: string) {
     this.loading = true;
     try {
-      await this.db.deleteShift(shiftId);
+      await this.shiftsService.deleteShift(shiftId);
       this.showSuccess("Shift has beeen deleted successfully.");
     } catch (error: any) {
       this.showError(error.message);

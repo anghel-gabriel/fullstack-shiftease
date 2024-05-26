@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { isPasswordValid } from "../../utils/validation";
-import { AuthenticationService } from "../../services/authentication.service";
+import { UsersService } from "../../services/users.service";
 
 @Component({
   selector: "app-change-password-form",
@@ -15,7 +15,7 @@ export class ChangePasswordFormComponent {
   newPassword = "";
   newPasswordConfirm = "";
 
-  constructor(private auth: AuthenticationService) {}
+  constructor(private usersService: UsersService) {}
 
   async onSubmit() {
     try {
@@ -29,7 +29,7 @@ export class ChangePasswordFormComponent {
         return;
       }
       this.closeForm.emit();
-      await this.auth.changePasswordBackend(this.newPassword);
+      await this.usersService.changePasswordBackend(this.newPassword);
       this.successEvent.emit("Password changed succesfully.");
     } catch (error) {
       this.errorEvent.emit(

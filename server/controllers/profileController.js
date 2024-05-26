@@ -133,6 +133,48 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// This function is used by users to change their own profile data
+const updateProfileAsAdmin = async (req, res) => {
+  const { username, firstName, lastName, birthDate, gender } = req.body;
+  const { id } = req.params;
+  const userId = ObjectId.createFromHexString(id);
+
+  console.log(firstName);
+  try {
+    let isUsernameTheSame = false;
+    let isUsernameAlreadyExisting = false;
+    const actualUserData = await profileService.getProfile(userId);
+
+    // If username is the same, we don't check if it already exists
+    if (actualUserData.username === username) isUsernameTheSame = true;
+
+    // If it is a new username, we check the availability
+    if (!isUsernameTheSame)
+      isUsernameAlreadyExisting = await registerService.checkUsernameExisting(
+        username
+      );
+
+    if (isUsernameAlreadyExisting) {
+      return res.status(409).send({
+        message: "This username is already in use. Please choose another one.",
+      });
+    }
+    await profileService.updateProfile(userId, {
+      username,
+      firstName,
+      lastName,
+      birthDate,
+      gender,
+    });
+    const newUserData = await profileService.getProfile(userId);
+    res
+      .status(200)
+      .send({ message: "Profile updated successfully", data: newUserData });
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error" });
+  }
+};
+
 export default {
   changeEmailAddress,
   changePassword,
@@ -140,4 +182,5 @@ export default {
   updateProfilePicture,
   getAllUsers,
   getUser,
+  updateProfileAsAdmin,
 };

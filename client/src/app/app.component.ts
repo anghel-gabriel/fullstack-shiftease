@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { PrimeNGConfig } from "primeng/api";
-import { AuthenticationService } from "./services/authentication.service";
+import { UsersService } from "./services/users.service";
 
 @Component({
   selector: "app-root",
@@ -10,11 +10,11 @@ import { AuthenticationService } from "./services/authentication.service";
 export class AppComponent implements OnInit {
   constructor(
     private primengConfig: PrimeNGConfig,
-    private authService: AuthenticationService
+    private usersService: UsersService
   ) {}
 
   ngOnInit() {
     this.primengConfig.ripple = true;
-    this.authService.checkAuthenticationBackend();
+    this.usersService.checkAuthenticationBackend();
   }
 }
