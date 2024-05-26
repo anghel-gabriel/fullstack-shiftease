@@ -15,4 +15,7 @@ shiftsRouter.delete(
 // Delete shift by shift id
 shiftsRouter.delete("/delete-shift/:id", shiftsController.deleteShiftAsAdmin);
 
+// Edit shift
+shiftsRouter.put("/update-shift/:id", shiftsController.updateShiftAsAdmin);
+
 export default shiftsRouter;

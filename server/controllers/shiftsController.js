@@ -146,19 +146,61 @@ const getAllShifts = async (req, res) => {
     object. This ensures that each shift includes the author's full name. 
     */
     const populatedShifts = await shiftsService.getAllShifts();
-    const transformedShifts = populatedShifts.map((shift) => ({
-      ...shift.toJSON(),
-      authorFullName: `${shift.author.firstName} ${shift.author.lastName}`,
-      authorId: shift.author._id,
-    }));
     res.status(200).send({
       message: "Shifts fetched successfully",
-      data: transformedShifts,
+      data: populatedShifts,
     });
   } catch (error) {
     res
       .status(400)
       .send({ message: "An error has occurred while getting shifts." });
+  }
+};
+
+// This function is used by users to update their own shifts
+const updateShiftAsAdmin = async (req, res) => {
+  // Getting request data
+  const { startTime, endTime, hourlyWage, workplace, comments } = req.body;
+  const { id } = req.params;
+  // Validation
+  if (!startTime || !endTime || !computation.isDateBefore(startTime, endTime)) {
+    return res.status(400).send({
+      message: "The start time must be before the end time.",
+    });
+  }
+  if (!hourlyWage || isNaN(hourlyWage) || hourlyWage <= 0) {
+    return res.status(400).send({
+      message: "Hourly wage must be greater than 0.",
+    });
+  }
+  if (!workplace || !isWorkplaceValid(workplace)) {
+    return res.status(400).send({
+      message: "Please select a valid workplace.",
+    });
+  }
+  // Updating shift
+  try {
+    const shiftId = ObjectId.createFromHexString(id);
+    await shiftsService.updateShiftByIdAsAdmin(shiftId, {
+      startTime,
+      endTime,
+      hourlyWage,
+      workplace,
+      comments,
+      profit: computation.calculateProfit(
+        new Date(startTime),
+        new Date(endTime),
+        hourlyWage
+      ),
+    });
+    const populatedShifts = await shiftsService.getAllShifts();
+    res
+      .status(200)
+      .send({ message: "Shift updated successfully", data: populatedShifts });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "An error occurred while updating the shift." });
   }
 };
 
@@ -203,6 +245,7 @@ export default {
   getUserShifts,
   deleteUserShifts,
   deleteShiftAsAdmin,
+  updateShiftAsAdmin,
 };
 
 // TODO: check for ids bla bla

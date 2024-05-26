@@ -80,7 +80,7 @@ export class AllShiftsPageComponent implements OnInit {
     this.loading = true;
     this.editModalVisible = false;
     try {
-      await this.db.editShift(this.selectedShift._id, editedShift);
+      await this.db.editShiftAsAdmin(this.selectedShift._id, editedShift);
     } catch (error: any) {
       this.showError(error.message);
     } finally {
@@ -132,7 +132,7 @@ export class AllShiftsPageComponent implements OnInit {
   }
 
   // Export shifts to Excel document
-  async exportExcel() {
+  async exportExcel(): Promise<void> {
     this.isLoading = true;
     try {
       const xlsx = await import("xlsx");

@@ -43,7 +43,20 @@ const getAllShifts = async () => {
       "author",
       "firstName lastName"
     );
-    return allShifts;
+    const transformedShifts = allShifts.map((shift) => ({
+      ...shift.toJSON(),
+      authorFullName: `${shift.author.firstName} ${shift.author.lastName}`,
+      authorId: shift.author._id,
+    }));
+    return transformedShifts;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const updateShiftByIdAsAdmin = async (_id, newData) => {
+  try {
+    await Shift.findOneAndUpdate({ _id }, newData);
   } catch (error) {
     throw new Error(error);
   }
@@ -73,6 +86,7 @@ export default {
   getUserShifts,
   deleteUserShifts,
   deleteShiftByIdAndAuthor,
+  updateShiftByIdAsAdmin,
 };
 
 // TODO: add loggers

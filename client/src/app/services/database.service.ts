@@ -197,6 +197,30 @@ export class DatabaseService {
     }
   }
 
+  async editShiftAsAdmin(shiftId: string, newData: IShift) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/admin/shifts/update-shift/${shiftId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(newData),
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      } else {
+        this.allShifts.next(result.data);
+      }
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
   async deleteShiftsByUserId(userId: string) {
     try {
       this.areAllShiftsLoading.next(true);
