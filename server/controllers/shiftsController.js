@@ -177,18 +177,6 @@ const deleteUserShifts = async (req, res) => {
   }
 };
 
-// This function is used to get all users (employees)
-const getAllUsers = async (req, res) => {
-  try {
-    const foundUsers = await User.find({});
-    res.status(200).send(foundUsers);
-  } catch (error) {
-    res
-      .status(400)
-      .send({ message: "An error has occurred while getting shifts." });
-  }
-};
-
 // Get all users
 const getUser = async (req, res) => {
   const { id } = req.params;
@@ -208,7 +196,6 @@ export default {
   getAllShifts,
   getUserShifts,
   deleteUserShifts,
-  getAllUsers,
   getUser,
 };
 

@@ -60,9 +60,7 @@ const deleteShiftAsAdmin = async (shiftId, userId) => {
 
 const deleteUserShifts = async (userId) => {
   try {
-    // TODO: add loggers
-    const result = await Shift.deleteMany({ author: userId });
-    console.log(result.deletedCount);
+    await Shift.deleteMany({ author: userId });
   } catch (error) {
     throw new Error(error);
   }
@@ -77,3 +75,5 @@ export default {
   deleteUserShifts,
   deleteShiftById,
 };
+
+// TODO: add loggers

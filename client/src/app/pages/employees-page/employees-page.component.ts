@@ -16,21 +16,19 @@ import { DatabaseService } from "src/app/services/database.service";
 export class EmployeesPageComponent {
   @ViewChild("dt") dt: Table | undefined;
   @ViewChild("op") overlayPanel!: OverlayPanel;
-  // loading states
+  // Loading states
   loading: boolean = false;
   isLoading: boolean = false;
-  // self info
-  myId = "";
-  myRole = "";
-  // modals
-  addModalVisible = false;
-  editModalVisible = false;
-  bestMonthModalVisible = false;
-  // comment
-  currentComments: string = "";
-  // shifts
-  users: any = [];
-  selectedShift: any = null;
+  // Self data
+  myId: string = "";
+  myRole: string = "";
+  // Modals states
+  addModalVisible: boolean = false;
+  editModalVisible: boolean = false;
+  bestMonthModalVisible: boolean = false;
+  // Shifts
+  // TODO: add user interface
+  users: any[] = [];
 
   constructor(
     private db: DatabaseService,
@@ -42,12 +40,14 @@ export class EmployeesPageComponent {
       this.users = [...users];
     });
     this.auth.getLoggedUser().subscribe((data) => {
-      // this.myId = data._id;
-      // this.myRole = data.role;
+      this.myId = data._id;
+      // TODO: check if it is needed
+      this.myRole = data.role;
     });
     this.db.getAreAllUsersLoading().subscribe((val) => (this.isLoading = val));
   }
 
+  // Show error toast notification
   showError(message: string) {
     this.messageService.add({
       severity: "error",
@@ -55,7 +55,7 @@ export class EmployeesPageComponent {
       summary: "Error",
     });
   }
-
+  // Show success toast notification
   showSuccess(message: string) {
     this.messageService.add({
       severity: "success",
@@ -64,33 +64,34 @@ export class EmployeesPageComponent {
     });
   }
 
-  // edit modal
+  /* 
+  If I am the selected employee, redirect to /profile
+  Else, redirect to /employee/userId
+  */
   onEditClick(employee: any) {
     if (employee._id === this.myId) this.router.navigate(["/profile"]);
     else this.router.navigate([`/employee/${employee._id}`]);
   }
 
-  // delete all employee shifts
+  // Delete all shifts of an employee
   async onDeleteEmployeeShifts(employee: any) {
     this.isLoading = true;
     try {
-      await this.db.deleteShiftsByUserIdBackend(employee);
+      await this.db.deleteShiftsByUserId(employee);
     } catch (error: any) {
-      this.showError(
-        "An error has occurred while removing data. Please try again."
-      );
+      this.showError(error.message);
     } finally {
       this.isLoading = false;
       this.showSuccess("Shifts deleted succesfully.");
     }
   }
 
-  // search input (by workplace)
+  // Search input (by workplace)
   applyFilterGlobal($event: any, stringVal: any) {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
-  // shifts to excel
+  // Export shifts to Excel document
   async exportExcel() {
     this.isLoading = true;
     try {

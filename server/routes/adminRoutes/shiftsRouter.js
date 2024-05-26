@@ -5,8 +5,13 @@ const shiftsRouter = express.Router();
 
 // Get all shifts
 shiftsRouter.get("/get-all-shifts", shiftsController.getAllShifts);
-// Update shift by shift id
-shiftsRouter.put("/update-shift/:id", shiftsController.updateShift);
+
+// Delete all shifts of an user
+shiftsRouter.delete(
+  "/delete-user-shifts/:id",
+  shiftsController.deleteUserShifts
+);
+
 // Delete shift by shift id
 shiftsRouter.delete("/delete-shift/:id", shiftsController.deleteShift);
 

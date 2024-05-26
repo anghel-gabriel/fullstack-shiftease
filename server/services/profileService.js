@@ -13,7 +13,7 @@ const changeEmailAddress = async (userId, newEmailAddress) => {
   try {
     await User.updateOne(
       { _id: userId },
-      { $set: { emailAddress: newEmailAddress } },
+      { $set: { emailAddress: newEmailAddress } }
     );
   } catch (error) {
     throw new Error(error);
@@ -48,13 +48,23 @@ const removeProfilePicture = async (userId, photoURL) => {
   try {
     await User.updateOne(
       { _id: userId },
-      { $set: { photoURL: "http://localhost:8080/pictures/defaultPhoto.png" } },
+      { $set: { photoURL: "http://localhost:8080/pictures/defaultPhoto.png" } }
     );
   } catch (error) {
     throw new Error(error);
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    const allUsers = await User.find({});
+    return allUsers;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// TODO: check for admin and user services
 export default {
   getProfile,
   changeEmailAddress,
@@ -62,4 +72,5 @@ export default {
   updateProfile,
   updateProfilePicture,
   removeProfilePicture,
+  getAllUsers,
 };

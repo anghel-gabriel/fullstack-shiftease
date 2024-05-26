@@ -1,18 +1,12 @@
 import express from "express";
-import shiftsController from "../controllers/shiftsController.js";
+import shiftsRouter from "./adminRoutes/shiftsRouter.js";
+import profileRouter from "./adminRoutes/profileRouter.js";
+import uploadRouter from "./adminRoutes/uploadRouter.js";
 
 const adminRouter = express.Router();
 
-adminRouter.delete(
-  "/delete-user-shifts/:id",
-  shiftsController.deleteUserShifts
-);
-
-// Get all shifts
-adminRouter.get("/get-all-shifts", shiftsController.getAllShifts);
-
-adminRouter.get("/get-all-users", shiftsController.getAllUsers);
-
-adminRouter.get("/get-user/:id", shiftsController.getUser);
+adminRouter.use("/profile", profileRouter);
+adminRouter.use("/shifts", shiftsRouter);
+adminRouter.use("/upload", uploadRouter);
 
 export default adminRouter;

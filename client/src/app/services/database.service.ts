@@ -20,8 +20,8 @@ export class DatabaseService {
       .getLoggedUser()
       .subscribe((userData) => this.loggedUserData.next(userData));
     this.getUserShifts();
-    this.getAllShiftsBackend();
-    this.getAllUsersBackend();
+    this.getAllShifts();
+    this.getAllUsers();
   }
 
   // Observables
@@ -148,11 +148,11 @@ export class DatabaseService {
   }
 
   // ADMIN USERS METHODS
-  public async getAllShiftsBackend() {
+  async getAllShifts() {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/admin/get-all-shifts/`,
+        `http://localhost:8080/api/admin/shifts/get-all-shifts/`,
         {
           method: "GET",
           credentials: "include",
@@ -176,11 +176,11 @@ export class DatabaseService {
     }
   }
 
-  private async getAllUsersBackend() {
+  async getAllUsers() {
     try {
       this.areAllUsersLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/admin/get-all-users/`,
+        `http://localhost:8080/api/admin/profile/get-all-users/`,
         {
           method: "GET",
           credentials: "include",
@@ -189,27 +189,22 @@ export class DatabaseService {
           },
         }
       );
-
+      const result = await response.json();
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      this.allUsers.next(data);
+      } else this.allUsers.next(result.data);
     } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
-      );
+      throw new Error(error.message);
     } finally {
       this.areAllUsersLoading.next(false);
     }
   }
 
-  async deleteShiftsByUserIdBackend(userId: string) {
+  async deleteShiftsByUserId(userId: string) {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/admin/delete-user-shifts/${userId}/`,
+        `http://localhost:8080/api/admin/shifts/delete-user-shifts/${userId}/`,
         {
           method: "DELETE",
           credentials: "include",
@@ -218,13 +213,12 @@ export class DatabaseService {
           },
         }
       );
+      const result = await response.json();
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(result.message);
       }
     } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
-      );
+      throw new Error(error.message);
     } finally {
       this.areAllShiftsLoading.next(false);
     }

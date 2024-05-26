@@ -21,8 +21,9 @@ const updateProfile = async (req, res) => {
 
     // If it is a new username, we check the availability
     if (!isUsernameTheSame)
-      isUsernameAlreadyExisting =
-        await registerService.checkUsernameExisting(username);
+      isUsernameAlreadyExisting = await registerService.checkUsernameExisting(
+        username
+      );
 
     if (isUsernameAlreadyExisting) {
       return res.status(409).send({
@@ -106,9 +107,27 @@ const updateProfilePicture = async (userId, photoURL) => {
   }
 };
 
+// ADMIN USERS
+
+// This function is used to get all users (employees)
+const getAllUsers = async (req, res) => {
+  try {
+    const foundUsers = await profileService.getAllUsers();
+    console.log(foundUsers);
+    res
+      .status(200)
+      .send({ message: "Users fetched successfully!", data: foundUsers });
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "An error has occurred while getting shifts." });
+  }
+};
+
 export default {
   changeEmailAddress,
   changePassword,
   updateProfile,
   updateProfilePicture,
+  getAllUsers,
 };
