@@ -14,26 +14,44 @@ import fs from "fs";
 const PORT = process.env.PORT ?? 8080;
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
+export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
+
 // Ensure the "pictures" folder exists
 if (!fs.existsSync(path.join(__dirname, "../../pictures"))) {
   fs.mkdirSync(path.join(__dirname, "../../pictures"));
 }
 
-// Enable CORS
+// Enable CORS with dynamic origin
+const allowedOrigins = [
+  "http://localhost:4200",
+  "https://fullstack-shiftease.onrender.com",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:4200",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
 
+// Middlewares
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Path configuration for environment variables
 dotenv.config({ path: "./config/.env" });
 
+// Routes
 app.use("/api/auth", authRouter);
 app.use("/pictures", express.static(path.join(__dirname, "pictures")));
 app.use("/api/user", authorizeMdw.checkUserIsAuthenticated, userRouter);

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { UsersService } from "./users.service";
 import { IShift } from "../utils/interfaces";
+import { root } from "../utils/URLs";
 
 @Injectable({
   providedIn: "root",
@@ -50,16 +51,13 @@ export class ShiftsService {
   async getUserShifts() {
     try {
       this.areMyShiftsLoading.next(true);
-      const response = await fetch(
-        `http://localhost:8080/api/user/shifts/get-user-shifts/`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + "/api/user/shifts/get-user-shifts/", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message);
@@ -74,17 +72,14 @@ export class ShiftsService {
 
   async addShift(shift: IShift) {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/user/shifts/add-shift",
-        {
-          method: "POST",
-          body: JSON.stringify(shift),
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + "/api/user/shifts/add-shift", {
+        method: "POST",
+        body: JSON.stringify(shift),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message);
@@ -99,7 +94,7 @@ export class ShiftsService {
   async editShift(shiftId: string, newData: IShift) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/user/shifts/update-shift/${shiftId}`,
+        root + `/api/user/shifts/update-shift/${shiftId}`,
         {
           method: "PUT",
           body: JSON.stringify(newData),
@@ -123,7 +118,7 @@ export class ShiftsService {
     try {
       this.areMyShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/user/shifts/delete-shift/${shiftId}`,
+        root + `/api/user/shifts/delete-shift/${shiftId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -148,16 +143,13 @@ export class ShiftsService {
   async getAllShifts() {
     try {
       this.areAllShiftsLoading.next(true);
-      const response = await fetch(
-        `http://localhost:8080/api/admin/shifts/get-all-shifts/`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + "/api/admin/shifts/get-all-shifts/", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
 
       const result = await response.json();
 
@@ -176,7 +168,7 @@ export class ShiftsService {
   async editShiftAsAdmin(shiftId: string, newData: IShift) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/admin/shifts/update-shift/${shiftId}`,
+        root + `/api/admin/shifts/update-shift/${shiftId}`,
         {
           method: "PUT",
           body: JSON.stringify(newData),
@@ -201,7 +193,7 @@ export class ShiftsService {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/admin/shifts/delete-user-shifts/${userId}/`,
+        root + `/api/admin/shifts/delete-user-shifts/${userId}/`,
         {
           method: "DELETE",
           credentials: "include",
@@ -225,7 +217,7 @@ export class ShiftsService {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
-        `http://localhost:8080/api/admin/shifts/delete-shift/${shiftId}/`,
+        root + `/api/admin/shifts/delete-shift/${shiftId}/`,
         {
           method: "DELETE",
           credentials: "include",
@@ -250,16 +242,13 @@ export class ShiftsService {
   async getAllUsers() {
     try {
       this.areAllUsersLoading.next(true);
-      const response = await fetch(
-        `http://localhost:8080/api/admin/profile/get-all-users/`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + `/api/admin/profile/get-all-users/`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       const result = await response.json();
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

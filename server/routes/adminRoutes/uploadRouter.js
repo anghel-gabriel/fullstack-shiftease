@@ -1,10 +1,6 @@
 import express from "express";
-import path from "path";
-import fs from "fs";
-import profileService from "../../services/profileService.js";
 import { upload } from "../userRoutes/uploadRouter.js";
-import { ObjectId } from "mongodb";
-import profileController from "../../controllers/profileController.js";
+import usersController from "../../controllers/usersController.js";
 
 const uploadRouter = express.Router();
 
@@ -12,13 +8,13 @@ const uploadRouter = express.Router();
 uploadRouter.post(
   "/profile-picture/:id",
   upload.single("photo"),
-  profileController.updateProfilePictureAsAdmin
+  usersController.updateProfilePictureAsAdmin
 );
 
 // Delete photo
 uploadRouter.delete(
   "/profile-picture",
-  profileController.deleteProfilePictureAsAdmin
+  usersController.deleteProfilePictureAsAdmin
 );
 
 export default uploadRouter;

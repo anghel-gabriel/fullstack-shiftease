@@ -102,9 +102,7 @@
             icon="pi pi-trash"
             label="Remove"
             (onClick)="removePhoto()"
-            [disabled]="
-              photoURL === 'http://localhost:8080/pictures/defaultPhoto.png'
-            " />
+            [disabled]="photoURL === defaultPhotoURL" />
         </div>
       </div>
     </div>

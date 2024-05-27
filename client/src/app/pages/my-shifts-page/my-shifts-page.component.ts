@@ -4,7 +4,7 @@ import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { UsersService } from "src/app/services/users.service";
-import { defaultPhotoURL } from "src/app/utils/defaultProfileImage";
+import { defaultPhotoURL } from "src/app/utils/URLs";
 import { getImageUrl } from "src/app/utils/workplaces";
 import { ShiftsService } from "src/app/services/shifts";
 import { IData, IOptions, IShift } from "src/app/utils/interfaces";

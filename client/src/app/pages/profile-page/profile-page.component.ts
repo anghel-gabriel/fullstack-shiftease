@@ -8,6 +8,8 @@ import {
 import { UsersService } from "../../services/users.service";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { IGenderOption, genderOptionList } from "src/app/utils/genderOptions";
+import { defaultPhotoURL } from "src/app/utils/URLs";
+import { root } from "src/app/utils/URLs";
 
 @Component({
   selector: "app-profile-page",
@@ -30,6 +32,8 @@ export class ProfilePageComponent {
   // Modals states
   isChangingPasswordModalVisible = false;
   isChangingEmailModalVisible = false;
+  // Default photo URL
+  defaultPhotoURL: string = defaultPhotoURL;
 
   constructor(
     private messageService: MessageService,
@@ -152,7 +156,7 @@ export class ProfilePageComponent {
 
       // Update the user profile photo to the default one
       await this.usersService.removeUserPhoto();
-      this.photoURL = "http://localhost:8080/pictures/defaultPhoto.png";
+      this.photoURL = root + "/pictures/defaultPhoto.png";
       this.showSuccess("Profile picture removed successfully.");
     } catch (error: any) {
       this.showError(error.message);

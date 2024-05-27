@@ -1,11 +1,9 @@
-import profileService from "../services/profileService.js";
+import usersService from "../services/usersService.js";
 import registerService from "../services/registerService.js";
 import { isEmailValid, isPasswordValid } from "../utils/validation.js";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
-import { upload } from "../routes/userRoutes/uploadRouter.js";
 import path from "path";
-import { __dirname } from "../app.js";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
@@ -19,7 +17,7 @@ const updateProfile = async (req, res) => {
   try {
     let isUsernameTheSame = false;
     let isUsernameAlreadyExisting = false;
-    const actualUserData = await profileService.getProfile(reqUserId);
+    const actualUserData = await usersService.getProfile(reqUserId);
 
     // If username is the same, we don't check if it already exists
     if (actualUserData.username === username) isUsernameTheSame = true;
@@ -35,7 +33,7 @@ const updateProfile = async (req, res) => {
         message: "This username is already in use. Please choose another one.",
       });
     }
-    await profileService.updateProfile(reqUserId, {
+    await usersService.updateProfile(reqUserId, {
       username,
       firstName,
       lastName,
@@ -67,7 +65,7 @@ const changeEmailAddress = async (req, res) => {
     if (isEmailAddressAlreadyExisting) {
       return res.status(400).send("Chosen email address is already existing.");
     }
-    await profileService.changeEmailAddress(userId, emailAddress);
+    await usersService.changeEmailAddress(userId, emailAddress);
     res.status(200).send({ message: "Email address updated successfully" });
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
@@ -89,7 +87,7 @@ const changePassword = async (req, res) => {
       if (err) {
         res.status(500).send("An error has occurred while registering.");
       } else {
-        await profileService.changePassword(userId, hash);
+        await usersService.changePassword(userId, hash);
         res.status(200).send("Password updated successfully.");
       }
     } catch (error) {
@@ -101,7 +99,7 @@ const changePassword = async (req, res) => {
 // This function is used by users to update their profile photo
 const updateProfilePicture = async (userId, photoURL) => {
   try {
-    await profileService.updateProfilePicture(userId, photoURL);
+    await usersService.updateProfilePicture(userId, photoURL);
   } catch (error) {
     throw new Error("Error updating profile picture");
   }
@@ -120,7 +118,7 @@ const deleteProfilePicture = async (req, res) => {
 
   try {
     // Update the user's profile picture URL to the default one
-    await profileService.removeProfilePicture(userId);
+    await usersService.removeProfilePicture(userId);
 
     // Extract the filename from the photoURL
     const filename = path.basename(photoURL);
@@ -151,7 +149,7 @@ const getUser = async (req, res) => {
   const { id } = req.params;
   const userId = ObjectId.createFromHexString(id);
   try {
-    const userData = await profileService.getProfile(userId);
+    const userData = await usersService.getProfile(userId);
     res
       .status(200)
       .send({ message: "Profile data fetched successfully", data: userData });
@@ -165,7 +163,7 @@ const getUser = async (req, res) => {
 // This function is used by admins to get all users (employees)
 const getAllUsers = async (req, res) => {
   try {
-    const foundUsers = await profileService.getAllUsers();
+    const foundUsers = await usersService.getAllUsers();
     res
       .status(200)
       .send({ message: "Users fetched successfully!", data: foundUsers });
@@ -185,7 +183,7 @@ const updateProfileAsAdmin = async (req, res) => {
   try {
     let isUsernameTheSame = false;
     let isUsernameAlreadyExisting = false;
-    const actualUserData = await profileService.getProfile(userId);
+    const actualUserData = await usersService.getProfile(userId);
 
     // If username is the same, we don't check if it already exists
     if (actualUserData.username === username) isUsernameTheSame = true;
@@ -201,7 +199,7 @@ const updateProfileAsAdmin = async (req, res) => {
         message: "This username is already in use. Please choose another one.",
       });
     }
-    await profileService.updateProfile(userId, {
+    await usersService.updateProfile(userId, {
       username,
       firstName,
       lastName,
@@ -223,7 +221,7 @@ const updateProfilePictureAsAdmin = async (req, res) => {
     req.file.filename
   }`;
   try {
-    await profileService.updateProfilePicture(userId, photoURL);
+    await usersService.updateProfilePicture(userId, photoURL);
     return res
       .status(200)
       .json({ message: "File uploaded successfully", photoURL });
@@ -245,7 +243,7 @@ const deleteProfilePictureAsAdmin = async (req, res) => {
 
   try {
     // Update the user's profile picture URL to the default one
-    await profileService.removeProfilePicture(userId);
+    await usersService.removeProfilePicture(userId);
 
     // Extract the filename from the photoURL
     const filename = path.basename(photoURL);

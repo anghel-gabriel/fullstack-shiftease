@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { UsersService } from "src/app/services/users.service";
 import { FileUploadService } from "src/app/services/file-upload.service";
-import { defaultPhotoURL } from "src/app/utils/defaultProfileImage";
+import { defaultPhotoURL } from "src/app/utils/URLs";
 import { IGenderOption, genderOptionList } from "src/app/utils/genderOptions";
 import {
   isUserAgeBetween6And130,
@@ -180,3 +180,4 @@ export class EmployeePageComponent implements OnInit {
     }
   }
 }
+// TODO: guards

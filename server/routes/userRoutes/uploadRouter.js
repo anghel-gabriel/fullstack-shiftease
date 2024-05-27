@@ -3,7 +3,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import profileService from "../../services/profileService.js";
+import usersService from "../../services/usersService.js";
 
 const uploadRouter = express.Router();
 
@@ -23,11 +23,6 @@ const storage = multer.diskStorage({
 });
 export const upload = multer({ storage: storage });
 
-// Ensure the "pictures" folder exists
-if (!fs.existsSync(path.join(__dirname, "../../pictures"))) {
-  fs.mkdirSync(path.join(__dirname, "../../pictures"));
-}
-
 // Upload photo
 uploadRouter.post(
   "/profile-picture",
@@ -39,7 +34,7 @@ uploadRouter.post(
         req.file.filename
       }`;
       try {
-        await profileService.updateProfilePicture(userId, photoURL);
+        await usersService.updateProfilePicture(userId, photoURL);
         res
           .status(200)
           .json({ message: "File uploaded successfully", photoURL: photoURL });
@@ -67,7 +62,7 @@ uploadRouter.delete("/profile-picture", async (req, res) => {
 
   try {
     // Update the user's profile picture URL to the default one
-    await profileService.removeProfilePicture(userId);
+    await usersService.removeProfilePicture(userId);
 
     // Extract the filename from the photoURL
     const filename = path.basename(photoURL);

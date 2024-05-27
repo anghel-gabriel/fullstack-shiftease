@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { RegisterInterface, UserInterface } from "../utils/interfaces";
 import { BehaviorSubject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { defaultPhotoURL, root } from "../utils/URLs";
 
 @Injectable({
   providedIn: "root",
@@ -24,23 +25,20 @@ export class UsersService {
     const currentLoggedUserData = await this.loggedUser.getValue();
     this.loggedUser.next({
       ...currentLoggedUserData,
-      photoURL: "http://localhost:8080/pictures/defaultPhoto.png ",
+      photoURL: defaultPhotoURL,
     });
   }
 
   async setNewPasswordBackend(token: string, newPassword: string) {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/auth/reset-password/${token}`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ newPassword: newPassword }),
-        }
-      );
+      const response = await fetch(root + `/api/auth/reset-password/${token}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ newPassword: newPassword }),
+      });
 
       const result = await response.json();
       if (!response.ok) {
@@ -53,17 +51,14 @@ export class UsersService {
 
   async editProfileBackend(newData: UserInterface) {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/user/profile/update-profile/`,
-        {
-          method: "PUT",
-          credentials: "include",
-          body: JSON.stringify(newData),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + `/api/user/profile/update-profile/`, {
+        method: "PUT",
+        credentials: "include",
+        body: JSON.stringify(newData),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message);
       else {
@@ -85,19 +80,16 @@ export class UsersService {
 
   async changeEmailBackend(newEmail: string) {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/profile/change-email/`,
-        {
-          method: "PUT",
-          credentials: "include",
-          body: JSON.stringify({
-            emailAddress: newEmail,
-          }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + `/api/profile/change-email/`, {
+        method: "PUT",
+        credentials: "include",
+        body: JSON.stringify({
+          emailAddress: newEmail,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
@@ -109,19 +101,16 @@ export class UsersService {
 
   async changePasswordBackend(newPassword: string) {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/profile/change-email/`,
-        {
-          method: "PUT",
-          credentials: "include",
-          body: JSON.stringify({
-            password: newPassword,
-          }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + `/api/profile/change-email/`, {
+        method: "PUT",
+        credentials: "include",
+        body: JSON.stringify({
+          password: newPassword,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
@@ -133,19 +122,16 @@ export class UsersService {
 
   async sendPasswordResetEmail(email: string) {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/auth/request-reset-password",
-        {
-          method: "POST",
-          credentials: "include",
-          body: JSON.stringify({
-            email,
-          }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + "/api/auth/request-reset-password", {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message);
@@ -162,21 +148,18 @@ export class UsersService {
     confirmPassword: string
   ) {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/auth/credentials",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            emailAddress,
-            username,
-            password,
-            confirmPassword,
-          }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+      const response = await fetch(root + "/api/auth/credentials", {
+        method: "POST",
+        body: JSON.stringify({
+          emailAddress,
+          username,
+          password,
+          confirmPassword,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message);
@@ -188,7 +171,7 @@ export class UsersService {
 
   async register(registerData: RegisterInterface) {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch(root + "/api/auth/register", {
         method: "POST",
         body: JSON.stringify(registerData),
         headers: {
@@ -206,7 +189,7 @@ export class UsersService {
 
   async login(usernameOrEmail: string, password: string, loginMethod: string) {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch(root + "/api/auth/login", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -226,7 +209,7 @@ export class UsersService {
 
   async checkAuthenticationBackend() {
     this.http
-      .get("http://localhost:8080/api/auth/validate-session", {
+      .get(root + "/api/auth/validate-session", {
         withCredentials: true,
       })
       .subscribe({
@@ -239,7 +222,7 @@ export class UsersService {
 
   async logOutBackend() {
     this.http
-      .get("http://localhost:8080/api/auth/log-out", {
+      .get(root + "/api/auth/log-out", {
         withCredentials: true,
       })
       .subscribe({
@@ -257,7 +240,7 @@ export class UsersService {
   async getEmployeeData(userId: string) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/admin/profile/get-user/${userId}/`,
+        root + `/api/admin/profile/get-user/${userId}/`,
         {
           method: "GET",
           credentials: "include",
@@ -279,7 +262,7 @@ export class UsersService {
   async editProfileAsAdmin(employeeId: string, newData: UserInterface) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/admin/profile/update-profile/${employeeId}`,
+        root + `/api/admin/profile/update-profile/${employeeId}`,
         {
           method: "PUT",
           credentials: "include",
