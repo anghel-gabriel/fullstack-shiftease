@@ -6,7 +6,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { UsersService } from "src/app/services/users.service";
 import { defaultPhotoURL } from "src/app/utils/URLs";
 import { getImageUrl } from "src/app/utils/workplaces";
-import { ShiftsService } from "src/app/services/shifts";
+import { ShiftsService } from "src/app/services/shifts-service";
 import { IData, IOptions, IShift } from "src/app/utils/interfaces";
 
 @Component({
@@ -65,7 +65,7 @@ export class MyShiftsPageComponent implements OnInit {
     private toast: MessageService
   ) {
     this.shiftsService
-      .getMyShiftsObsBackend()
+      .getMyShiftsObs()
       .subscribe((data) => (this.shifts = data));
     this.usersService.getLoggedUser().subscribe((data) => {
       this.userPhotoURL = data?.photoURL;

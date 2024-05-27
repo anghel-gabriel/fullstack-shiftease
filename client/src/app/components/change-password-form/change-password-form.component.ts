@@ -12,12 +12,12 @@ export class ChangePasswordFormComponent {
   @Output() successEvent = new EventEmitter<string>();
   @Output() setLoadingSpinner = new EventEmitter<boolean>();
   @Output() closeForm = new EventEmitter();
-  newPassword = "";
-  newPasswordConfirm = "";
+  newPassword: string = "";
+  newPasswordConfirm: string = "";
 
   constructor(private usersService: UsersService) {}
 
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     try {
       this.setLoadingSpinner.emit(true);
       if (!isPasswordValid(this.newPassword)) {
@@ -31,10 +31,8 @@ export class ChangePasswordFormComponent {
       this.closeForm.emit();
       await this.usersService.changePasswordBackend(this.newPassword);
       this.successEvent.emit("Password changed succesfully.");
-    } catch (error) {
-      this.errorEvent.emit(
-        "An error has occured while changing your password. Please reauthenticate and try again."
-      );
+    } catch (error: any) {
+      this.errorEvent.emit(error.message);
     } finally {
       this.setLoadingSpinner.emit(false);
     }

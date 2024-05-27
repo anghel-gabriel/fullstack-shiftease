@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.usersService.getLoggedUser().subscribe((user) => {
-      this.updateNavbarItems(!!user, user?.userRole);
+      if (user) this.updateNavbarItems(!!user, user.userRole);
     });
   }
 
@@ -88,7 +88,7 @@ export class NavbarComponent implements OnInit {
   async onSignOut() {
     this.isLoading = true;
     try {
-      await this.usersService.logOutBackend();
+      await this.usersService.logOut();
       await this.router.navigate(["/sign-in"]);
     } catch (error: any) {
       this.showError(error);

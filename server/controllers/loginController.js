@@ -5,7 +5,6 @@ import loginService from "../services/loginService.js";
 const login = async (req, res) => {
   // Getting request data
   const { usernameOrEmail, password, loginMethod } = req.body;
-
   if (!usernameOrEmail || !password || !loginMethod) {
     return res
       .status(400)
@@ -39,7 +38,7 @@ const login = async (req, res) => {
         const user = foundUser;
         const data = {
           id: user._id,
-          role: user.userRole,
+          userRole: user.userRole,
         };
         const token = jwt.sign(data, process.env.SECRET_KEY, {
           expiresIn: "7d",
@@ -53,14 +52,16 @@ const login = async (req, res) => {
         });
         // Returning user's data
         res.status(200).send({
+          message: "You have been authenticated",
           user: {
+            emailAddress: user.emailAddress,
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            role: user.role,
             birthDate: user.birthDate,
-            gender: user.gender.value,
+            gender: user.gender,
             userRole: user.userRole,
+            photoURL: user.photoURL,
           },
         });
       } else {
@@ -75,5 +76,3 @@ const login = async (req, res) => {
 };
 
 export default { login };
-
-// TODO: check if keeping both expiration dates is needed

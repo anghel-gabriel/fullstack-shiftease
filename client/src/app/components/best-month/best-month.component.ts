@@ -1,6 +1,38 @@
 import { Component, OnInit } from "@angular/core";
-import { ShiftsService } from "src/app/services/shifts";
+import { ShiftsService } from "src/app/services/shifts-service";
 import { getBestMonthStats } from "src/app/utils/computation";
+
+interface IChartData {
+  labels: string[];
+  datasets: Array<{
+    data: number[];
+    backgroundColor: string[];
+    hoverBackgroundColor: string[];
+  }>;
+}
+
+interface IChartOptions {
+  plugins: {
+    legend: {
+      display: boolean;
+      position: string;
+      labels: {
+        usePointStyle: boolean;
+        color: string;
+      };
+    };
+  };
+  responsive: boolean;
+  maintainAspectRatio: boolean;
+}
+
+interface IBestMonthStats {
+  month: string;
+  year: string;
+  hoursWorked: number;
+  averageHourlyWage: number;
+  profit: number;
+}
 
 @Component({
   selector: "app-best-month",
@@ -8,30 +40,22 @@ import { getBestMonthStats } from "src/app/utils/computation";
   styleUrls: ["./best-month.component.scss"],
 })
 export class BestMonthComponent {
-  bestMonthStats = {
+  bestMonthStats: IBestMonthStats = {
     month: "No stats",
     year: "No stats",
     hoursWorked: 0,
     averageHourlyWage: 0,
     profit: 0,
   };
+  data: IChartData | null = null;
+  options: IChartOptions | null = null;
 
-  data = {};
-  options = {};
-
-  // constructor(
-  //   private auth: AuthenticationService,
-  //   private shiftsService: ShiftsService,
-  // ) {
-  //   this.shiftsService.updateShifts().subscribe((shifts) => {
-  //     const currentId = this.auth?.getAuthUser()?.uid;
-  //     const myShifts = shifts.filter(
-  //       (shift: any) => shift.author === currentId,
-  //     );
-  //     this.bestMonthStats = getBestMonthStats(myShifts);
-  //     this.updateChartData(myShifts);
-  //   });
-  // }
+  constructor(private shiftsService: ShiftsService) {
+    this.shiftsService.getMyShiftsObs().subscribe((shifts) => {
+      this.bestMonthStats = getBestMonthStats(shifts);
+      this.updateChartData(shifts);
+    });
+  }
 
   updateChartData(shifts: any[]): void {
     const workplaceProfits = shifts.reduce((acc, shift) => {
@@ -47,7 +71,7 @@ export class BestMonthComponent {
       labels: workplaces,
       datasets: [
         {
-          data: profits,
+          data: profits as number[],
           backgroundColor: [
             "#FF6384",
             "#36A2EB",

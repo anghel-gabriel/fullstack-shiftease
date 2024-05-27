@@ -13,12 +13,12 @@ export class ChangeEmailFormComponent {
   @Output() setLoadingSpinner = new EventEmitter<boolean>();
   @Output() closeForm = new EventEmitter();
 
-  newEmail = "";
-  newEmailConfirm = "";
+  newEmail: string = "";
+  newEmailConfirm: string = "";
 
   constructor(private usersService: UsersService) {}
 
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     try {
       this.setLoadingSpinner.emit(true);
       if (!isEmailValid(this.newEmail)) {
@@ -33,9 +33,7 @@ export class ChangeEmailFormComponent {
       await this.usersService.changeEmailBackend(this.newEmail);
       this.successEvent.emit("Email address changed successfully.");
     } catch (error: any) {
-      this.errorEvent.emit(
-        "An error has occured while changing email address. Please reauthenticate and try again."
-      );
+      this.errorEvent.emit(error.message);
     } finally {
       this.setLoadingSpinner.emit(false);
     }

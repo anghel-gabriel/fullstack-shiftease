@@ -3,7 +3,7 @@ import * as FileSaver from "file-saver";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
-import { ShiftsService } from "src/app/services/shifts";
+import { ShiftsService } from "src/app/services/shifts-service";
 import { IShift } from "src/app/utils/interfaces";
 import { getImageUrl } from "src/app/utils/workplaces";
 
@@ -17,18 +17,16 @@ export class AllShiftsPageComponent implements OnInit {
   @ViewChild("dt") dt: Table | undefined;
   @ViewChild("op") overlayPanel!: OverlayPanel;
   // Loading states
-  // TODO: check spinner not displaying
   loading: boolean = false;
   isLoading: boolean = false;
-
   // Modals states
   editModalVisible: boolean = false;
   statisticsModalVisible: boolean = false;
-  // comment
+  // Current displayed comments
   currentComments: string = "";
-  // shifts
-  shifts: any[] = [];
-  selectedShift: any = null;
+  // Shifts
+  shifts: IShift[] = [];
+  selectedShift: IShift | null = null;
   getWorkplaceImage = getImageUrl;
 
   constructor(
@@ -47,7 +45,7 @@ export class AllShiftsPageComponent implements OnInit {
     });
     this.shiftsService
       .getAreAllShiftsLoading()
-      .subscribe((val) => (this.isLoading = val));
+      .subscribe((val: boolean) => (this.isLoading = val));
   }
 
   // Get all shifts when accessing the page
@@ -79,18 +77,20 @@ export class AllShiftsPageComponent implements OnInit {
   }
   // Edit shift method
   async onEditSubmit(editedShift: IShift): Promise<void> {
-    this.loading = true;
-    this.editModalVisible = false;
-    try {
-      await this.shiftsService.editShiftAsAdmin(
-        this.selectedShift._id,
-        editedShift
-      );
-    } catch (error: any) {
-      this.showError(error.message);
-    } finally {
-      this.loading = false;
-    }
+    if (this.selectedShift && this.selectedShift._id) {
+      this.loading = true;
+      this.editModalVisible = false;
+      try {
+        await this.shiftsService.editShiftAsAdmin(
+          this.selectedShift._id,
+          editedShift
+        );
+      } catch (error: any) {
+        this.showError(error.message);
+      } finally {
+        this.loading = false;
+      }
+    } else this.showError("Please select a shift");
   }
   // Close edit modal method
   onEditModalClose(): void {

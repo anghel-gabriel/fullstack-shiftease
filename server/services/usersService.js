@@ -64,7 +64,6 @@ const getAllUsers = async () => {
   }
 };
 
-// TODO: check for admin and user services
 export default {
   getProfile,
   changeEmailAddress,

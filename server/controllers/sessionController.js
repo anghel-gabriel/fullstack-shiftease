@@ -18,10 +18,25 @@ const validateSession = async (req, res) => {
       .status(401)
       .send({ message: "Authentication token is required." });
   try {
+    // Get user data
     const deserializedToken = jwt.verify(token, process.env.SECRET_KEY);
     const userId = deserializedToken.id;
     const userData = await sessionService.findUserById(userId);
-    return res.status(200).send(userData);
+    // Sending data
+    return res.status(200).send({
+      message: "Data retreived successfully",
+      data: {
+        _id: userData._id,
+        username: userData.username,
+        emailAddress: userData.emailAddress,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        birthDate: userData.birthDate,
+        gender: userData.gender,
+        userRole: userData.userRole,
+        photoURL: userData.photoURL,
+      },
+    });
   } catch (error) {
     if (error.name === "JsonWebTokenError")
       return res.status(401).send({ message: "Invalid token." });

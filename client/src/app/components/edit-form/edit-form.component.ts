@@ -26,7 +26,7 @@ export class EditFormComponent implements OnChanges {
   comments: string = "";
   workplaces: IWorkplace[] = workplaces;
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes["editShift"] && this.editShift) {
       this.workTime = [
         new Date(this.editShift.startTime),
@@ -38,7 +38,7 @@ export class EditFormComponent implements OnChanges {
     }
   }
 
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     // Check if start time is before end time
     if (
       !this.workTime ||

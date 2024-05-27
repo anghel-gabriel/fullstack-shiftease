@@ -26,7 +26,7 @@ const checkUserIsAdmin = (req, res, next) => {
   try {
     const deserializedToken = jwt.verify(token, process.env.SECRET_KEY);
     req.tokenData = deserializedToken;
-    if (req.tokenData.role !== "admin") {
+    if (req.tokenData.userRole !== "admin") {
       return res.status(403).send({ message: "Forbidden: Admins only." });
     }
     next();

@@ -11,7 +11,9 @@ const getUserShifts = async (req, res) => {
   try {
     const userId = ObjectId.createFromHexString(id);
     const foundShifts = await shiftsService.getUserShifts(userId);
-    res.status(200).send(foundShifts);
+    res
+      .status(200)
+      .send({ message: "Shifts retrieved successfully", data: foundShifts });
   } catch (error) {
     res
       .status(400)
@@ -57,7 +59,9 @@ const addShift = async (req, res) => {
       ),
     });
     const newShifts = await shiftsService.getUserShifts(userId);
-    res.status(200).send(newShifts);
+    res
+      .status(200)
+      .send({ message: "Shift added successfully", data: newShifts });
   } catch (error) {
     res.status(500).send({
       message:
@@ -106,7 +110,9 @@ const updateShift = async (req, res) => {
       ),
     });
     const newShifts = await shiftsService.getUserShifts(userId);
-    res.status(200).send(newShifts);
+    res
+      .status(200)
+      .send({ message: "Shift updated successfully.", data: newShifts });
   } catch (error) {
     res
       .status(500)
@@ -125,7 +131,9 @@ const deleteShift = async (req, res) => {
     // userId is used to ensure that the author of the shift is the logged-in user
     await shiftsService.deleteShiftByIdAndAuthor(shiftId, reqUserId);
     const newShifts = await shiftsService.getUserShifts(userId);
-    res.status(200).send(newShifts);
+    res
+      .status(200)
+      .send({ message: "Shift deleted successfully.", data: messagenewShifts });
   } catch (error) {
     res
       .status(500)
@@ -145,7 +153,7 @@ const getAllShifts = async (req, res) => {
     */
     const populatedShifts = await shiftsService.getAllShifts();
     res.status(200).send({
-      message: "Shifts fetched successfully",
+      message: "Shifts fetched successfully.",
       data: populatedShifts,
     });
   } catch (error) {
@@ -194,7 +202,7 @@ const updateShiftAsAdmin = async (req, res) => {
     const populatedShifts = await shiftsService.getAllShifts();
     res
       .status(200)
-      .send({ message: "Shift updated successfully", data: populatedShifts });
+      .send({ message: "Shift updated successfully.", data: populatedShifts });
   } catch (error) {
     res
       .status(500)
@@ -245,5 +253,3 @@ export default {
   deleteShiftAsAdmin,
   updateShiftAsAdmin,
 };
-
-// TODO: check for ids bla bla

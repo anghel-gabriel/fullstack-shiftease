@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { UsersService } from "./users.service";
-import { IShift } from "../utils/interfaces";
+import { IShift, UserInterface } from "../utils/interfaces";
 import { root } from "../utils/URLs";
 
 @Injectable({
@@ -23,32 +23,32 @@ export class ShiftsService {
   }
 
   // Observables
-  getAreMyShiftsLoading() {
+  getAreMyShiftsLoading(): Observable<boolean> {
     return this.areMyShiftsLoading.asObservable();
   }
 
-  getAllUsersObs() {
+  getAllUsersObs(): Observable<UserInterface[]> {
     return this.allUsers.asObservable();
   }
 
-  getAreAllShiftsLoading() {
+  getAreAllShiftsLoading(): Observable<boolean> {
     return this.areAllShiftsLoading.asObservable();
   }
 
-  getAreAllUsersLoading() {
+  getAreAllUsersLoading(): Observable<boolean> {
     return this.areAllUsersLoading.asObservable();
   }
 
-  getMyShiftsObsBackend() {
+  getMyShiftsObs(): Observable<IShift[]> {
     return this.myShifts.asObservable();
   }
 
-  getAllShiftsObs() {
+  getAllShiftsObs(): Observable<IShift[]> {
     return this.allShifts.asObservable();
   }
 
   // REGULAR USERS METHODS
-  async getUserShifts() {
+  async getUserShifts(): Promise<void> {
     try {
       this.areMyShiftsLoading.next(true);
       const response = await fetch(root + "/api/user/shifts/get-user-shifts/", {
@@ -62,7 +62,7 @@ export class ShiftsService {
       if (!response.ok) {
         throw new Error(result.message);
       }
-      this.myShifts.next(result);
+      this.myShifts.next(result.data);
     } catch (error: any) {
       throw new Error(error.message);
     } finally {
@@ -70,7 +70,7 @@ export class ShiftsService {
     }
   }
 
-  async addShift(shift: IShift) {
+  async addShift(shift: IShift): Promise<void> {
     try {
       const response = await fetch(root + "/api/user/shifts/add-shift", {
         method: "POST",
@@ -84,14 +84,14 @@ export class ShiftsService {
       if (!response.ok) {
         throw new Error(result.message);
       } else {
-        this.myShifts.next(result);
+        this.myShifts.next(result.data);
       }
     } catch (error: any) {
       throw new Error(error.message);
     }
   }
 
-  async editShift(shiftId: string, newData: IShift) {
+  async editShift(shiftId: string, newData: IShift): Promise<void> {
     try {
       const response = await fetch(
         root + `/api/user/shifts/update-shift/${shiftId}`,
@@ -108,13 +108,13 @@ export class ShiftsService {
       if (!response.ok) {
         throw new Error(result.message);
       }
-      this.myShifts.next(result);
+      this.myShifts.next(result.data);
     } catch (error: any) {
       throw new Error(error.message);
     }
   }
 
-  async deleteShift(shiftId: string) {
+  async deleteShift(shiftId: string): Promise<void> {
     try {
       this.areMyShiftsLoading.next(true);
       const response = await fetch(
@@ -131,7 +131,7 @@ export class ShiftsService {
       if (!response.ok) {
         throw new Error(result.message);
       }
-      this.myShifts.next(result);
+      this.myShifts.next(result.data);
     } catch (error: any) {
       throw new Error(error.message);
     } finally {
@@ -140,7 +140,7 @@ export class ShiftsService {
   }
 
   // ADMIN USERS METHODS
-  async getAllShifts() {
+  async getAllShifts(): Promise<void> {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(root + "/api/admin/shifts/get-all-shifts/", {
@@ -165,7 +165,7 @@ export class ShiftsService {
     }
   }
 
-  async editShiftAsAdmin(shiftId: string, newData: IShift) {
+  async editShiftAsAdmin(shiftId: string, newData: IShift): Promise<void> {
     try {
       const response = await fetch(
         root + `/api/admin/shifts/update-shift/${shiftId}`,
@@ -189,7 +189,7 @@ export class ShiftsService {
     }
   }
 
-  async deleteShiftsByUserId(userId: string) {
+  async deleteShiftsByUserId(userId: string): Promise<void> {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
@@ -213,7 +213,7 @@ export class ShiftsService {
     }
   }
 
-  async deleteShiftAsAdmin(shiftId: string) {
+  async deleteShiftAsAdmin(shiftId: string): Promise<void> {
     try {
       this.areAllShiftsLoading.next(true);
       const response = await fetch(
@@ -239,7 +239,7 @@ export class ShiftsService {
     }
   }
 
-  async getAllUsers() {
+  async getAllUsers(): Promise<void> {
     try {
       this.areAllUsersLoading.next(true);
       const response = await fetch(root + `/api/admin/profile/get-all-users/`, {
@@ -260,5 +260,3 @@ export class ShiftsService {
     }
   }
 }
-
-// TODO: get all shifts after operations from backend, don t trigget getshifts

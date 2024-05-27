@@ -30,8 +30,8 @@ export class ProfilePageComponent {
   // Loading state
   isLoading: boolean = false;
   // Modals states
-  isChangingPasswordModalVisible = false;
-  isChangingEmailModalVisible = false;
+  isChangingPasswordModalVisible: boolean = false;
+  isChangingEmailModalVisible: boolean = false;
   // Default photo URL
   defaultPhotoURL: string = defaultPhotoURL;
 
@@ -46,7 +46,7 @@ export class ProfilePageComponent {
   }
 
   // Fill profile input fields with user data
-  fillProfileFields(data: any) {
+  fillProfileFields(data: any): void {
     if (data) {
       this.username = data.username;
       this.emailAddress = data.emailAddress;
@@ -60,7 +60,7 @@ export class ProfilePageComponent {
   }
 
   // Show error toast function
-  showError(message: string) {
+  showError(message: string): void {
     this.messageService.add({
       severity: "error",
       detail: message,
@@ -68,7 +68,7 @@ export class ProfilePageComponent {
     });
   }
   // Show success toast notification
-  showSuccess(message: string) {
+  showSuccess(message: string): void {
     this.messageService.add({
       severity: "success",
       detail: message,
@@ -77,12 +77,12 @@ export class ProfilePageComponent {
   }
 
   // Set loading spinner
-  setLoadingSpinner(event: boolean) {
+  setLoadingSpinner(event: boolean): void {
     this.isLoading = event;
   }
 
   // Save profile method
-  async handleSaveProfile() {
+  async handleSaveProfile(): Promise<void> {
     // Form validation
     if (this.username.length < 6) {
       this.showError("Your username must be at least 6 characters long");
@@ -103,7 +103,6 @@ export class ProfilePageComponent {
       );
       return;
     }
-
     this.setLoadingSpinner(true);
     try {
       const newData = {
@@ -128,7 +127,7 @@ export class ProfilePageComponent {
   }
 
   // Photo upload method
-  async onUpload(event: any) {
+  async onUpload(event: any): Promise<void> {
     this.setLoadingSpinner(true);
     for (let file of event.files) {
       try {
@@ -148,12 +147,11 @@ export class ProfilePageComponent {
   }
 
   // Remove photo method
-  async removePhoto() {
+  async removePhoto(): Promise<void> {
     this.setLoadingSpinner(true);
     try {
       // Call the backend to remove the photo
       await this.fileUploadService.deleteFile(this.photoURL);
-
       // Update the user profile photo to the default one
       await this.usersService.removeUserPhoto();
       this.photoURL = root + "/pictures/defaultPhoto.png";
@@ -165,7 +163,3 @@ export class ProfilePageComponent {
     }
   }
 }
-
-// TODO: add user interface
-// TODO: add error types
-// TODO: check if can throw errors with 'throw error'

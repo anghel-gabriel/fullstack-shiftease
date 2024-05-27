@@ -9,14 +9,14 @@ export interface RegisterInterface {
 }
 
 export interface UserInterface {
-  uid: string;
-  email: string;
+  _id: string;
+  emailAddress: string;
   username: string;
   firstName: string;
   lastName: string;
   birthDate: any;
   gender: any;
-  role: "user" | "admin";
+  userRole: "user" | "admin";
   photoURL: string;
 }
 
@@ -27,6 +27,7 @@ export interface IShift {
   hourlyWage: number;
   workplace: string;
   comments: string;
+  profit?: number;
 }
 
 export interface IWorkplace {

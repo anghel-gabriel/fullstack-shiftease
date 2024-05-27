@@ -5,7 +5,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
 import { UsersService } from "src/app/services/users.service";
-import { ShiftsService } from "src/app/services/shifts";
+import { ShiftsService } from "src/app/services/shifts-service";
 
 @Component({
   selector: "app-employees-page",
@@ -43,7 +43,7 @@ export class EmployeesPageComponent implements OnInit {
       if (data) {
         this.myId = data._id;
         // TODO: check if it is needed
-        this.myRole = data.role;
+        this.myRole = data.userRole;
       }
     });
     this.shiftsService

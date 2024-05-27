@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { isPasswordValid } from "../utils/validation.js";
 import resetPasswordService from "../services/resetPasswordService.js";
 
+// This function is used to receive a reset password link
 const requestResetPasswordLink = async (req, res) => {
   // Getting body data
   const { email } = req.body;
@@ -33,8 +34,7 @@ const requestResetPasswordLink = async (req, res) => {
     from: process.env.SENDER_EMAIL,
     to: email,
     subject: "Password Reset",
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password</p>`,
-    // TODO: maybe a better email, tell user link is available just 1h and make sure if token is expired, user knows when setting password
+    html: `<p>Click <a href="${resetLink}">here</a> to reset your password. The reset link is available 1h.</p>`,
   };
 
   // Send email
@@ -51,6 +51,7 @@ const requestResetPasswordLink = async (req, res) => {
   });
 };
 
+// This function in used to set a new password using the reset password link
 const resetPassword = async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
@@ -66,7 +67,9 @@ const resetPassword = async (req, res) => {
     await resetPasswordService.setPassword(decodedUser.id, hashedPassword);
     return res.status(200).send({ message: "Password reset successfully." });
   } catch (error) {
-    return res.status(400).send({ message: "Invalid or expired URL." });
+    return res
+      .status(400)
+      .send({ message: "The reset password link expired." });
   }
 };
 

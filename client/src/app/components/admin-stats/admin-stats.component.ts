@@ -1,5 +1,26 @@
-import { Component, OnInit } from "@angular/core";
-import { ShiftsService } from "src/app/services/shifts";
+import { Component } from "@angular/core";
+import { ShiftsService } from "src/app/services/shifts-service";
+import { IShift } from "src/app/utils/interfaces";
+
+interface IDropDownOption {
+  name: string;
+  code: string;
+}
+
+interface IOptions {
+  plugins: {
+    legend: {
+      display: boolean;
+      position: string;
+      labels: {
+        usePointStyle: boolean;
+        color: string;
+      };
+    };
+  };
+  responsive: boolean;
+  maintainAspectRatio: boolean;
+}
 
 @Component({
   selector: "app-admin-stats",
@@ -7,12 +28,12 @@ import { ShiftsService } from "src/app/services/shifts";
   styleUrls: ["./admin-stats.component.scss"],
 })
 export class AdminStatsComponent {
-  options = {};
+  options: IOptions | null = null;
   data = {};
   allShifts: any[] = [];
   currentChart = "profit";
-  isChartShowing = false;
-  dropdownOptions = [
+  isChartShowing: boolean = false;
+  dropdownOptions: IDropDownOption[] = [
     { name: "Select an option", code: "none" },
     { name: "Total Profit per Month", code: "profitMonth" },
     { name: "Total Profit per Workplace", code: "profit" },
@@ -22,14 +43,11 @@ export class AdminStatsComponent {
     { name: "Worked Hours per Employee", code: "hoursAuthor" },
   ];
 
-  // constructor(
-  //   private shiftsService: ShiftsService,
-  //   private auth: AuthenticationService
-  // ) {
-  //   this.shiftsService.updateShifts().subscribe((shifts) => {
-  //     this.allShifts = shifts;
-  //   });
-  // }
+  constructor(private shiftsService: ShiftsService) {
+    this.shiftsService.getAllShiftsObs().subscribe((shifts) => {
+      this.allShifts = shifts;
+    });
+  }
 
   onChartChange(event: any): void {
     this.currentChart = event.value.code;

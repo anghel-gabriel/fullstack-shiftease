@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { RegisterInterface, UserInterface } from "../utils/interfaces";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { defaultPhotoURL, root } from "../utils/URLs";
 
@@ -9,19 +9,20 @@ import { defaultPhotoURL, root } from "../utils/URLs";
 })
 export class UsersService {
   private loggedUser = new BehaviorSubject<any>(null);
-  constructor(public http: HttpClient) {}
+  constructor() {}
 
-  getLoggedUser() {
+  getLoggedUser(): Observable<UserInterface> {
     return this.loggedUser.asObservable();
   }
 
   // REGULAR USERS METHODS
-  async updateUserPhoto(photoURL: string) {
+
+  async updateUserPhoto(photoURL: string): Promise<void> {
     const currentLoggedUserData = await this.loggedUser.getValue();
     this.loggedUser.next({ ...currentLoggedUserData, photoURL });
   }
 
-  async removeUserPhoto() {
+  async removeUserPhoto(): Promise<void> {
     const currentLoggedUserData = await this.loggedUser.getValue();
     this.loggedUser.next({
       ...currentLoggedUserData,
@@ -29,7 +30,10 @@ export class UsersService {
     });
   }
 
-  async setNewPasswordBackend(token: string, newPassword: string) {
+  async setNewPasswordBackend(
+    token: string,
+    newPassword: string
+  ): Promise<void> {
     try {
       const response = await fetch(root + `/api/auth/reset-password/${token}`, {
         method: "POST",
@@ -49,7 +53,7 @@ export class UsersService {
     }
   }
 
-  async editProfileBackend(newData: UserInterface) {
+  async editProfileBackend(newData: UserInterface): Promise<void> {
     try {
       const response = await fetch(root + `/api/user/profile/update-profile/`, {
         method: "PUT",
@@ -69,7 +73,7 @@ export class UsersService {
           ...newData,
           photoURL: currentData.photoURL,
           emailAddress: currentData.emailAddress,
-          userRole: currentData.role,
+          userRole: currentData.userRole,
         };
         this.loggedUser.next(newUserData);
       }
@@ -78,7 +82,7 @@ export class UsersService {
     }
   }
 
-  async changeEmailBackend(newEmail: string) {
+  async changeEmailBackend(newEmail: string): Promise<void> {
     try {
       const response = await fetch(root + `/api/profile/change-email/`, {
         method: "PUT",
@@ -99,7 +103,7 @@ export class UsersService {
     }
   }
 
-  async changePasswordBackend(newPassword: string) {
+  async changePasswordBackend(newPassword: string): Promise<void> {
     try {
       const response = await fetch(root + `/api/profile/change-email/`, {
         method: "PUT",
@@ -120,7 +124,7 @@ export class UsersService {
     }
   }
 
-  async sendPasswordResetEmail(email: string) {
+  async sendPasswordResetEmail(email: string): Promise<void> {
     try {
       const response = await fetch(root + "/api/auth/request-reset-password", {
         method: "POST",
@@ -146,7 +150,7 @@ export class UsersService {
     username: string,
     password: string,
     confirmPassword: string
-  ) {
+  ): Promise<void> {
     try {
       const response = await fetch(root + "/api/auth/credentials", {
         method: "POST",
@@ -169,7 +173,7 @@ export class UsersService {
     }
   }
 
-  async register(registerData: RegisterInterface) {
+  async register(registerData: RegisterInterface): Promise<void> {
     try {
       const response = await fetch(root + "/api/auth/register", {
         method: "POST",
@@ -187,7 +191,11 @@ export class UsersService {
     }
   }
 
-  async login(usernameOrEmail: string, password: string, loginMethod: string) {
+  async login(
+    usernameOrEmail: string,
+    password: string,
+    loginMethod: string
+  ): Promise<void> {
     try {
       const response = await fetch(root + "/api/auth/login", {
         method: "POST",
@@ -207,37 +215,41 @@ export class UsersService {
     }
   }
 
-  async checkAuthenticationBackend() {
-    this.http
-      .get(root + "/api/auth/validate-session", {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res: any) => {
-          this.loggedUser.next(res);
-        },
-        error: () => this.loggedUser.next(null),
+  async checkAuthenticationBackend(): Promise<void> {
+    try {
+      const response = await fetch(root + "/api/auth/validate-session", {
+        method: "GET",
+        credentials: "include",
       });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+      this.loggedUser.next(result.data);
+    } catch (error) {
+      this.loggedUser.next(null);
+    }
   }
 
-  async logOutBackend() {
-    this.http
-      .get(root + "/api/auth/log-out", {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res: any) => {
-          this.loggedUser.next(null);
-        },
-        error: (error) => {
-          throw new Error(error);
-        },
+  async logOut(): Promise<void> {
+    try {
+      const response = await fetch(root + "/api/auth/log-out", {
+        method: "GET",
+        credentials: "include",
       });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+      this.loggedUser.next(null);
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   // ADMIN USERS METHOD
 
-  async getEmployeeData(userId: string) {
+  async getEmployeeData(userId: string): Promise<UserInterface> {
     try {
       const response = await fetch(
         root + `/api/admin/profile/get-user/${userId}/`,
@@ -259,7 +271,10 @@ export class UsersService {
     }
   }
 
-  async editProfileAsAdmin(employeeId: string, newData: UserInterface) {
+  async editProfileAsAdmin(
+    employeeId: string,
+    newData: UserInterface
+  ): Promise<void> {
     try {
       const response = await fetch(
         root + `/api/admin/profile/update-profile/${employeeId}`,

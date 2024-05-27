@@ -6,19 +6,7 @@ import {
   isUsernameValid,
   isUserAgeBetween6And130,
 } from "../utils/validation.js";
-
-// This is used to verify is gender is chosen from the list
-const genderOptionList = [
-  { name: "Unknown", value: "unknown" },
-  { name: "Male", value: "male" },
-  { name: "Female", value: "female" },
-  { name: "Other", value: "other" },
-];
-const validateGender = (gender) => {
-  return genderOptionList.some(
-    (option) => option.value === gender.value && option.name === gender.name
-  );
-};
+import { validateGender } from "../utils/validation.js";
 
 /* 
 This is used for the first step of the register form. 
@@ -84,6 +72,7 @@ const checkCredentials = async (req, res) => {
   }
 };
 
+// This is used for register form submission
 const registerUser = async (req, res) => {
   // Getting request data
   const {
@@ -151,7 +140,6 @@ const registerUser = async (req, res) => {
   if (!validateGender(gender))
     return res.status(400).send({ message: "The gender provided is invalid." });
 
-  // TODO: check if possible with await bcrypt.hash(newPassword, 8);
   bcrypt.hash(password, 8, async (err, hash) => {
     const userData = {
       username: username,
@@ -197,5 +185,3 @@ const registerUser = async (req, res) => {
 };
 
 export default { registerUser, checkCredentials };
-
-// TODO: check all statuses

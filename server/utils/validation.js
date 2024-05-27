@@ -40,3 +40,16 @@ export function isWorkplaceValid(workplace) {
     workplace
   );
 }
+
+// This is used to verify is gender is chosen from the list
+const genderOptionList = [
+  { name: "Unknown", value: "unknown" },
+  { name: "Male", value: "male" },
+  { name: "Female", value: "female" },
+  { name: "Other", value: "other" },
+];
+export const validateGender = (gender) => {
+  return genderOptionList.some(
+    (option) => option.value === gender.value && option.name === gender.name
+  );
+};

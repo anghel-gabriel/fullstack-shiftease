@@ -65,7 +65,6 @@ const updateProfilePicture = async (req, res) => {
         .status(200)
         .json({ message: "File uploaded successfully", photoURL: photoURL });
     } catch (error) {
-      console.error("Error updating profile picture:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   } else {

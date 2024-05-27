@@ -20,7 +20,7 @@ export class AddFormComponent {
   // Loading state
   isLoading: boolean = false;
 
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     // Check if start time is before end time
     if (
       !this.workTime ||
