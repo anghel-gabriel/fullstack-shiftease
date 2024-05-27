@@ -14,15 +14,14 @@ import fs from "fs";
 const PORT = process.env.PORT ?? 8080;
 const app = express();
 
+// Ensure the "pictures" folder exists
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
-
-// Ensure the "pictures" folder exists
 if (!fs.existsSync(path.join(__dirname, "../../pictures"))) {
   fs.mkdirSync(path.join(__dirname, "../../pictures"));
 }
 
-// Enable CORS with dynamic origin
+// Enable CORS
 app.use(
   cors({
     origin: true,
@@ -44,6 +43,7 @@ app.use("/pictures", express.static(path.join(__dirname, "pictures")));
 app.use("/api/user", authorizeMdw.checkUserIsAuthenticated, userRouter);
 app.use("/api/admin", authorizeMdw.checkUserIsAdmin, adminRouter);
 
+// Connect to MongoDB, start server
 const connectFn = async () => {
   try {
     await mongoose.connect(process.env.ACCESS_URL);

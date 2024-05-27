@@ -4,14 +4,14 @@ import usersController from "../../controllers/usersController.js";
 
 const uploadRouter = express.Router();
 
-// Upload photo
+// This endpoint is used by admins to update any user's profile photo
 uploadRouter.post(
   "/profile-picture/:id",
   upload.single("photo"),
   usersController.updateProfilePictureAsAdmin
 );
 
-// Delete photo
+// This endpoint is used by admins to delete any user's profile photo
 uploadRouter.delete(
   "/profile-picture",
   usersController.deleteProfilePictureAsAdmin

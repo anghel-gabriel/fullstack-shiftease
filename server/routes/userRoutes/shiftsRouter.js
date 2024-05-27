@@ -3,13 +3,16 @@ import shiftsController from "../../controllers/shiftsController.js";
 
 const shiftsRouter = express.Router();
 
-// Get shifts by user id
+// This endpoint is used to get the logged user's shifts
 shiftsRouter.get("/get-user-shifts", shiftsController.getUserShifts);
-// Add new shift
+
+// This endpoint is used by users to add a new shift
 shiftsRouter.post("/add-shift", shiftsController.addShift);
-// Update shift by shift id
+
+// This endpoint is used by users to update a shift
 shiftsRouter.put("/update-shift/:id", shiftsController.updateShift);
-// Delete shift by shift id
+
+// This endpoint is used by users to delete a shift
 shiftsRouter.delete("/delete-shift/:id", shiftsController.deleteShift);
 
 export default shiftsRouter;

@@ -1,15 +1,14 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
 import { fileURLToPath } from "url";
-import usersService from "../../services/usersService.js";
+import usersController from "../../controllers/usersController.js";
 
 const uploadRouter = express.Router();
 
 // Construct __dirname for ES module
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export const __dirname = path.dirname(__filename);
 
 // Configure multer
 const storage = multer.diskStorage({
@@ -23,67 +22,16 @@ const storage = multer.diskStorage({
 });
 export const upload = multer({ storage: storage });
 
-// Upload photo
+// This endpoint is used by users to update their profile photo
 uploadRouter.post(
   "/profile-picture",
   upload.single("photo"),
-  async (req, res) => {
-    const userId = req.tokenData.id;
-    if (req.file) {
-      const photoURL = `${req.protocol}://${req.get("host")}/pictures/${
-        req.file.filename
-      }`;
-      try {
-        await usersService.updateProfilePicture(userId, photoURL);
-        res
-          .status(200)
-          .json({ message: "File uploaded successfully", photoURL: photoURL });
-      } catch (error) {
-        console.error("Error updating profile picture:", error);
-        res.status(500).json({ message: "Internal server error" });
-      }
-    } else {
-      res.status(400).json({ message: "No file uploaded" });
-    }
-  }
+  usersController.updateProfilePicture
 );
 
-// Delete photo
-uploadRouter.delete("/profile-picture", async (req, res) => {
-  const { photoURL } = req.body;
-  const userId = req.tokenData.id; // Assuming userId is available in tokenData
-
-  if (
-    !photoURL ||
-    photoURL === "http://localhost:8080/pictures/defaultPhoto.png"
-  ) {
-    return res.status(400).json({ message: "photoURL is required" });
-  }
-
-  try {
-    // Update the user's profile picture URL to the default one
-    await usersService.removeProfilePicture(userId);
-
-    // Extract the filename from the photoURL
-    const filename = path.basename(photoURL);
-    const filePath = path.join(__dirname, "../../pictures", filename);
-
-    // Check if the file exists before trying to delete it
-    if (fs.existsSync(filePath)) {
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          return res.status(500).json({ message: "Internal server error" });
-        }
-        res
-          .status(200)
-          .json({ message: "Profile picture removed successfully" });
-      });
-    } else {
-      res.status(404).json({ message: "File not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
+// This endpoint is used by users to delete their profile photo
+uploadRouter.delete("/profile-picture", usersController.deleteProfilePicture);
 
 export default uploadRouter;
+
+// TODO: refactorize photo dir, filename bla bla, to have in a single place

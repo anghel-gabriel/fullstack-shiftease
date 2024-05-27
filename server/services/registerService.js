@@ -13,7 +13,7 @@ const checkEmailAddressExisting = async (emailAddress) => {
     const user = await User.find({ emailAddress: emailAddress });
     return !!user.length;
   } catch (error) {
-    throw new Error("Could not check email address. Please try again later.");
+    throw new Error(error);
   }
 };
 
@@ -22,7 +22,7 @@ const checkUsernameExisting = async (username) => {
     const user = await User.find({ username });
     return !!user.length;
   } catch (error) {
-    throw new Error("Could not check email address. Please try again later.");
+    throw new Error(error);
   }
 };
 

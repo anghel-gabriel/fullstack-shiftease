@@ -3,9 +3,14 @@ import registerService from "../services/registerService.js";
 import { isEmailValid, isPasswordValid } from "../utils/validation.js";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
-import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import path from "path";
+
+// Define __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.join(__dirname, "../");
 
 // REGULAR USERS
 
@@ -44,6 +49,27 @@ const updateProfile = async (req, res) => {
     res.status(200).send({ message: "Profile updated successfully" });
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
+  }
+};
+
+// This function is used by users update their profile picture
+const updateProfilePicture = async (req, res) => {
+  const userId = req.tokenData.id;
+  if (req.file) {
+    const photoURL = `${req.protocol}://${req.get("host")}/pictures/${
+      req.file.filename
+    }`;
+    try {
+      await usersService.updateProfilePicture(userId, photoURL);
+      res
+        .status(200)
+        .json({ message: "File uploaded successfully", photoURL: photoURL });
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  } else {
+    res.status(400).json({ message: "No file uploaded" });
   }
 };
 
@@ -96,15 +122,6 @@ const changePassword = async (req, res) => {
   });
 };
 
-// This function is used by users to update their profile photo
-const updateProfilePicture = async (userId, photoURL) => {
-  try {
-    await usersService.updateProfilePicture(userId, photoURL);
-  } catch (error) {
-    throw new Error("Error updating profile picture");
-  }
-};
-
 const deleteProfilePicture = async (req, res) => {
   const { photoURL } = req.body;
   const userId = req.tokenData.id; // Assuming userId is available in tokenData
@@ -122,7 +139,7 @@ const deleteProfilePicture = async (req, res) => {
 
     // Extract the filename from the photoURL
     const filename = path.basename(photoURL);
-    const filePath = path.join(__dirname, "../../pictures", filename);
+    const filePath = path.join(rootDir, "pictures", filename);
 
     // Check if the file exists before trying to delete it
     if (fs.existsSync(filePath)) {
@@ -130,15 +147,15 @@ const deleteProfilePicture = async (req, res) => {
         if (err) {
           return res.status(500).json({ message: "Internal server error" });
         }
-        res
+        return res
           .status(200)
           .json({ message: "Profile picture removed successfully" });
       });
     } else {
-      res.status(404).json({ message: "File not found" });
+      return res.status(404).json({ message: "File not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
