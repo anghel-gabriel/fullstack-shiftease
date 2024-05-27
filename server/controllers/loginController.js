@@ -47,6 +47,8 @@ const login = async (req, res) => {
         // Setting the cookie
         res.cookie("LOGIN_INFO", token, {
           httpOnly: true,
+          secure: false,
+          sameSite: "Lax",
           maxAge: 604800000, // The equivalent of 7 days
         });
         // Returning user's data
