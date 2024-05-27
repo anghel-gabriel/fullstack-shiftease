@@ -9,15 +9,15 @@ import { MessageService } from "primeng/api";
   providers: [MessageService],
 })
 export class ForgotPasswordComponent {
-  email = "";
-  isLoading = false;
+  email: string = "";
+  isLoading: boolean = false;
 
   constructor(
     private usersService: UsersService,
     public toast: MessageService
   ) {}
 
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     this.isLoading = true;
     try {
       await this.usersService.sendPasswordResetEmail(this.email);

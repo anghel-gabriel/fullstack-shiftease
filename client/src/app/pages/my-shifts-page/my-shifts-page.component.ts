@@ -4,10 +4,9 @@ import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { UsersService } from "src/app/services/users.service";
-import { defaultPhotoURL } from "src/app/utils/URLs";
 import { getImageUrl } from "src/app/utils/workplaces";
 import { ShiftsService } from "src/app/services/shifts-service";
-import { IData, IOptions, IShift } from "src/app/utils/interfaces";
+import { IData, IOptions, IShift, IUser } from "src/app/utils/interfaces";
 
 @Component({
   selector: "app-my-shifts-page",
@@ -67,29 +66,29 @@ export class MyShiftsPageComponent implements OnInit {
     this.shiftsService
       .getMyShiftsObs()
       .subscribe((data) => (this.shifts = data));
-    this.usersService.getLoggedUser().subscribe((data) => {
+    this.usersService.getLoggedUser().subscribe((data: IUser) => {
       this.userPhotoURL = data?.photoURL;
       this.userFirstName = data?.firstName;
     });
     this.shiftsService
       .getAreMyShiftsLoading()
-      .subscribe((value) => (this.isLoading = value));
+      .subscribe((value: boolean) => (this.isLoading = value));
   }
 
   // Get my shifts when accessing the page
-  ngOnInit() {
+  ngOnInit(): void {
     this.shiftsService.getUserShifts();
   }
 
   // Toast notification methods
-  showError(message: string) {
+  showError(message: string): void {
     this.toast.add({
       severity: "error",
       summary: "Error",
       detail: message,
     });
   }
-  showSuccess(message: string) {
+  showSuccess(message: string): void {
     this.toast.add({
       severity: "success",
       summary: "Success",
@@ -97,23 +96,23 @@ export class MyShiftsPageComponent implements OnInit {
     });
   }
 
-  onBestMonthClick() {
+  onBestMonthClick(): void {
     this.bestMonthModalVisible = true;
   }
-  onBestMonthModalClose() {
+  onBestMonthModalClose(): void {
     this.bestMonthModalVisible = false;
   }
 
   // Open add shift modal
-  onAddClick() {
+  onAddClick(): void {
     this.addModalVisible = true;
   }
   // Close add shift modal
-  onAddModalClose() {
+  onAddModalClose(): void {
     this.addModalVisible = false;
   }
   // Add shift method
-  async onAddSubmit(addedShift: IShift) {
+  async onAddSubmit(addedShift: IShift): Promise<void> {
     this.loading = true;
     this.addModalVisible = false;
     try {
@@ -131,17 +130,17 @@ export class MyShiftsPageComponent implements OnInit {
   }
 
   // Open edit shift modal
-  onEditClick(shift: IShift) {
+  onEditClick(shift: IShift): void {
     this.selectedShift = shift;
     this.editModalVisible = true;
   }
   // Close edit shift modal
-  onEditModalClose() {
+  onEditModalClose(): void {
     this.selectedShift = this.shifts[0];
     this.editModalVisible = false;
   }
   // Edit shift method
-  async onEditSubmit(editedShift: IShift) {
+  async onEditSubmit(editedShift: IShift): Promise<void> {
     this.loading = true;
     try {
       this.editModalVisible = false;
@@ -156,7 +155,7 @@ export class MyShiftsPageComponent implements OnInit {
   }
 
   // Delete confirmation popup
-  onDeleteClick(event: Event, shift: IShift) {
+  onDeleteClick(event: Event, shift: IShift): void {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: "Are you sure?",
@@ -168,7 +167,7 @@ export class MyShiftsPageComponent implements OnInit {
       reject: () => {},
     });
   }
-  async onDeleteConfirm(shiftId: string) {
+  async onDeleteConfirm(shiftId: string): Promise<void> {
     this.loading = true;
     try {
       await this.shiftsService.deleteShift(shiftId);
@@ -194,12 +193,12 @@ export class MyShiftsPageComponent implements OnInit {
   }
 
   // Export shifts to excel
-  async exportExcel() {
+  async exportExcel(): Promise<void> {
     this.isLoading = true;
     try {
       const xlsx = await import("xlsx");
       const worksheet = xlsx.utils.json_to_sheet(
-        this.shifts.map((shift: any) => ({
+        this.shifts.map((shift: IShift) => ({
           Workplace: shift.workplace,
           "Start Time": shift.startTime.toLocaleString(),
           "End Time": shift.endTime.toLocaleString(),

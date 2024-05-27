@@ -6,6 +6,7 @@ import { OverlayPanel } from "primeng/overlaypanel";
 import { Table } from "primeng/table";
 import { UsersService } from "src/app/services/users.service";
 import { ShiftsService } from "src/app/services/shifts-service";
+import { IUser } from "src/app/utils/interfaces";
 
 @Component({
   selector: "app-employees-page",
@@ -27,8 +28,7 @@ export class EmployeesPageComponent implements OnInit {
   editModalVisible: boolean = false;
   bestMonthModalVisible: boolean = false;
   // Shifts
-  // TODO: add user interface
-  users: any[] = [];
+  users: IUser[] = [];
 
   constructor(
     private shiftsService: ShiftsService,
@@ -42,7 +42,6 @@ export class EmployeesPageComponent implements OnInit {
     this.usersService.getLoggedUser().subscribe((data) => {
       if (data) {
         this.myId = data._id;
-        // TODO: check if it is needed
         this.myRole = data.userRole;
       }
     });
@@ -77,16 +76,16 @@ export class EmployeesPageComponent implements OnInit {
   If I am the selected employee, redirect to /profile
   Else, redirect to /employee/userId
   */
-  onEditClick(employee: any) {
+  onEditClick(employee: any): void {
     if (employee._id === this.myId) this.router.navigate(["/profile"]);
     else this.router.navigate([`/employee/${employee._id}`]);
   }
 
   // Delete all shifts of an employee
-  async onDeleteEmployeeShifts(employee: any) {
+  async onDeleteEmployeeShifts(employeeId: any): Promise<void> {
     this.isLoading = true;
     try {
-      await this.shiftsService.deleteShiftsByUserId(employee);
+      await this.shiftsService.deleteShiftsByUserId(employeeId);
     } catch (error: any) {
       this.showError(error.message);
     } finally {
@@ -96,12 +95,12 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   // Search input (by workplace)
-  applyFilterGlobal($event: any, stringVal: any) {
+  applyFilterGlobal($event: any, stringVal: any): void {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
   // Export shifts to Excel document
-  async exportExcel() {
+  async exportExcel(): Promise<void> {
     this.isLoading = true;
     try {
       const xlsx = await import("xlsx");
@@ -148,3 +147,5 @@ export class EmployeesPageComponent implements OnInit {
     }
   }
 }
+
+// TODO: check excels

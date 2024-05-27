@@ -10,6 +10,7 @@ import {
 import { UsersService } from "../../services/users.service";
 import { Router } from "@angular/router";
 import { IGenderOption, genderOptionList } from "src/app/utils/genderOptions";
+import { IRegister } from "src/app/utils/interfaces";
 
 @Component({
   selector: "app-register-page",
@@ -66,12 +67,12 @@ export class RegisterPageComponent {
   }
 
   // Triggering previous step
-  handlePrevious() {
+  handlePrevious(): void {
     if (this.currentStep !== 0) this.currentStep--;
   }
 
   // Show error toast function
-  showError(message: string) {
+  showError(message: string): void {
     this.messageService.add({
       severity: "error",
       detail: message,
@@ -80,7 +81,7 @@ export class RegisterPageComponent {
   }
 
   // Register form validation
-  async handleNext() {
+  async handleNext(): Promise<any> {
     // First step validation
     if (this.currentStep === 0) {
       if (!isEmailValid(this.emailAddress)) {
@@ -135,7 +136,7 @@ export class RegisterPageComponent {
   }
 
   // Register function
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     this.messageService.add({
       severity: "warn",
       summary: "Loading",
@@ -153,7 +154,7 @@ export class RegisterPageComponent {
       gender: this.gender,
     };
     try {
-      await this.usersService.register(newUserData);
+      await this.usersService.register(newUserData as IRegister);
       this.messageService.add({
         severity: "success",
         summary: "Success",

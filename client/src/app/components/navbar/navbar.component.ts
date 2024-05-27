@@ -3,6 +3,15 @@ import { MessageService } from "primeng/api";
 import { UsersService } from "../../services/users.service";
 import { Router } from "@angular/router";
 
+interface INavbarItem {
+  label: string;
+  icon: string;
+  url?: string;
+  visible: boolean;
+  items?: Array<any>;
+  command?: VoidFunction;
+}
+
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
@@ -10,8 +19,10 @@ import { Router } from "@angular/router";
   providers: [MessageService],
 })
 export class NavbarComponent implements OnInit {
-  navbarItems: any[] = [];
-  isLoading = false;
+  // Navbar items
+  navbarItems: INavbarItem[] = [];
+  // Loading state
+  isLoading: boolean = false;
 
   constructor(
     private usersService: UsersService,
@@ -25,7 +36,7 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  updateNavbarItems(isUserLogged: boolean, userRole?: string) {
+  updateNavbarItems(isUserLogged: boolean, userRole?: string): void {
     this.navbarItems = [
       {
         label: "My shifts",
@@ -77,7 +88,7 @@ export class NavbarComponent implements OnInit {
     ];
   }
 
-  showError(message: string) {
+  showError(message: string): void {
     this.messageService.add({
       severity: "error",
       detail: message,
@@ -85,13 +96,13 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  async onSignOut() {
+  async onSignOut(): Promise<void> {
     this.isLoading = true;
     try {
       await this.usersService.logOut();
       await this.router.navigate(["/sign-in"]);
     } catch (error: any) {
-      this.showError(error);
+      this.showError(error.message);
     } finally {
       this.isLoading = false;
     }

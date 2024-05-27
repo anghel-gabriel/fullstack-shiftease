@@ -23,11 +23,11 @@ export class ResetPasswordPageComponent {
     private usersService: UsersService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.token = this.route.snapshot.params["token"];
   }
 
-  showError(message: string) {
+  showError(message: string): void {
     this.toast.add({
       severity: "error",
       summary: "Error",
@@ -35,7 +35,7 @@ export class ResetPasswordPageComponent {
     });
   }
 
-  async resetPassword() {
+  async resetPassword(): Promise<void> {
     // Validation
     if (!this.newPassword || !this.confirmNewPassword) {
       return this.showError("All fields are mandatory");

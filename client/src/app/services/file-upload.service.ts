@@ -5,11 +5,9 @@ import { root } from "../utils/URLs";
   providedIn: "root",
 })
 export class FileUploadService {
-  constructor() {}
-
   // REGULAR USERS
 
-  async uploadFile(photo: FormData) {
+  async uploadFile(photo: FormData): Promise<string> {
     try {
       const response = await fetch(root + "/api/user/upload/profile-picture", {
         method: "POST",
@@ -49,7 +47,10 @@ export class FileUploadService {
   }
 
   // ADMIN USERS
-  async uploadPhotoAsAdmin(employeeId: string, photo: FormData) {
+  async uploadPhotoAsAdmin(
+    employeeId: string,
+    photo: FormData
+  ): Promise<string> {
     try {
       const response = await fetch(
         root + `/api/admin/upload/profile-picture/${employeeId}`,
@@ -70,7 +71,10 @@ export class FileUploadService {
     }
   }
 
-  async deletePhotoAsAdmin(employeeId: string, photoURL: string) {
+  async deletePhotoAsAdmin(
+    employeeId: string,
+    photoURL: string
+  ): Promise<void> {
     try {
       const response = await fetch(root + "/api/admin/upload/profile-picture", {
         method: "DELETE",

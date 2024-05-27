@@ -1,5 +1,4 @@
 import { Component, HostListener, OnInit } from "@angular/core";
-import { MenuItem } from "primeng/api";
 import { MessageService } from "primeng/api";
 import {
   isUsernameValid,
@@ -10,6 +9,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { IGenderOption, genderOptionList } from "src/app/utils/genderOptions";
 import { defaultPhotoURL } from "src/app/utils/URLs";
 import { root } from "src/app/utils/URLs";
+import { IUser } from "src/app/utils/interfaces";
 
 @Component({
   selector: "app-profile-page",
@@ -46,7 +46,7 @@ export class ProfilePageComponent {
   }
 
   // Fill profile input fields with user data
-  fillProfileFields(data: any): void {
+  fillProfileFields(data: IUser): void {
     if (data) {
       this.username = data.username;
       this.emailAddress = data.emailAddress;

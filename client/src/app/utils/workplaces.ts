@@ -1,6 +1,6 @@
 import { IWorkplace } from "./interfaces";
 
-export const workplaces = [
+export const workplaces: IWorkplace[] = [
   {
     label: "Frontend",
     value: "Frontend",
@@ -29,9 +29,9 @@ export const workplaces = [
 ];
 
 // Get image URL
-export function getImageUrl(name: string) {
+export function getImageUrl(name: string): string {
   const workplace = workplaces.find(
-    (wp: IWorkplace) => wp.label === name || wp.value === name,
+    (wp: IWorkplace) => wp.label === name || wp.value === name
   );
   return workplace ? workplace.imgUrl : "No image URL found";
 }

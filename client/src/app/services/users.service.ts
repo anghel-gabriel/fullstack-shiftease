@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { RegisterInterface, UserInterface } from "../utils/interfaces";
+import { IUser, IRegister } from "../utils/interfaces";
 import { BehaviorSubject, Observable } from "rxjs";
-import { HttpClient } from "@angular/common/http";
 import { defaultPhotoURL, root } from "../utils/URLs";
 
 @Injectable({
@@ -9,9 +8,8 @@ import { defaultPhotoURL, root } from "../utils/URLs";
 })
 export class UsersService {
   private loggedUser = new BehaviorSubject<any>(null);
-  constructor() {}
 
-  getLoggedUser(): Observable<UserInterface> {
+  getLoggedUser(): Observable<IUser> {
     return this.loggedUser.asObservable();
   }
 
@@ -53,7 +51,7 @@ export class UsersService {
     }
   }
 
-  async editProfileBackend(newData: UserInterface): Promise<void> {
+  async editProfileBackend(newData: IUser): Promise<void> {
     try {
       const response = await fetch(root + `/api/user/profile/update-profile/`, {
         method: "PUT",
@@ -173,7 +171,7 @@ export class UsersService {
     }
   }
 
-  async register(registerData: RegisterInterface): Promise<void> {
+  async register(registerData: IRegister): Promise<void> {
     try {
       const response = await fetch(root + "/api/auth/register", {
         method: "POST",
@@ -249,7 +247,7 @@ export class UsersService {
 
   // ADMIN USERS METHOD
 
-  async getEmployeeData(userId: string): Promise<UserInterface> {
+  async getEmployeeData(userId: string): Promise<IUser> {
     try {
       const response = await fetch(
         root + `/api/admin/profile/get-user/${userId}/`,
@@ -271,10 +269,7 @@ export class UsersService {
     }
   }
 
-  async editProfileAsAdmin(
-    employeeId: string,
-    newData: UserInterface
-  ): Promise<void> {
+  async editProfileAsAdmin(employeeId: string, newData: IUser): Promise<void> {
     try {
       const response = await fetch(
         root + `/api/admin/profile/update-profile/${employeeId}`,

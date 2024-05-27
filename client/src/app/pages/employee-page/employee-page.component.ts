@@ -72,7 +72,7 @@ export class EmployeePageComponent implements OnInit {
   }
 
   // show error toast function
-  showError(message: string) {
+  showError(message: string): void {
     this.messageService.add({
       severity: "error",
       detail: message,
@@ -81,7 +81,7 @@ export class EmployeePageComponent implements OnInit {
   }
 
   // show success toast notification
-  showSuccess(message: string) {
+  showSuccess(message: string): void {
     this.messageService.add({
       severity: "success",
       detail: message,

@@ -55,7 +55,6 @@ import { EmployeesPageComponent } from "./pages/employees-page/employees-page.co
 import { EmployeePageComponent } from "./pages/employee-page/employee-page.component";
 import { ChartModule } from "primeng/chart";
 import { AdminStatsComponent } from "./components/admin-stats/admin-stats.component";
-import { firebaseConfig } from "./utils/firebaseConfig";
 import { ResetPasswordPageComponent } from "./pages/reset-password-page/reset-password-page.component";
 
 @NgModule({

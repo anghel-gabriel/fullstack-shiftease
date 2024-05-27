@@ -80,7 +80,7 @@ export class LoginPageComponent {
   }
 
   // Login function
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     if (!this.password || !this.usernameOrEmail) {
       return this.showError("Please enter your login credentials.");
     }

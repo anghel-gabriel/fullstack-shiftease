@@ -1,14 +1,12 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { UsersService } from "./users.service";
-import { IShift, UserInterface } from "../utils/interfaces";
+import { IShift, IUser } from "../utils/interfaces";
 import { root } from "../utils/URLs";
 
 @Injectable({
   providedIn: "root",
 })
 export class ShiftsService {
-  loggedUserData = new BehaviorSubject<any>(null);
   private areMyShiftsLoading = new BehaviorSubject<boolean>(false);
   private areAllShiftsLoading = new BehaviorSubject<boolean>(false);
   private areAllUsersLoading = new BehaviorSubject<boolean>(false);
@@ -16,18 +14,12 @@ export class ShiftsService {
   private allShifts = new BehaviorSubject<IShift[]>([]);
   private allUsers = new BehaviorSubject<any[]>([]);
 
-  constructor(private usersService: UsersService) {
-    this.usersService
-      .getLoggedUser()
-      .subscribe((userData) => this.loggedUserData.next(userData));
-  }
-
   // Observables
   getAreMyShiftsLoading(): Observable<boolean> {
     return this.areMyShiftsLoading.asObservable();
   }
 
-  getAllUsersObs(): Observable<UserInterface[]> {
+  getAllUsersObs(): Observable<IUser[]> {
     return this.allUsers.asObservable();
   }
 

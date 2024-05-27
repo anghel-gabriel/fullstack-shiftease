@@ -1,14 +1,15 @@
-export interface RegisterInterface {
+export interface IRegister {
   emailAddress: string;
   username: string;
   password: string;
+  confirmPassword: string;
   firstName: string;
   lastName: string;
   birthDate: any;
   gender: any;
 }
 
-export interface UserInterface {
+export interface IUser {
   _id: string;
   emailAddress: string;
   username: string;
