@@ -13,7 +13,7 @@ const userSchema = new Schema({
   userRole: { type: String },
   photoURL: {
     type: String,
-    default: "https://s3.amazonaws.com/37assets/svn/765-default-avatar.png",
+    default: "http://localhost:8080/pictures/defaultPhoto.png",
   },
 });
 
