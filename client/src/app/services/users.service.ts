@@ -79,7 +79,7 @@ export class UsersService {
 
   async changeEmail(newEmail: string): Promise<void> {
     try {
-      const response = await fetch(root + `/api/profile/change-email/`, {
+      const response = await fetch(root + `/api/user/profile/change-email/`, {
         method: "PUT",
         credentials: "include",
         body: JSON.stringify({
@@ -89,29 +89,32 @@ export class UsersService {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
+
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result.message);
       const currentData = await this.loggedUser.getValue();
       this.loggedUser.next({ ...currentData, emailAddress: newEmail });
     } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
-      );
+      throw new Error(error.message);
     }
   }
 
   async changePassword(newPassword: string): Promise<void> {
     try {
-      const response = await fetch(root + `/api/profile/change-password/`, {
-        method: "PUT",
-        credentials: "include",
-        body: JSON.stringify({
-          password: newPassword,
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
+      const response = await fetch(
+        root + `/api/user/profile/change-password/`,
+        {
+          method: "PUT",
+          credentials: "include",
+          body: JSON.stringify({
+            password: newPassword,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
       const result = await response.json();
       if (!response.ok) throw new Error(result.message);
     } catch (error: any) {

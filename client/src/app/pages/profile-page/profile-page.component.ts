@@ -85,23 +85,20 @@ export class ProfilePageComponent {
   async handleSaveProfile(): Promise<void> {
     // Form validation
     if (this.username.length < 6) {
-      this.showError("Your username must be at least 6 characters long");
+      return this.showError("Your username must be at least 6 characters long");
     }
     if (!isUsernameValid(this.username)) {
-      this.showError("Your username must be alphanumeric");
-      return;
+      return this.showError("Your username must be alphanumeric");
     }
     if (this.firstName.length < 2 || this.lastName.length < 2) {
-      this.showError(
+      return this.showError(
         "First name and last name must be at least 2 characters long"
       );
-      return;
     }
     if (!this.birthDate || !isUserAgeBetween6And130(new Date(this.birthDate))) {
-      this.showError(
+      return this.showError(
         "You must be between 18 and 90 years old in order to register"
       );
-      return;
     }
     this.setLoadingSpinner(true);
     try {

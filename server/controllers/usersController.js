@@ -131,9 +131,9 @@ const changeEmailAddress = async (req, res) => {
   try {
     if (!isEmailValid(emailAddress)) {
       logger.warn("Invalid email format provided.");
-      return res
-        .status(400)
-        .send("The email address doesn't respect the requested format.");
+      return res.status(400).send({
+        message: "The email address doesn't respect the requested format.",
+      });
     }
 
     const isEmailAddressAlreadyExisting =
@@ -141,7 +141,9 @@ const changeEmailAddress = async (req, res) => {
 
     if (isEmailAddressAlreadyExisting) {
       logger.warn(`Email address already in use: ${emailAddress}`);
-      return res.status(400).send("Chosen email address is already existing.");
+      return res
+        .status(400)
+        .send({ message: "Chosen email address is already existing." });
     }
     await usersService.changeEmailAddress(userId, emailAddress);
     logger.info(`Email address updated successfully for user ID: ${userId}`);
@@ -161,21 +163,23 @@ const changePassword = async (req, res) => {
     logger.warn("Invalid password format provided.");
     return res
       .status(400)
-      .send("The password doesn't respect the requested format.");
+      .send({ message: "The password doesn't respect the requested format." });
   }
   bcrypt.hash(password, 8, async (err, hash) => {
     try {
       if (err) {
         logger.error("Error hashing password", err);
-        res.status(500).send("An error has occurred while registering.");
+        res
+          .status(500)
+          .send({ message: "An error has occurred while registering." });
       } else {
         await usersService.changePassword(userId, hash);
         logger.info(`Password updated successfully for user ID: ${userId}`);
-        res.status(200).send("Password updated successfully.");
+        res.status(200).send({ message: "Password updated successfully." });
       }
     } catch (error) {
       logger.error("Error updating password", error);
-      res.status(500).send("Internal server error");
+      res.status(500).send({ message: "Internal server error" });
     }
   });
 };
@@ -265,6 +269,45 @@ const updateProfileAsAdmin = async (req, res) => {
   const { username, firstName, lastName, birthDate, gender } = req.body;
   const { id } = req.params;
   const userId = ObjectId.createFromHexString(id);
+
+  // Validation
+  if (!username) {
+    logger.warn("Registration check attempt with missing mandatory fields.");
+    return res
+      .status(400)
+      .send({ message: "Please fill all the mandatory fields." });
+  }
+
+  if (username.length < 6) {
+    logger.warn("Username too short during registration check.");
+    return res
+      .status(400)
+      .send({ message: "Username must be at least 6 characters long." });
+  }
+
+  if (!isUsernameValid(username)) {
+    logger.warn("Invalid username format during registration check.");
+    return res.status(400).send({ message: "Username must be alphanumeric." });
+  }
+
+  if (firstName.length < 2 || lastName.length < 2) {
+    logger.warn("First name or last name too short during registration.");
+    return res.status(400).send({
+      message: "First name and last name must be at least 2 characters long.",
+    });
+  }
+
+  if (!isUserAgeBetween6And130(birthDate)) {
+    logger.warn("Invalid age during registration.");
+    return res.status(400).send({
+      message: "User must be between 6 and 130 years old in order to register.",
+    });
+  }
+
+  if (!validateGender(gender)) {
+    logger.warn("Invalid gender provided during registration.");
+    return res.status(400).send({ message: "The gender provided is invalid." });
+  }
 
   try {
     let isUsernameTheSame = false;
