@@ -143,7 +143,6 @@ export class AllShiftsPageComponent implements OnInit {
       const xlsx = await import("xlsx");
       const worksheet = xlsx.utils.json_to_sheet(
         this.shifts.map((shift: any) => ({
-          // TODO: check if authorfullname does exist
           Employee: shift.authorFullName,
           Workplace: shift.workplace,
           "Start Time": shift.startTime.toLocaleString(),

@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
     private usersService: UsersService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.primengConfig.ripple = true;
     this.usersService.checkAuthenticationBackend();
   }

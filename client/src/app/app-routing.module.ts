@@ -58,7 +58,7 @@ const routes: Routes = [
   {
     path: "reset-password/:token",
     component: ResetPasswordPageComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
 
   // fallback route

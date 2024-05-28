@@ -33,5 +33,3 @@ uploadRouter.post(
 uploadRouter.delete("/profile-picture", usersController.deleteProfilePicture);
 
 export default uploadRouter;
-
-// TODO: refactorize photo dir, filename bla bla, to have in a single place

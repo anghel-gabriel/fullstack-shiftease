@@ -33,6 +33,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.usersService.getLoggedUser().subscribe((user) => {
       if (user) this.updateNavbarItems(!!user, user.userRole);
+      else this.updateNavbarItems(false, "user");
     });
   }
 

@@ -232,7 +232,4 @@ export class MyShiftsPageComponent implements OnInit {
       this.showSuccess("Data exported successfully.");
     }
   }
-  // TODO: check if export does work
-  // TODO: check if best month does work
-  // TODO: check if charts work
 }

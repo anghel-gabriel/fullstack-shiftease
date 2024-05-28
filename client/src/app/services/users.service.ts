@@ -94,6 +94,8 @@ export class UsersService {
       });
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
+      const currentData = await this.loggedUser.getValue();
+      this.loggedUser.next({ ...currentData, emailAddress: newEmail });
     } catch (error: any) {
       throw new Error(
         `Failed to fetch shifts: ${error.message || error.toString()}`
