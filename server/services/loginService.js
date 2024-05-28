@@ -5,7 +5,7 @@ const getUserByEmailAddress = async (emailAddress) => {
     const user = await User.findOne({ emailAddress });
     return user;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(`Error fetching user with email address ${emailAddress}:.`);
   }
 };
 
@@ -14,7 +14,7 @@ const getUserByUsername = async (username) => {
     const user = await User.findOne({ username });
     return user;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(`Error fetching user with username ${username}.`);
   }
 };
 

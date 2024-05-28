@@ -5,7 +5,7 @@ const findUserById = async (userId) => {
     const user = await User.findOne({ _id: userId });
     return user;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(`Error fetching user with ID ${userId}.`);
   }
 };
 

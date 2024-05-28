@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
+import { logger } from "../app.js";
 
 // Define __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -34,6 +35,7 @@ const updateProfile = async (req, res) => {
       );
 
     if (isUsernameAlreadyExisting) {
+      logger.warn(`Username already in use: ${username}`);
       return res.status(409).send({
         message: "This username is already in use. Please choose another one.",
       });
@@ -46,13 +48,15 @@ const updateProfile = async (req, res) => {
       gender,
     });
 
+    logger.info(`Profile updated successfully for user ID: ${reqUserId}`);
     res.status(200).send({ message: "Profile updated successfully" });
   } catch (error) {
+    logger.error("Error updating profile", error);
     res.status(500).send({ message: "Internal server error" });
   }
 };
 
-// This function is used by users update their profile picture
+// This function is used by users to update their profile picture
 const updateProfilePicture = async (req, res) => {
   const userId = req.tokenData.id;
   if (req.file) {
@@ -61,13 +65,18 @@ const updateProfilePicture = async (req, res) => {
     }`;
     try {
       await usersService.updateProfilePicture(userId, photoURL);
+      logger.info(
+        `Profile picture updated successfully for user ID: ${userId}`
+      );
       res
         .status(200)
         .json({ message: "File uploaded successfully", photoURL: photoURL });
     } catch (error) {
+      logger.error("Error updating profile picture", error);
       res.status(500).json({ message: "Internal server error" });
     }
   } else {
+    logger.warn("No file uploaded for profile picture update.");
     res.status(400).json({ message: "No file uploaded" });
   }
 };
@@ -79,6 +88,7 @@ const changeEmailAddress = async (req, res) => {
 
   try {
     if (!isEmailValid(emailAddress)) {
+      logger.warn("Invalid email format provided.");
       return res
         .status(400)
         .send("The email address doesn't respect the requested format.");
@@ -88,11 +98,14 @@ const changeEmailAddress = async (req, res) => {
       await registerService.checkEmailAddressExisting(emailAddress);
 
     if (isEmailAddressAlreadyExisting) {
+      logger.warn(`Email address already in use: ${emailAddress}`);
       return res.status(400).send("Chosen email address is already existing.");
     }
     await usersService.changeEmailAddress(userId, emailAddress);
+    logger.info(`Email address updated successfully for user ID: ${userId}`);
     res.status(200).send({ message: "Email address updated successfully" });
   } catch (error) {
+    logger.error("Error updating email address", error);
     res.status(500).send({ message: "Internal server error" });
   }
 };
@@ -103,6 +116,7 @@ const changePassword = async (req, res) => {
   const userId = req.tokenData.id;
 
   if (!isPasswordValid(password)) {
+    logger.warn("Invalid password format provided.");
     return res
       .status(400)
       .send("The password doesn't respect the requested format.");
@@ -110,12 +124,15 @@ const changePassword = async (req, res) => {
   bcrypt.hash(password, 8, async (err, hash) => {
     try {
       if (err) {
+        logger.error("Error hashing password", err);
         res.status(500).send("An error has occurred while registering.");
       } else {
         await usersService.changePassword(userId, hash);
+        logger.info(`Password updated successfully for user ID: ${userId}`);
         res.status(200).send("Password updated successfully.");
       }
     } catch (error) {
+      logger.error("Error updating password", error);
       res.status(500).send("Internal server error");
     }
   });
@@ -129,6 +146,7 @@ const deleteProfilePicture = async (req, res) => {
     !photoURL ||
     photoURL === "http://localhost:8080/pictures/defaultPhoto.png"
   ) {
+    logger.warn("Invalid photoURL provided for profile picture deletion.");
     return res.status(400).json({ message: "photoURL is required" });
   }
 
@@ -144,16 +162,22 @@ const deleteProfilePicture = async (req, res) => {
     if (fs.existsSync(filePath)) {
       fs.unlink(filePath, (err) => {
         if (err) {
+          logger.error("Error deleting profile picture file", err);
           return res.status(500).json({ message: "Internal server error" });
         }
+        logger.info(
+          `Profile picture removed successfully for user ID: ${userId}`
+        );
         return res
           .status(200)
           .json({ message: "Profile picture removed successfully" });
       });
     } else {
+      logger.warn(`File not found: ${filePath}`);
       return res.status(404).json({ message: "File not found" });
     }
   } catch (error) {
+    logger.error("Error removing profile picture", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -166,10 +190,12 @@ const getUser = async (req, res) => {
   const userId = ObjectId.createFromHexString(id);
   try {
     const userData = await usersService.getProfile(userId);
+    logger.info(`Profile data fetched successfully for user ID: ${userId}`);
     res
       .status(200)
       .send({ message: "Profile data fetched successfully", data: userData });
   } catch (error) {
+    logger.error("Error fetching user profile data", error);
     res
       .status(400)
       .send({ message: "An error has occurred while getting shifts." });
@@ -180,10 +206,12 @@ const getUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const foundUsers = await usersService.getAllUsers();
+    logger.info("All users fetched successfully.");
     res
       .status(200)
       .send({ message: "Users fetched successfully!", data: foundUsers });
   } catch (error) {
+    logger.error("Error fetching all users", error);
     res
       .status(400)
       .send({ message: "An error has occurred while getting shifts." });
@@ -211,6 +239,7 @@ const updateProfileAsAdmin = async (req, res) => {
       );
 
     if (isUsernameAlreadyExisting) {
+      logger.warn(`Username already in use: ${username}`);
       return res.status(409).send({
         message: "This username is already in use. Please choose another one.",
       });
@@ -222,13 +251,15 @@ const updateProfileAsAdmin = async (req, res) => {
       birthDate,
       gender,
     });
+    logger.info(`Profile updated successfully by admin for user ID: ${userId}`);
     res.status(200).send({ message: "Profile updated successfully" });
   } catch (error) {
+    logger.error("Error updating profile by admin", error);
     res.status(500).send({ message: "Internal server error" });
   }
 };
 
-// This functions is used by admins to upload new profile photos
+// This function is used by admins to upload new profile photos
 const updateProfilePictureAsAdmin = async (req, res) => {
   const { id } = req.params;
   const userId = ObjectId.createFromHexString(id);
@@ -238,10 +269,14 @@ const updateProfilePictureAsAdmin = async (req, res) => {
   }`;
   try {
     await usersService.updateProfilePicture(userId, photoURL);
+    logger.info(
+      `Profile picture updated successfully by admin for user ID: ${userId}`
+    );
     return res
       .status(200)
       .json({ message: "File uploaded successfully", photoURL });
   } catch (error) {
+    logger.error("Error updating profile picture by admin", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -254,6 +289,9 @@ const deleteProfilePictureAsAdmin = async (req, res) => {
     !photoURL ||
     photoURL === "http://localhost:8080/pictures/defaultPhoto.png"
   ) {
+    logger.warn(
+      "Invalid photoURL provided for admin profile picture deletion."
+    );
     return res.status(400).json({ message: "photoURL is required" });
   }
 
@@ -263,34 +301,28 @@ const deleteProfilePictureAsAdmin = async (req, res) => {
 
     // Extract the filename from the photoURL
     const filename = path.basename(photoURL);
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-
-    // Adjust the file path to the actual location of the stored files
-    const filePath = path.join(__dirname, "../pictures", filename);
-
-    // Log file path information for debugging
-    console.log("photoURL:", photoURL);
-    console.log("filename:", filename);
-    console.log("filePath:", filePath);
+    const filePath = path.join(rootDir, "pictures", filename);
 
     // Check if the file exists before trying to delete it
     if (fs.existsSync(filePath)) {
       fs.unlink(filePath, (err) => {
         if (err) {
-          console.error("Error deleting file:", err);
+          logger.error("Error deleting profile picture file by admin", err);
           return res.status(500).json({ message: "Internal server error" });
         }
+        logger.info(
+          `Profile picture removed successfully by admin for user ID: ${userId}`
+        );
         res
           .status(200)
           .json({ message: "Profile picture removed successfully" });
       });
     } else {
-      console.warn("File not found:", filePath);
+      logger.warn(`File not found for deletion: ${filePath}`);
       res.status(404).json({ message: "File not found" });
     }
   } catch (error) {
-    console.error("Error during file removal:", error);
+    logger.error("Error removing profile picture by admin", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

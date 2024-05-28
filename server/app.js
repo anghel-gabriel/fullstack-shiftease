@@ -10,6 +10,8 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import winston from "winston";
+import { formatTimestamp } from "./utils/computation.js";
 
 const PORT = process.env.PORT ?? 8080;
 const app = express();
@@ -20,6 +22,23 @@ export const __dirname = path.dirname(__filename);
 if (!fs.existsSync(path.join(__dirname, "../../pictures"))) {
   fs.mkdirSync(path.join(__dirname, "../../pictures"));
 }
+
+// Logger configuration
+const { combine, printf, colorize } = winston.format;
+const logFormat = printf(({ level, message }) => {
+  const timestamp = formatTimestamp();
+  return `${timestamp} [${level}]: ${message}`;
+});
+export const logger = winston.createLogger({
+  level: "info",
+  format: combine(logFormat),
+  transports: [
+    new winston.transports.Console({
+      format: combine(colorize(), logFormat),
+    }),
+    new winston.transports.File({ filename: "combined.log" }),
+  ],
+});
 
 // Enable CORS
 app.use(
@@ -47,13 +66,13 @@ app.use("/api/admin", authorizeMdw.checkUserIsAdmin, adminRouter);
 const connectFn = async () => {
   try {
     await mongoose.connect(process.env.ACCESS_URL);
-    console.log("You are now connected with MongoDB.");
+    logger.info("You are now connected with MongoDB.");
     app.listen(PORT, () => {
-      console.log(`Express.js server started on port ${PORT}.`);
+      logger.info(`Express.js server started on port ${PORT}.`);
     });
   } catch (error) {
-    console.log("An error occurred while connecting with MongoDB.");
-    console.log(error);
+    logger.error("An error occurred while connecting with MongoDB.");
+    logger.error(error.message);
   }
 };
 

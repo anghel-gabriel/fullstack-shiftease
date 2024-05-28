@@ -2,6 +2,7 @@ import shiftsService from "../services/shiftsService.js";
 import { ObjectId } from "mongodb";
 import computation from "../utils/computation.js";
 import { isWorkplaceValid } from "../utils/validation.js";
+import { logger } from "../app.js";
 
 // REGULAR USERS
 
@@ -11,13 +12,15 @@ const getUserShifts = async (req, res) => {
   try {
     const userId = ObjectId.createFromHexString(id);
     const foundShifts = await shiftsService.getUserShifts(userId);
+    logger.info(`Shifts retrieved successfully for user ID: ${id}`);
     res
       .status(200)
       .send({ message: "Shifts retrieved successfully", data: foundShifts });
   } catch (error) {
+    logger.error("Error retrieving user shifts", error);
     res
       .status(400)
-      .send({ message: "An error has occured while getting your shifts." });
+      .send({ message: "An error has occurred while getting your shifts." });
   }
 };
 
@@ -29,16 +32,19 @@ const addShift = async (req, res) => {
   const userId = ObjectId.createFromHexString(id);
   // Validation
   if (!startTime || !endTime || !computation.isDateBefore(startTime, endTime)) {
+    logger.warn("Invalid start time or end time provided.");
     return res.status(400).send({
       message: "The start time must be before the end time.",
     });
   }
   if (!hourlyWage || isNaN(hourlyWage) || hourlyWage <= 0) {
+    logger.warn("Invalid hourly wage provided.");
     return res.status(400).send({
       message: "Hourly wage must be greater than 0.",
     });
   }
   if (!workplace || !isWorkplaceValid(workplace)) {
+    logger.warn("Invalid workplace provided.");
     return res.status(400).send({
       message: "Please select a valid workplace.",
     });
@@ -59,10 +65,12 @@ const addShift = async (req, res) => {
       ),
     });
     const newShifts = await shiftsService.getUserShifts(userId);
+    logger.info(`Shift added successfully for user ID: ${id}`);
     res
       .status(200)
       .send({ message: "Shift added successfully", data: newShifts });
   } catch (error) {
+    logger.error("Error adding shift", error);
     res.status(500).send({
       message:
         "An error occurred while adding the shift. Please try again later.",
@@ -79,16 +87,19 @@ const updateShift = async (req, res) => {
   const userId = ObjectId.createFromHexString(reqUserId);
   // Validation
   if (!startTime || !endTime || !computation.isDateBefore(startTime, endTime)) {
+    logger.warn("Invalid start time or end time provided for update.");
     return res.status(400).send({
       message: "The start time must be before the end time.",
     });
   }
   if (!hourlyWage || isNaN(hourlyWage) || hourlyWage <= 0) {
+    logger.warn("Invalid hourly wage provided for update.");
     return res.status(400).send({
       message: "Hourly wage must be greater than 0.",
     });
   }
   if (!workplace || !isWorkplaceValid(workplace)) {
+    logger.warn("Invalid workplace provided for update.");
     return res.status(400).send({
       message: "Please select a valid workplace.",
     });
@@ -110,10 +121,12 @@ const updateShift = async (req, res) => {
       ),
     });
     const newShifts = await shiftsService.getUserShifts(userId);
+    logger.info(`Shift updated successfully for shift ID: ${id}`);
     res
       .status(200)
       .send({ message: "Shift updated successfully.", data: newShifts });
   } catch (error) {
+    logger.error("Error updating shift", error);
     res
       .status(500)
       .send({ message: "An error occurred while updating the shift." });
@@ -131,17 +144,19 @@ const deleteShift = async (req, res) => {
     // userId is used to ensure that the author of the shift is the logged-in user
     await shiftsService.deleteShiftByIdAndAuthor(shiftId, reqUserId);
     const newShifts = await shiftsService.getUserShifts(userId);
+    logger.info(`Shift deleted successfully for shift ID: ${id}`);
     res
       .status(200)
-      .send({ message: "Shift deleted successfully.", data: messagenewShifts });
+      .send({ message: "Shift deleted successfully.", data: newShifts });
   } catch (error) {
+    logger.error("Error deleting shift", error);
     res
       .status(500)
       .send({ message: "An error occurred while deleting the shift." });
   }
 };
 
-//ADMIN USERS
+// ADMIN USERS
 
 // This function allows admin to view get all shifts
 const getAllShifts = async (req, res) => {
@@ -152,11 +167,13 @@ const getAllShifts = async (req, res) => {
     object. This ensures that each shift includes the author's full name. 
     */
     const populatedShifts = await shiftsService.getAllShifts();
+    logger.info("All shifts fetched successfully.");
     res.status(200).send({
       message: "Shifts fetched successfully.",
       data: populatedShifts,
     });
   } catch (error) {
+    logger.error("Error fetching all shifts", error);
     res
       .status(400)
       .send({ message: "An error has occurred while getting shifts." });
@@ -170,16 +187,19 @@ const updateShiftAsAdmin = async (req, res) => {
   const { id } = req.params;
   // Validation
   if (!startTime || !endTime || !computation.isDateBefore(startTime, endTime)) {
+    logger.warn("Invalid start time or end time provided for admin update.");
     return res.status(400).send({
       message: "The start time must be before the end time.",
     });
   }
   if (!hourlyWage || isNaN(hourlyWage) || hourlyWage <= 0) {
+    logger.warn("Invalid hourly wage provided for admin update.");
     return res.status(400).send({
       message: "Hourly wage must be greater than 0.",
     });
   }
   if (!workplace || !isWorkplaceValid(workplace)) {
+    logger.warn("Invalid workplace provided for admin update.");
     return res.status(400).send({
       message: "Please select a valid workplace.",
     });
@@ -200,10 +220,12 @@ const updateShiftAsAdmin = async (req, res) => {
       ),
     });
     const populatedShifts = await shiftsService.getAllShifts();
+    logger.info(`Shift updated successfully by admin for shift ID: ${id}`);
     res
       .status(200)
       .send({ message: "Shift updated successfully.", data: populatedShifts });
   } catch (error) {
+    logger.error("Error updating shift as admin", error);
     res
       .status(500)
       .send({ message: "An error occurred while updating the shift." });
@@ -218,10 +240,12 @@ const deleteShiftAsAdmin = async (req, res) => {
   try {
     await shiftsService.deleteShiftAsAdmin(shiftId);
     const newShifts = await shiftsService.getAllShifts();
+    logger.info(`Shift deleted successfully by admin for shift ID: ${id}`);
     res
       .status(200)
       .send({ message: "Shift deleted successfully", data: newShifts });
   } catch (error) {
+    logger.error("Error deleting shift as admin", error);
     res
       .status(500)
       .send({ message: "An error occurred while deleting the shift." });
@@ -234,8 +258,10 @@ const deleteUserShifts = async (req, res) => {
   try {
     const userId = ObjectId.createFromHexString(id);
     await shiftsService.deleteUserShifts(userId);
+    logger.info(`All shifts deleted successfully for user ID: ${id}`);
     res.status(200).send({ message: "Your shift has been deleted." });
   } catch (error) {
+    logger.error("Error deleting all shifts for user", error);
     res.status(500).send({
       message:
         "An error occurred while deleting the shifts. Please try again later.",

@@ -1,0 +1,79 @@
+2024-05-28T03:57:32.576Z [info]: You are now connected with MongoDB.
+2024-05-28T03:58:38.255Z [info]: You are now connected with MongoDB.
+2024-05-28T04:00:47.639Z [info]: You are now connected with MongoDB.
+2024-05-28T04:02:07.650Z [info]: You are now connected with MongoDB.
+2024-05-28 07:02:39 [info]: You are now connected with MongoDB.
+2024-05-28 07:03:12 [info]: You are now connected with MongoDB.
+2024-05-28 07:05:21 [info]: You are now connected with MongoDB.
+2024-05-28 07:05:21 [info]: Express.js server started on port 8080.
+2024-05-28 07:06:23 [info]: You are now connected with MongoDB.
+2024-05-28 07:06:23 [info]: Express.js server started on port 8080.
+2024-05-28 07:07:05 [error]: An error occurred while connecting with MongoDB.
+2024-05-28 07:07:05 [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/
+2024-05-28 07:07:44 [info]: You are now connected with MongoDB.
+2024-05-28 07:07:44 [info]: Express.js server started on port 8080.
+2024-05-28 07:10:37 [info]: You are now connected with MongoDB.
+2024-05-28 07:10:37 [info]: Express.js server started on port 8080.
+2024-05-28 07:11:01 [info]: You are now connected with MongoDB.
+2024-05-28 07:11:01 [info]: Express.js server started on port 8080.
+2024-05-28 07:11:28 [info]: You are now connected with MongoDB.
+2024-05-28 07:11:28 [info]: Express.js server started on port 8080.
+2024-05-28 07:11:41 [info]: Login attempt with username: anghel
+2024-05-28 07:11:41 [info]: User anghel authenticated successfully.
+2024-05-28 07:12:36 [info]: You are now connected with MongoDB.
+2024-05-28 07:12:36 [info]: Express.js server started on port 8080.
+2024-05-28 07:13:19 [info]: You are now connected with MongoDB.
+2024-05-28 07:13:19 [info]: Express.js server started on port 8080.
+2024-05-28 07:15:28 [info]: You are now connected with MongoDB.
+2024-05-28 07:15:28 [info]: Express.js server started on port 8080.
+2024-05-28 07:15:55 [info]: Username and email address available during registration check.
+2024-05-28 07:16:07 [info]: New user registered: anghel2
+2024-05-28 07:16:43 [info]: Login attempt with username: sadas.
+2024-05-28 07:16:43 [warn]: Login attempt with non-existing username: sadas
+2024-05-28 07:17:52 [info]: You are now connected with MongoDB.
+2024-05-28 07:17:52 [info]: Express.js server started on port 8080.
+2024-05-28 07:18:57 [warn]: Password reset request for non-existing email: anghel@anghel.com
+2024-05-28 07:21:42 [info]: You are now connected with MongoDB.
+2024-05-28 07:21:42 [info]: Express.js server started on port 8080.
+2024-05-28 07:22:02 [info]: You are now connected with MongoDB.
+2024-05-28 07:22:02 [info]: Express.js server started on port 8080.
+2024-05-28 07:22:26 [info]: You are now connected with MongoDB.
+2024-05-28 07:22:26 [info]: Express.js server started on port 8080.
+2024-05-28 07:22:34 [warn]: Authentication token is missing in validateSession request.
+2024-05-28 07:22:36 [warn]: Authentication token is missing in validateSession request.
+2024-05-28 07:22:38 [warn]: Authentication token is missing in validateSession request.
+2024-05-28 07:22:39 [warn]: Authentication token is missing in validateSession request.
+2024-05-28 07:22:43 [warn]: Authentication token is missing in validateSession request.
+2024-05-28 07:25:00 [info]: You are now connected with MongoDB.
+2024-05-28 07:25:00 [info]: Express.js server started on port 8080.
+2024-05-28 07:25:10 [info]: Login attempt with username: anghel.
+2024-05-28 07:25:10 [info]: User anghel authenticated successfully.
+2024-05-28 07:25:10 [info]: Shifts retrieved successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:27:45 [info]: You are now connected with MongoDB.
+2024-05-28 07:27:45 [info]: Express.js server started on port 8080.
+2024-05-28 07:29:24 [info]: You are now connected with MongoDB.
+2024-05-28 07:29:24 [info]: Express.js server started on port 8080.
+2024-05-28 07:29:43 [info]: You are now connected with MongoDB.
+2024-05-28 07:29:43 [info]: Express.js server started on port 8080.
+2024-05-28 07:29:47 [info]: Login attempt with username: anghel.
+2024-05-28 07:29:47 [info]: User anghel authenticated successfully.
+2024-05-28 07:29:47 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:29:47 [info]: Shifts retrieved successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:30:41 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:30:41 [info]: Profile picture updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:30:45 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:30:45 [info]: Profile picture removed successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:37:35 [info]: You are now connected with MongoDB.
+2024-05-28 07:37:35 [info]: Express.js server started on port 8080.
+2024-05-28 07:38:07 [info]: You are now connected with MongoDB.
+2024-05-28 07:38:07 [info]: Express.js server started on port 8080.
+2024-05-28 07:38:36 [info]: You are now connected with MongoDB.
+2024-05-28 07:38:36 [info]: Express.js server started on port 8080.
+2024-05-28 07:38:56 [info]: You are now connected with MongoDB.
+2024-05-28 07:38:56 [info]: Express.js server started on port 8080.
+2024-05-28 07:39:03 [info]: You are now connected with MongoDB.
+2024-05-28 07:39:03 [info]: Express.js server started on port 8080.
+2024-05-28 07:39:53 [info]: You are now connected with MongoDB.
+2024-05-28 07:39:53 [info]: Express.js server started on port 8080.
+2024-05-28 07:40:33 [info]: You are now connected with MongoDB.
+2024-05-28 07:40:33 [info]: Express.js server started on port 8080.
