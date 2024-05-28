@@ -1,6 +1,6 @@
 # ShiftEase App
 
-Welcome to the ShiftEase app, a tool designed to help manage shifts for various jobs efficiently. Initially built using Firebase, we have transitioned to an Express-based backend. This document provides comprehensive information on the app's features, the developer's contributions, and backend integration.
+Welcome to the ShiftEase app, a tool designed to help manage shifts for various jobs efficiently. Initially built using Firebase, I have transitioned to an Express-based backend. This document provides comprehensive information on the app's features, the developer's contributions, and backend integration.
 
 ## Desktop Screenshots
 
