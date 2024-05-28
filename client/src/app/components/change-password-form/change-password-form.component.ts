@@ -29,7 +29,7 @@ export class ChangePasswordFormComponent {
         return;
       }
       this.closeForm.emit();
-      await this.usersService.changePasswordBackend(this.newPassword);
+      await this.usersService.changePassword(this.newPassword);
       this.successEvent.emit("Password changed succesfully.");
     } catch (error: any) {
       this.errorEvent.emit(error.message);

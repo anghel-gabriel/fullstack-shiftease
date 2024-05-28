@@ -30,7 +30,7 @@ export class ChangeEmailFormComponent {
         return;
       }
       this.closeForm.emit();
-      await this.usersService.changeEmailBackend(this.newEmail);
+      await this.usersService.changeEmail(this.newEmail);
       this.successEvent.emit("Email address changed successfully.");
     } catch (error: any) {
       this.errorEvent.emit(error.message);

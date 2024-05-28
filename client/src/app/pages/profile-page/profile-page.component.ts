@@ -38,7 +38,7 @@ export class ProfilePageComponent {
   constructor(
     private messageService: MessageService,
     private usersService: UsersService,
-    private fileUploadService: FileUploadService,
+    private fileUploadService: FileUploadService
   ) {
     this.usersService.getLoggedUser().subscribe((data) => {
       this.fillProfileFields(data);
@@ -93,13 +93,13 @@ export class ProfilePageComponent {
     }
     if (this.firstName.length < 2 || this.lastName.length < 2) {
       this.showError(
-        "First name and last name must be at least 2 characters long",
+        "First name and last name must be at least 2 characters long"
       );
       return;
     }
     if (!this.birthDate || !isUserAgeBetween6And130(new Date(this.birthDate))) {
       this.showError(
-        "You must be between 18 and 90 years old in order to register",
+        "You must be between 18 and 90 years old in order to register"
       );
       return;
     }
@@ -113,7 +113,7 @@ export class ProfilePageComponent {
         birthDate: this.birthDate.toISOString(),
         gender: this.gender,
       };
-      await this.usersService.editProfileBackend(newData as any);
+      await this.usersService.editProfile(newData as any);
       this.messageService.add({
         severity: "success",
         detail: "Changes saved succesfully",

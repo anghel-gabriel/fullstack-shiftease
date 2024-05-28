@@ -28,10 +28,7 @@ export class UsersService {
     });
   }
 
-  async setNewPasswordBackend(
-    token: string,
-    newPassword: string
-  ): Promise<void> {
+  async setNewPassword(token: string, newPassword: string): Promise<void> {
     try {
       const response = await fetch(root + `/api/auth/reset-password/${token}`, {
         method: "POST",
@@ -51,7 +48,7 @@ export class UsersService {
     }
   }
 
-  async editProfileBackend(newData: IUser): Promise<void> {
+  async editProfile(newData: IUser): Promise<void> {
     try {
       const response = await fetch(root + `/api/user/profile/update-profile/`, {
         method: "PUT",
@@ -80,7 +77,7 @@ export class UsersService {
     }
   }
 
-  async changeEmailBackend(newEmail: string): Promise<void> {
+  async changeEmail(newEmail: string): Promise<void> {
     try {
       const response = await fetch(root + `/api/profile/change-email/`, {
         method: "PUT",
@@ -103,9 +100,9 @@ export class UsersService {
     }
   }
 
-  async changePasswordBackend(newPassword: string): Promise<void> {
+  async changePassword(newPassword: string): Promise<void> {
     try {
-      const response = await fetch(root + `/api/profile/change-email/`, {
+      const response = await fetch(root + `/api/profile/change-password/`, {
         method: "PUT",
         credentials: "include",
         body: JSON.stringify({
@@ -115,12 +112,10 @@ export class UsersService {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message);
     } catch (error: any) {
-      throw new Error(
-        `Failed to fetch shifts: ${error.message || error.toString()}`
-      );
+      throw new Error(error.message);
     }
   }
 
@@ -145,7 +140,7 @@ export class UsersService {
     }
   }
 
-  async checkCredentialsBackend(
+  async checkCredentials(
     emailAddress: string,
     username: string,
     password: string,
@@ -215,7 +210,7 @@ export class UsersService {
     }
   }
 
-  async checkAuthenticationBackend(): Promise<void> {
+  async checkAuthentication(): Promise<void> {
     try {
       const response = await fetch(root + "/api/auth/validate-session", {
         method: "GET",

@@ -49,10 +49,7 @@ export class ResetPasswordPageComponent {
     // Sending password to server
     this.isLoading = true;
     try {
-      await this.usersService.setNewPasswordBackend(
-        this.token,
-        this.newPassword
-      );
+      await this.usersService.setNewPassword(this.token, this.newPassword);
       this.toast.add({
         severity: "success",
         summary: "Sucess",

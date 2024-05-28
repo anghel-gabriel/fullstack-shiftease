@@ -77,3 +77,160 @@
 2024-05-28 07:39:53 [info]: Express.js server started on port 8080.
 2024-05-28 07:40:33 [info]: You are now connected with MongoDB.
 2024-05-28 07:40:33 [info]: Express.js server started on port 8080.
+2024-05-28 07:46:49 [info]: Email address already in use during registration check: anghel.ergosum@gmail.com
+2024-05-28 07:47:11 [warn]: Registration check attempt with missing mandatory fields.
+2024-05-28 07:47:30 [info]: Email address already in use during registration check: anghel.ergosum@gmail.com
+2024-05-28 07:47:58 [info]: You are now connected with MongoDB.
+2024-05-28 07:47:58 [info]: Express.js server started on port 8080.
+2024-05-28 07:48:02 [info]: Email address already in use during registration check: anghel.ergosum@gmail.com
+2024-05-28 07:49:26 [warn]: Registration check attempt with missing mandatory fields.
+2024-05-28 07:49:35 [warn]: Registration check attempt with missing mandatory fields.
+2024-05-28 07:49:36 [warn]: Registration check attempt with missing mandatory fields.
+2024-05-28 07:49:37 [warn]: Registration check attempt with missing mandatory fields.
+2024-05-28 07:49:43 [info]: Email address already in use during registration check: anghel.ergosum@gmail.com
+2024-05-28 07:50:23 [info]: Login attempt with email: anghel.ergosum@gmail.com.
+2024-05-28 07:50:23 [info]: User anghel authenticated successfully.
+2024-05-28 07:56:01 [info]: Password reset link sent to anghel.ergosum@gmail.com
+2024-05-28 07:56:52 [info]: Email address already in use during registration check: anghel.ergosum@gmail.com
+2024-05-28 07:57:33 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:57:38 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 07:57:38 [info]: All shifts fetched successfully.
+2024-05-28 08:01:23 [info]: New user registered: anghel22
+2024-05-28 08:01:39 [info]: Email address already in use during registration: anghel.ergosum@gmail.com
+2024-05-28 08:02:31 [warn]: Password reset request for non-existing email: undefined
+2024-05-28 08:05:27 [info]: You are now connected with MongoDB.
+2024-05-28 08:05:27 [info]: Express.js server started on port 8080.
+2024-05-28 08:06:49 [info]: You are now connected with MongoDB.
+2024-05-28 08:06:49 [info]: Express.js server started on port 8080.
+2024-05-28 08:06:56 [warn]: Password reset request without valid email
+2024-05-28 08:07:21 [warn]: Login attempt with missing mandatory fields.
+2024-05-28 08:07:33 [warn]: Registration attempt with missing mandatory fields.
+2024-05-28 08:07:40 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:07:40 [info]: All shifts fetched successfully.
+2024-05-28 08:09:35 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:09:46 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:09:46 [info]: All shifts deleted successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:10:26 [info]: You are now connected with MongoDB.
+2024-05-28 08:10:26 [info]: Express.js server started on port 8080.
+2024-05-28 08:10:30 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:10:30 [info]: All shifts deleted successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:10:39 [info]: You are now connected with MongoDB.
+2024-05-28 08:10:39 [info]: Express.js server started on port 8080.
+2024-05-28 08:10:57 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:11:04 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:11:07 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:11:07 [info]: All shifts deleted successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:11:35 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:11:35 [warn]: Invalid start time or end time provided.
+2024-05-28 08:12:51 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:12:51 [warn]: Invalid workplace provided.
+2024-05-28 08:13:21 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:13:21 [info]: Shift added successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:15:38 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:15:38 [info]: Shifts retrieved successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:16:59 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:17:00 [info]: Shift updated successfully for shift ID: 665567f10c4c931d4deecea2
+2024-05-28 08:18:15 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:18:15 [info]: Shift deleted successfully for shift ID: 665567f10c4c931d4deecea2
+2024-05-28 08:19:17 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:19:17 [info]: All shifts deleted successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:19:20 [info]: Admin access granted to user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:19:20 [info]: All shifts fetched successfully.
+2024-05-28 08:23:39 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:23:39 [warn]: Invalid email format provided.
+2024-05-28 08:23:53 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:23:53 [warn]: Email address already in use: anghel.ergosum@gmail.com
+2024-05-28 08:24:12 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:24:12 [info]: Email address updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:25:18 [info]: User data retrieved successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:28:55 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:28:56 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:29:30 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:29:31 [warn]: Username already in use: anghel22
+2024-05-28 08:29:35 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:29:35 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:29:43 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:29:43 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:29:45 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:29:45 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:30:21 [info]: User data retrieved successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:31:19 [info]: You are now connected with MongoDB.
+2024-05-28 08:31:19 [info]: Express.js server started on port 8080.
+2024-05-28 08:31:29 [info]: You are now connected with MongoDB.
+2024-05-28 08:31:29 [info]: Express.js server started on port 8080.
+2024-05-28 08:32:13 [info]: You are now connected with MongoDB.
+2024-05-28 08:32:13 [info]: Express.js server started on port 8080.
+2024-05-28 08:32:26 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:32:26 [warn]: Registration check attempt with missing mandatory fields.
+2024-05-28 08:32:31 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:33:17 [info]: You are now connected with MongoDB.
+2024-05-28 08:33:17 [info]: Express.js server started on port 8080.
+2024-05-28 08:33:25 [info]: You are now connected with MongoDB.
+2024-05-28 08:33:25 [info]: Express.js server started on port 8080.
+2024-05-28 08:33:33 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:33:33 [warn]: First name or last name too short during registration.
+2024-05-28 08:33:38 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:33:38 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:34:50 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:34:50 [warn]: Username already in use: anghel22
+2024-05-28 08:34:53 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:34:53 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:35:02 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:35:02 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:35:03 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:35:03 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:35:16 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:35:17 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:35:18 [info]: User authenticated with ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:35:18 [info]: Profile updated successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:38:48 [info]: New user registered: anghel
+2024-05-28 08:39:45 [info]: Login attempt with email: anghel.ergosum@gmail.com.
+2024-05-28 08:39:45 [info]: User anghel authenticated successfully.
+2024-05-28 08:40:23 [info]: User authenticated with ID: 66556de881da9b77766ab99a
+2024-05-28 08:40:23 [warn]: Invalid password format provided.
+2024-05-28 08:40:28 [info]: User authenticated with ID: 66556de881da9b77766ab99a
+2024-05-28 08:40:28 [info]: Password updated successfully for user ID: 66556de881da9b77766ab99a
+2024-05-28 08:40:33 [info]: User data retrieved successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:40:33 [error]: Unauthorized access attempt detected. Cannot read properties of null (reading '_id')
+2024-05-28 08:40:43 [info]: User authenticated with ID: 66556de881da9b77766ab99a
+2024-05-28 08:40:43 [info]: Password updated successfully for user ID: 66556de881da9b77766ab99a
+2024-05-28 08:41:09 [info]: User data retrieved successfully for user ID: 6637bc391e9c9a3e5bf9c7e5
+2024-05-28 08:41:09 [error]: Unauthorized access attempt detected. Cannot read properties of null (reading '_id')
+2024-05-28 08:41:15 [info]: Login attempt with username: anghel.
+2024-05-28 08:41:15 [warn]: Failed login attempt for user anghel: Incorrect password.
+2024-05-28 08:41:27 [info]: Login attempt with username: anghel.
+2024-05-28 08:41:27 [info]: User anghel authenticated successfully.
+2024-05-28 08:41:27 [info]: User authenticated with ID: 66556de881da9b77766ab99a
+2024-05-28 08:41:27 [info]: Shifts retrieved successfully for user ID: 66556de881da9b77766ab99a
+2024-05-28 08:45:04 [info]: User logged out successfully. LOGIN_INFO cookie cleared.
+2024-05-28 08:45:13 [warn]: Authentication token is missing.
+2024-05-28 08:45:15 [warn]: Authentication token is missing.
+2024-05-28 08:45:20 [info]: Login attempt with email: anghel.ergosum@gmail.com.
+2024-05-28 08:45:20 [warn]: Failed login attempt for user anghel.ergosum@gmail.com: Incorrect password.
+2024-05-28 08:45:29 [info]: Login attempt with email: anghel.ergosum@gmail.com.
+2024-05-28 08:45:29 [info]: User anghel authenticated successfully.
+2024-05-28 08:46:23 [info]: You are now connected with MongoDB.
+2024-05-28 08:46:23 [info]: Express.js server started on port 8080.
+2024-05-28 08:46:26 [info]: User anghel authenticated successfully.
+2024-05-28 08:46:29 [warn]: Failed login attempt for user anghel.ergosum@gmail.com: Incorrect password.
+2024-05-28 08:46:35 [info]: User anghel authenticated successfully.
+2024-05-28 08:48:19 [info]: User data retrieved successfully for user ID: 66556de881da9b77766ab99a
+2024-05-28 08:50:11 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 08:50:11 [info]: Profile data fetched successfully for user ID: 66556de881da9b77766ab99a
+2024-05-28 08:51:01 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 08:51:01 [info]: Profile updated successfully by admin for user ID: 66556de881da9b77766ab99a
+2024-05-28 08:57:28 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 08:57:28 [info]: All shifts fetched successfully.
+2024-05-28 08:57:33 [info]: User authenticated with ID: 66556de881da9b77766ab99a
+2024-05-28 08:57:33 [info]: Shift added successfully for user ID: 66556de881da9b77766ab99a
+2024-05-28 08:58:07 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 08:58:17 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 08:58:20 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 08:58:20 [info]: Shift updated successfully by admin for shift ID: 6655724d2aed14efe74706b8
+2024-05-28 09:01:25 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 09:01:29 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 09:01:29 [info]: Shift deleted successfully by admin for shift ID: 6655724d2aed14efe74706b8
+2024-05-28 09:02:24 [info]: Admin access granted to user ID: 66556de881da9b77766ab99a
+2024-05-28 09:02:24 [info]: All users fetched successfully.
+2024-05-28 09:02:58 [info]: You are now connected with MongoDB.
+2024-05-28 09:02:58 [info]: Express.js server started on port 8080.

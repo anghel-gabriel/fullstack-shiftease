@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
-import { isPasswordValid } from "../utils/validation.js";
+import { isEmailValid, isPasswordValid } from "../utils/validation.js";
 import resetPasswordService from "../services/resetPasswordService.js";
 import { logger } from "../app.js";
 
@@ -9,6 +9,13 @@ import { logger } from "../app.js";
 const requestResetPasswordLink = async (req, res) => {
   // Getting body data
   const { email } = req.body;
+
+  if (!email || !isEmailValid(email)) {
+    logger.warn("Password reset request without valid email");
+    return res
+      .status(400)
+      .send({ message: "A valid mail address is required." });
+  }
 
   // Check if user with entered email address does exist
   try {

@@ -106,7 +106,7 @@ export class RegisterPageComponent {
       // Check if username or email already existing
       this.isLoading = true;
       try {
-        await this.usersService.checkCredentialsBackend(
+        await this.usersService.checkCredentials(
           this.emailAddress,
           this.username,
           this.password,

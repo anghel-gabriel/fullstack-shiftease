@@ -17,10 +17,8 @@ const login = async (req, res) => {
     let foundUser;
     if (loginMethod === "email") {
       foundUser = await loginService.getUserByEmailAddress(usernameOrEmail);
-      logger.info(`Login attempt with email: ${usernameOrEmail}.`);
     } else if (loginMethod === "username") {
       foundUser = await loginService.getUserByUsername(usernameOrEmail);
-      logger.info(`Login attempt with username: ${usernameOrEmail}.`);
     } else {
       logger.warn("Login attempt with invalid login method.");
       return res

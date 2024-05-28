@@ -259,7 +259,11 @@ const deleteUserShifts = async (req, res) => {
     const userId = ObjectId.createFromHexString(id);
     await shiftsService.deleteUserShifts(userId);
     logger.info(`All shifts deleted successfully for user ID: ${id}`);
-    res.status(200).send({ message: "Your shift has been deleted." });
+    res
+      .status(200)
+      .send({
+        message: `All shifts deleted successfully for user with ID: ${id}`,
+      });
   } catch (error) {
     logger.error("Error deleting all shifts for user", error);
     res.status(500).send({

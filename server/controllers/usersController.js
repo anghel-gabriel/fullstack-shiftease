@@ -7,6 +7,9 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import { logger } from "../app.js";
+import { isUsernameValid } from "../utils/validation.js";
+import { isUserAgeBetween6And130 } from "../utils/validation.js";
+import { validateGender } from "../utils/validation.js";
 
 // Define __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -19,6 +22,45 @@ const rootDir = path.join(__dirname, "../");
 const updateProfile = async (req, res) => {
   const { username, firstName, lastName, birthDate, gender } = req.body;
   const reqUserId = req.tokenData.id;
+
+  // Validation
+  if (!username) {
+    logger.warn("Registration check attempt with missing mandatory fields.");
+    return res
+      .status(400)
+      .send({ message: "Please fill all the mandatory fields." });
+  }
+
+  if (username.length < 6) {
+    logger.warn("Username too short during registration check.");
+    return res
+      .status(400)
+      .send({ message: "Username must be at least 6 characters long." });
+  }
+
+  if (!isUsernameValid(username)) {
+    logger.warn("Invalid username format during registration check.");
+    return res.status(400).send({ message: "Username must be alphanumeric." });
+  }
+
+  if (firstName.length < 2 || lastName.length < 2) {
+    logger.warn("First name or last name too short during registration.");
+    return res.status(400).send({
+      message: "First name and last name must be at least 2 characters long.",
+    });
+  }
+
+  if (!isUserAgeBetween6And130(birthDate)) {
+    logger.warn("Invalid age during registration.");
+    return res.status(400).send({
+      message: "User must be between 6 and 130 years old in order to register.",
+    });
+  }
+
+  if (!validateGender(gender)) {
+    logger.warn("Invalid gender provided during registration.");
+    return res.status(400).send({ message: "The gender provided is invalid." });
+  }
 
   try {
     let isUsernameTheSame = false;
